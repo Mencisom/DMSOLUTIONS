@@ -10,52 +10,7 @@
 <body>
 <div class="container">
     <!-- Barra lateral -->
-    <aside class="sidebar">
-        <h2 class="sidebar-title">Bienvenido</h2>
-        <nav>
-            <ul class="menu">
-                <li class="menu-item">
-                    <a href="inicio.html">
-                        <i class="fas fa-home menu-icon"></i>
-                        <span class="menu-text">Home</span>
-                    </a>
-                </li>
-                <li class="menu-item active">
-                    <a href="browse.html">
-                        <i class="fas fa-search menu-icon"></i>
-                        <span class="menu-text">Browse</span>
-                    </a>
-                </li>
-            </ul>
-            <h3 class="sidebar-subtitle">Brochure</h3>
-            <ul class="submenu">
-                <li class="menu-item">
-                    <a href="quotes.html">
-                        <i class="fas fa-file-alt menu-icon"></i>
-                        <span class="menu-text">Quotes</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="products.html">
-                        <i class="fas fa-tshirt menu-icon"></i>
-                        <span class="menu-text">Products</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="reminders.html">
-                        <i class="fas fa-smile menu-icon"></i>
-                        <span class="menu-text">Reminders</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <div class="logout-section">
-            <button class="logout-button">
-                <i class="fas fa-sign-out-alt logout-icon"></i>
-                <span class="logout-text">Log Out</span>
-            </button>
-        </div>
-    </aside>
+    <x-lateral-bar></x-lateral-bar>
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
