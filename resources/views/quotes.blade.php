@@ -31,32 +31,35 @@
             <table class="project-table">
                 <thead>
                 <tr>
-                    <th>Task</th>
-                    <th>Title</th>
+                    <th>Id</th>
+                    <th>Client's Name</th>
                     <th>Price</th>
-                    <th>Date</th>
-                    <th>Owner</th>
+                    <th>Expiration Date</th>
+                    <th>Client's Phone number</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>FIG-123</td>
-                    <td>Task 1</td>
-                    <td><button class="btn">Project 1</button></td>
-                    <td>Dec 5</td>
-                    <td><img src="owner.jpg" alt="Owner" class="avatar"></td>
-                    <td>
-                        <div class="action-menu">
-                            <span class="action-dots">•••</span>
-                            <div class="action-dropdown hidden">
-                                <button class="action-btn">Crear</button>
-                                <button class="action-btn">Eliminar</button>
-                                <button class="action-btn">Actualizar</button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                @isset($quotes)
+                    @foreach($quotes as $quote)
+                        <tr>
+                            <td>{{$quote->id}}</td>
+                            <td>{{$quote->quote_client_name}}</td>
+                            <td><button class="btn">{{$quote->quote_total}}</button></td>
+                            <td>{{$quote->quote_expiration_date}}</td>
+                            <td>{{$quote->quote_client_phone}}</td>
+                            <td>
+                                <div class="action-menu">
+                                    <span class="action-dots">•••</span>
+                                    <div class="action-dropdown hidden">
+                                        <button class="action-btn">Eliminar</button>
+                                        <button class="action-btn">Actualizar</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endisset
                 </tbody>
             </table>
         </div>

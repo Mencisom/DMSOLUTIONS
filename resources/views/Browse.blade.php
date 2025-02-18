@@ -27,30 +27,36 @@
                 <thead>
                 <tr>
                     <th>Task</th>
-                    <th>CLIENTE</th>
+                    <th>Client</th>
                     <th>Price</th>
                     <th>Finish</th>
-                    <th>Owner</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>FIG-123</td>
-                    <td>Task 1</td>
-                    <td><button class="btn">Project 1</button></td>
-                    <td>Dec 5</td>
-                    <td><img src="owner.jpg" alt="Owner" class="avatar"></td>
-                    <td>
-                        <div class="action-menu">
-                            <span class="action-dots">•••</span>
-                            <div class="action-dropdown hidden">
-                                <button class="action-btn">Eliminar</button>
-                                <button class="action-btn">Actualizar</button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+
+                    @isset($projects)
+                        @foreach($projects as $project)
+                            <tr>
+                                <td>{{$project->id}}</td>
+                                <td>{{$project->proj_name}}</td>
+                                <td><button class="btn">{{$project->proj_deposit}}</button></td>
+                                <td>{{$project->proj_end_date}}</td>
+                                <td>Active</td>
+                                <td>
+                                    <div class="action-menu">
+                                        <span class="action-dots">•••</span>
+                                        <div class="action-dropdown hidden">
+                                            <button class="action-btn">Eliminar</button>
+                                            <button class="action-btn">Actualizar</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endisset
+
                 <!-- Más filas -->
                 </tbody>
             </table>
