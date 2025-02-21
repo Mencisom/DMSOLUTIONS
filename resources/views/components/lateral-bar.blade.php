@@ -24,7 +24,7 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="products.html">
+                <a href="{{route('products')}}">
                     <i class="fas fa-tshirt menu-icon"></i>
                     <span class="menu-text">Products</span>
                 </a>
