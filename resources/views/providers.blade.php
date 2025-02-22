@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - DM Solutions</title>
+    <title>Providers - DM Solutions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{{asset('css/products.css')}}">
+    <link rel="stylesheet" href="{{asset('css/providers.css')}}}">
 </head>
 <body>
 <div class="container">
     <!-- Barra lateral -->
-    <x-lateral-bar ></x-lateral-bar>
+    <x-lateral-bar></x-lateral-bar>
 
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
-            <h1>PRODUCTS</h1>
+            <h1>PROVIDERS</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Search products...">
+                <input type="text" placeholder="Search providers...">
                 <button class="filter-button"><i class="fas fa-filter"></i> Filter</button>
                 <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> New</button>
             </div>
@@ -26,25 +26,17 @@
             <table class="project-table">
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Description</th>
                     <th>Id</th>
-                    <th>Status</th>
-                    <th>Route</th>
-                    <th>Price</th>
-                    <th>Icon</th>
+                    <th>Name</th>
+                    <th>Phone</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>Martillo</td>
-                    <td>Martillo 8oz pequeño</td>
-                    <td>12345</td>
-                    <td>Disponible</td>
-                    <td>Herramientas</td>
-                    <td>15.000</td>
-                    <td><img src="Images/martillo.jpg"></td>
+                    <td>2</td>
+                    <td>Juan Pérez</td>
+                    <td>3105678923</td>
                     <td>
                         <div class="action-menu">
                             <span class="action-dots">•••</span>
@@ -61,44 +53,31 @@
     </main>
 </div>
 
-<!-- Modal para agregar producto -->
-<div class="modal hidden" id="productModal">
+<!-- Modal para agregar proveedor -->
+<div class="modal hidden" id="providerModal">
     <div class="modal-content">
-        <h2>Agregar Producto</h2>
-        <form id="productForm">
-            <label for="productName">Nombre:</label>
-            <input type="text" id="productName" required>
+        <h2>Add Provider</h2>
+        <form id="providerForm">
 
-            <label for="productDescription">Descripción:</label>
-            <textarea id="productDescription" required></textarea>
+            <label for="providerId">ID:</label>
+            <input type="text" id="providerId" required>
 
-            <label for="productId">ID:</label>
-            <input type="text" id="productId" required>
+            <label for="providerName">Name:</label>
+            <input type="text" id="providerName" required>
 
-            <label for="productStatus">Estado:</label>
-            <select id="productStatus">
-                <option value="Disponible">Disponible</option>
-                <option value="Agotado">Agotado</option>
-            </select>
+            <label for="providerPhone">Phone:</label>
+            <input type="text" id="providerPhone" required>
 
-            <label for="productRoute">Ruta:</label>
-            <input type="text" id="productRoute" required>
+            <button type="submit">Save Provider</button>
+            <button type="button" id="closeFormButton" class="close-form-button">Close</button>
 
-            <label for="productPrice">Precio:</label>
-            <input type="number" id="productPrice" required>
-
-            <label for="productImage">Subir Imagen:</label>
-            <input type="file" id="productImage" accept="image/*" required>
-
-            <button type="submit">Guardar Producto</button>
-            <button type="button" id="closeFormButton" class="close-form-button">Cerrar</button>
         </form>
     </div>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const modal = document.getElementById("productModal");
+        const modal = document.getElementById("providerModal");
         const openModalButton = document.getElementById("openModalButton");
         const closeFormButton = document.getElementById("closeFormButton");
 
@@ -143,23 +122,19 @@
         });
     });
 
-    document.getElementById('productForm').addEventListener('submit', (event) => {
+    document.getElementById('providerForm').addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const name = document.getElementById('productName').value;
-        const description = document.getElementById('productDescription').value;
-        const id = document.getElementById('productId').value;
-        const status = document.getElementById('productStatus').value;
-        const route = document.getElementById('productRoute').value;
-        const price = document.getElementById('productPrice').value;
-        const image = document.getElementById('productImage').files[0];
+        const name = document.getElementById('providerName').value;
+        const id = document.getElementById('providerId').value;
+        const phone = document.getElementById('providerPhone').value;
 
-        if (name && description && id && status && route && price && image) {
-            alert('Producto guardado con éxito');
-            document.getElementById('productModal').classList.add('hidden');
-            document.getElementById('productForm').reset();
+        if (name && id && phone && email && identification && address) {
+            alert('Provider saved successfully');
+            document.getElementById('providerModal').classList.add('hidden');
+            document.getElementById('providerForm').reset();
         } else {
-            alert('Por favor completa todos los campos.');
+            alert('Please complete all fields.');
         }
     });
 </script>

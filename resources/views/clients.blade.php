@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - DM Solutions</title>
+    <title>Clients - DM Solutions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{{asset('css/products.css')}}">
+    <link rel="stylesheet" href="{{asset('css/clients.css')}}">
 </head>
 <body>
 <div class="container">
     <!-- Barra lateral -->
-    <x-lateral-bar ></x-lateral-bar>
-
+    <x-lateral-bar></x-lateral-bar>
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
-            <h1>PRODUCTS</h1>
+            <h1>CLIENTS</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Search products...">
+                <input type="text" placeholder="Search clients...">
                 <button class="filter-button"><i class="fas fa-filter"></i> Filter</button>
                 <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> New</button>
             </div>
@@ -26,25 +25,22 @@
             <table class="project-table">
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Description</th>
                     <th>Id</th>
-                    <th>Status</th>
-                    <th>Route</th>
-                    <th>Price</th>
-                    <th>Icon</th>
-                    <th>Actions</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Identification</th>
+                    <th>Address</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>Martillo</td>
-                    <td>Martillo 8oz pequeño</td>
-                    <td>12345</td>
-                    <td>Disponible</td>
-                    <td>Herramientas</td>
-                    <td>15.000</td>
-                    <td><img src="Images/martillo.jpg"></td>
+                    <td>1</td>
+                    <td>Maria Enciso</td>
+                    <td>3124303625</td>
+                    <td>mencisom@gmail.com</td>
+                    <td>1007101050</td>
+                    <td>Calle 173#7-95</td>
                     <td>
                         <div class="action-menu">
                             <span class="action-dots">•••</span>
@@ -61,44 +57,40 @@
     </main>
 </div>
 
-<!-- Modal para agregar producto -->
-<div class="modal hidden" id="productModal">
+<!-- Modal para agregar cliente -->
+<div class="modal hidden" id="clientModal">
     <div class="modal-content">
-        <h2>Agregar Producto</h2>
-        <form id="productForm">
-            <label for="productName">Nombre:</label>
-            <input type="text" id="productName" required>
+        <h2>Agregar Cliente</h2>
+        <form id="clientForm">
 
-            <label for="productDescription">Descripción:</label>
-            <textarea id="productDescription" required></textarea>
+            <label for="clientId">ID:</label>
+            <input type="text" id="clientId" required>
 
-            <label for="productId">ID:</label>
-            <input type="text" id="productId" required>
+            <label for="clientName">Nombre:</label>
+            <input type="text" id="clientName" required>
 
-            <label for="productStatus">Estado:</label>
-            <select id="productStatus">
-                <option value="Disponible">Disponible</option>
-                <option value="Agotado">Agotado</option>
-            </select>
+            <label for="clientPhone">Teléfono:</label>
+            <input type="text" id="clientPhone" required>
 
-            <label for="productRoute">Ruta:</label>
-            <input type="text" id="productRoute" required>
+            <label for="clientEmail">Email:</label>
+            <input type="email" id="clientEmail" required>
 
-            <label for="productPrice">Precio:</label>
-            <input type="number" id="productPrice" required>
+            <label for="clientIdentification">Identificación:</label>
+            <input type="text" id="clientIdentification" required>
 
-            <label for="productImage">Subir Imagen:</label>
-            <input type="file" id="productImage" accept="image/*" required>
+            <label for="clientAddress">Dirección:</label>
+            <input type="text" id="clientAddress" required>
 
-            <button type="submit">Guardar Producto</button>
+            <button type="submit">Guardar Cliente</button>
             <button type="button" id="closeFormButton" class="close-form-button">Cerrar</button>
+
         </form>
     </div>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const modal = document.getElementById("productModal");
+        const modal = document.getElementById("clientModal");
         const openModalButton = document.getElementById("openModalButton");
         const closeFormButton = document.getElementById("closeFormButton");
 
@@ -143,21 +135,20 @@
         });
     });
 
-    document.getElementById('productForm').addEventListener('submit', (event) => {
+    document.getElementById('clientForm').addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const name = document.getElementById('productName').value;
-        const description = document.getElementById('productDescription').value;
-        const id = document.getElementById('productId').value;
-        const status = document.getElementById('productStatus').value;
-        const route = document.getElementById('productRoute').value;
-        const price = document.getElementById('productPrice').value;
-        const image = document.getElementById('productImage').files[0];
+        const name = document.getElementById('clientName').value;
+        const id = document.getElementById('clientId').value;
+        const phone = document.getElementById('clientPhone').value;
+        const email = document.getElementById('clientEmail').value;
+        const identification = document.getElementById('clientIdentification').value;
+        const address = document.getElementById('clientAddress').value;
 
-        if (name && description && id && status && route && price && image) {
-            alert('Producto guardado con éxito');
-            document.getElementById('productModal').classList.add('hidden');
-            document.getElementById('productForm').reset();
+        if (name && id && phone && email && identification && address) {
+            alert('Cliente guardado con éxito');
+            document.getElementById('clientModal').classList.add('hidden');
+            document.getElementById('clientForm').reset();
         } else {
             alert('Por favor completa todos los campos.');
         }

@@ -30,6 +30,18 @@
                 </a>
             </li>
             <li class="menu-item">
+                <a href="{{route('clients')}}">
+                    <i class="fas fa-smile menu-icon"></i>
+                    <span class="menu-text">Clients</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{{route('providers')}}">
+                    <i class="fas fa-truck menu-icon"></i>
+                    <span class="menu-text">Providers</span>
+                </a>
+            </li>
+            <li class="menu-item">
                 <a href="reminders.html">
                     <i class="fas fa-smile menu-icon"></i>
                     <span class="menu-text">Reminders</span>
