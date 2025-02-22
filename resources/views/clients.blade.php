@@ -31,6 +31,7 @@
                     <th>Email</th>
                     <th>Identification</th>
                     <th>Address</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
