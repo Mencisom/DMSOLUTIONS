@@ -35,23 +35,27 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Maria Enciso</td>
-                    <td>3124303625</td>
-                    <td>mencisom@gmail.com</td>
-                    <td>1007101050</td>
-                    <td>Calle 173#7-95</td>
-                    <td>
-                        <div class="action-menu">
-                            <span class="action-dots">•••</span>
-                            <div class="action-dropdown hidden">
-                                <button class="action-btn">Eliminar</button>
-                                <button class="action-btn">Actualizar</button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                @isset($clients)
+                    @foreach($clients as $client)
+                        <tr>
+                            <td>{{$client->id}}</td>
+                            <td>{{$client->client_name}}</td>
+                            <td>{{$client->client_ph}}</td>
+                            <td>{{$client->client_email}}</td>
+                            <td>{{$client->client_identification}}</td>
+                            <td>{{$client->client_address}}</td>
+                            <td>
+                                <div class="action-menu">
+                                    <span class="action-dots">•••</span>
+                                    <div class="action-dropdown hidden">
+                                        <button class="action-btn">Eliminar</button>
+                                        <button class="action-btn">Actualizar</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endisset
                 </tbody>
             </table>
         </div>

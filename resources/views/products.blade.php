@@ -30,31 +30,33 @@
                     <th>Description</th>
                     <th>Id</th>
                     <th>Status</th>
-                    <th>Route</th>
                     <th>Price</th>
                     <th>Icon</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Martillo</td>
-                    <td>Martillo 8oz pequeño</td>
-                    <td>12345</td>
-                    <td>Disponible</td>
-                    <td>Herramientas</td>
-                    <td>15.000</td>
-                    <td><img src="Images/martillo.jpg"></td>
-                    <td>
-                        <div class="action-menu">
-                            <span class="action-dots">•••</span>
-                            <div class="action-dropdown hidden">
-                                <button class="action-btn">Eliminar</button>
-                                <button class="action-btn">Actualizar</button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                @isset($products)
+                    @foreach($products as $product)
+                        <tr>
+                            <td>{{$product->prod_name}}</td>
+                            <td>{{$product->prod_des}}</td>
+                            <td>{{$product->id}}</td>
+                            <td>Active</td>
+                            <td>{{$product->prod_price}}</td>
+                            <td><img src="Images/martillo.jpg"></td>
+                            <td>
+                                <div class="action-menu">
+                                    <span class="action-dots">•••</span>
+                                    <div class="action-dropdown hidden">
+                                        <button class="action-btn">Eliminar</button>
+                                        <button class="action-btn">Actualizar</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endisset
                 </tbody>
             </table>
         </div>

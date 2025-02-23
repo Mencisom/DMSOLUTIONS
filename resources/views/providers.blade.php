@@ -33,20 +33,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>2</td>
-                    <td>Juan Pérez</td>
-                    <td>3105678923</td>
-                    <td>
-                        <div class="action-menu">
-                            <span class="action-dots">•••</span>
-                            <div class="action-dropdown hidden">
-                                <button class="action-btn">Eliminar</button>
-                                <button class="action-btn">Actualizar</button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                @isset($providers)
+                    @foreach($providers as $provider)
+                        <tr>
+                            <td>{{$provider->id}}</td>
+                            <td>{{$provider->provider_name}}</td>
+                            <td>{{$provider->provider_number}}</td>
+                            <td>
+                                <div class="action-menu">
+                                    <span class="action-dots">•••</span>
+                                    <div class="action-dropdown hidden">
+                                        <button class="action-btn">Eliminar</button>
+                                        <button class="action-btn">Actualizar</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endisset
                 </tbody>
             </table>
         </div>
