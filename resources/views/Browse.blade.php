@@ -14,11 +14,14 @@
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
-            <h1>Projects</h1>
+            <h1>PROYECTOS</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Search tickets...">
+                <input type="text" placeholder="Buscar proyectos...">
                 <button class="filter-button">
-                    <i class="fas fa-filter"></i> Filter
+                    <i class="fas fa-filter"></i> Filtros
+                </button>
+                <button class="new-button" id="openModalButton">
+                    <i class="fas fa-plus"></i> Nuevo
                 </button>
             </div>
         </header>
@@ -26,12 +29,12 @@
             <table class="project-table">
                 <thead>
                 <tr>
-                    <th>Task</th>
-                    <th>Client</th>
-                    <th>Price</th>
-                    <th>Finish</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Precio</th>
+                    <th>Fecha De Terminación</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>

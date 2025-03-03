@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('user', function (Blueprint $table) {
             $table->id();
-            $table->string('user_name');
+            $table->string('user_first_name');
+            $table->string('user_last_name');
+            $table->string('user_email');
+            $table->string('user_password');
             $table->foreignId('user_rol')->references('id')->on('role');
             $table->integer('user_status')->default(1);
             $table->timestamps();

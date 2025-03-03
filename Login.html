@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="public/css/login.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -64,32 +64,32 @@
                 <button class="button button-block">Iniciar Sesión</button>
             </form>
         </div>
-    </div> 
-</div> 
+    </div>
+</div>
 
 <script>
   $(document).ready(function () {
       // Mostrar solo la pestaña activa
       $('.tab-content > div').removeClass('active').hide();
       $('#signup').addClass('active').show();
-  
+
       $('.tab a').on('click', function (e) {
           e.preventDefault();
-  
+
           $(this).parent().addClass('active');
           $(this).parent().siblings().removeClass('active');
-  
+
           var target = $(this).attr('href');
-  
+
           $('.tab-content > div').removeClass('active').hide();
           $(target).addClass('active').fadeIn(600);
       });
-  
+
       // Animación cuando cambias de boton
       $('.form').find('input').on('keyup blur focus', function (e) {
           var $this = $(this),
               label = $this.prev('label');
-  
+
           if (e.type === 'keyup') {
               label.toggleClass('active highlight', $this.val() !== '');
           } else if (e.type === 'blur') {
@@ -101,7 +101,7 @@
               label.addClass('highlight');
           }
       });
-  
+
       // Redirigir a inicio después del registro
       $('.button-block').on('click', function (e) {
           e.preventDefault();
@@ -109,7 +109,7 @@
       });
   });
   </script>
-  
+
 
 </body>
 </html>

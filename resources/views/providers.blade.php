@@ -15,11 +15,11 @@
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
-            <h1>PROVIDERS</h1>
+            <h1>PROVEEDORES</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Search providers...">
-                <button class="filter-button"><i class="fas fa-filter"></i> Filter</button>
-                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> New</button>
+                <input type="text" placeholder="Buscar proveedores...">
+                <button class="filter-button"><i class="fas fa-filter"></i> Filtros</button>
+                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>
             </div>
         </header>
         <div class="table-container">
@@ -27,8 +27,10 @@
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Name</th>
-                    <th>Phone</th>
+                    <th>NIT</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -37,8 +39,10 @@
                     @foreach($providers as $provider)
                         <tr>
                             <td>{{$provider->id}}</td>
+                            <td>{{$provider->provider_nit}}</td>
                             <td>{{$provider->provider_name}}</td>
                             <td>{{$provider->provider_number}}</td>
+                            <td>{{$provider->provider_email}}</td>
                             <td>
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>

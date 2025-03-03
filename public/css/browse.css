@@ -1,14 +1,14 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 html, body {
   height: 100%;
   width: 100%;
   font-family: Arial, sans-serif;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 /* Contenedor principal */
@@ -20,20 +20,40 @@ html, body {
   overflow: hidden;
 }
 
+.filter-button, .new-button {
+    background-color: #ffffff;
+    color: #24BFA4;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filter-button:hover, .new-button:hover {
+    background-color: #f7f7f7;
+}
+
+.filter-button i, .new-button i {
+    margin-right: 5px;
+}
+
 /* Barra lateral  */
 .sidebar {
-  width: 260px; 
+  width: 260px;
   background-color: #ffffff;
-  padding: 25px; 
+  padding: 25px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-right: 1px solid #ddd; 
+  border-right: 1px solid #ddd;
 }
 
 .sidebar-title {
-  font-size: 1.8em; 
+  font-size: 1.8em;
   text-align: center;
   margin-bottom: 30px;
   color: #333;
@@ -46,10 +66,10 @@ html, body {
 }
 
 .menu-item {
-  padding: 15px 25px; 
+  padding: 15px 25px;
   cursor: pointer;
   color: #333;
-  font-size: 1.1em; 
+  font-size: 1.1em;
   transition: background-color 0.3s;
 }
 
@@ -61,23 +81,23 @@ html, body {
 }
 
 .menu-item:hover {
-  background-color: #f7f7f7; 
+  background-color: #f7f7f7;
 }
 
 .menu-item.active {
-  background-color: #24BFA4; 
+  background-color: #24BFA4;
   color: #fff;
-  border-radius: 8px; 
+  border-radius: 8px;
 }
 
 .menu-icon {
   margin-right: 15px;
-  font-size: 1.4em; 
+  font-size: 1.4em;
   color: #555;
 }
 
 .logout-section {
-  margin-top: auto; 
+  margin-top: auto;
 }
 
 .logout-button {
@@ -85,17 +105,17 @@ html, body {
   background-color: #333;
   color: #fff;
   border: none;
-  border-radius: 8px; 
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1em; 
+  font-size: 1.1em;
   transition: background-color 0.3s;
 }
 
 .logout-button:hover {
-  background-color: #555; 
+  background-color: #555;
 }
 
-  
+
   /* Contenido principal */
   .main-content {
     flex: 1;
@@ -106,31 +126,31 @@ html, body {
     gap: 20px;
     height: 100%;
   }
-  
+
   /* Header y barra de búsqueda */
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  
+
   .header h1 {
     color: #ffffff;
     font-size: 1.8em;
   }
-  
+
   .search-bar {
     display: flex;
     gap: 10px;
   }
-  
+
   .search-bar input {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     width: 250px;
   }
-  
+
   .filter-button {
     background-color: #ffffff;
     color: #24BFA4;
@@ -140,11 +160,11 @@ html, body {
     cursor: pointer;
     font-size: 1em;
   }
-  
+
   .filter-button i {
     margin-right: 5px;
   }
-  
+
   /* Tabla */
   .table-container {
     background-color: #ffffff;
@@ -153,28 +173,28 @@ html, body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     overflow-x: auto;
   }
-  
+
   .project-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
   }
-  
+
   .project-table th, .project-table td {
     padding: 15px;
     border-bottom: 1px solid #ddd;
   }
-  
+
   .project-table thead th {
     background-color: #f7f7f7;
     color: #555555;
     font-weight: bold;
   }
-  
+
   .project-table tbody tr:hover {
     background-color: rgba(36, 191, 164, 0.1);
   }
-  
+
   .project-table .btn {
     background-color: #24BFA4;
     color: white;
@@ -183,29 +203,29 @@ html, body {
     border-radius: 5px;
     cursor: pointer;
   }
-  
+
   .avatar {
     width: 30px;
     height: 30px;
     border-radius: 50%;
   }
-  
+
   /* Menú emergente de acciones */
   .action-menu {
     position: relative;
     display: inline-block;
     cursor: pointer;
   }
-  
+
   .action-dots {
     font-size: 1.5em;
     color: #888;
   }
-  
+
   .action-dots:hover {
     color: #000;
   }
-  
+
   /* Menú emergente oculto */
   .action-dropdown {
     position: absolute;
@@ -220,11 +240,11 @@ html, body {
     z-index: 100;
     padding: 10px;
   }
-  
+
   .action-dropdown.hidden {
     display: none;
   }
-  
+
   .action-btn {
     background: none;
     border: none;
@@ -235,8 +255,7 @@ html, body {
     cursor: pointer;
     transition: background 0.2s;
   }
-  
+
   .action-btn:hover {
     background: #f7f7f7;
   }
-  

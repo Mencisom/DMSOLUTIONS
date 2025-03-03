@@ -15,24 +15,24 @@
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
-            <h1>PRODUCTS</h1>
+            <h1>PRODUCTOS</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Search products...">
-                <button class="filter-button"><i class="fas fa-filter"></i> Filter</button>
-                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> New</button>
+                <input type="text" placeholder="Buscar productos...">
+                <button class="filter-button"><i class="fas fa-filter"></i> Filtros</button>
+                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>
             </div>
         </header>
         <div class="table-container">
             <table class="project-table">
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
                     <th>Id</th>
-                    <th>Status</th>
-                    <th>Price</th>
-                    <th>Icon</th>
-                    <th>Actions</th>
+                    <th>Estado</th>
+                    <th>Precio</th>
+                    <th>Imagen</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,7 +44,7 @@
                             <td>{{$product->id}}</td>
                             <td>Active</td>
                             <td>{{$product->prod_price}}</td>
-                            <td><img src="Images/martillo.jpg"></td>
+                            <td><img src="{{asset("Images/martillo.jpg")}}" alt=""></td>
                             <td>
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
@@ -56,7 +56,7 @@
                             </td>
                         </tr>
                     @endforeach
-                @endisset
+                    endisset
                 </tbody>
             </table>
         </div>

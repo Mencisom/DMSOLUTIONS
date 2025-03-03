@@ -5,11 +5,14 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\UserController;
 use App\Models\Project;
 use App\Models\Quote;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/','welcome')->name('home');
+Route::view('/','login')->name('login');
+Route::post('/', [UserController::class, 'login'])->name('login_validation');
+Route::view('/welcome','welcome')->name('home');
 Route::get('/browse',[ProjectController::class,'index'])->name('browse');
 Route::get('/quote',[QuoteController::class,'index'])->name('quote');
 Route::get('/products',[ProductController::class,'index'])->name('products');

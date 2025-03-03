@@ -14,11 +14,11 @@
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
-            <h1>CLIENTS</h1>
+            <h1>CLIENTES</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Search clients...">
-                <button class="filter-button"><i class="fas fa-filter"></i> Filter</button>
-                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> New</button>
+                <input type="text" placeholder="Buscar clientes...">
+                <button class="filter-button"><i class="fas fa-filter"></i> Filtros</button>
+                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>
             </div>
         </header>
         <div class="table-container">
@@ -26,12 +26,12 @@
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Name</th>
-                    <th>Phone</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
                     <th>Email</th>
-                    <th>Identification</th>
-                    <th>Address</th>
-                    <th>Actions</th>
+                    <th>Identificación</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>

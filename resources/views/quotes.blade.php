@@ -16,14 +16,14 @@
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
-            <h1>QUOTES</h1>
+            <h1>COTIZACIONES</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Search tickets...">
+                <input type="text" placeholder="Buscar Cotizaciones...">
                 <button class="filter-button">
-                    <i class="fas fa-filter"></i> Filter
+                    <i class="fas fa-filter"></i> Filtros
                 </button>
                 <button class="new-button" id="openModalButton">
-                    <i class="fas fa-plus"></i> New
+                    <i class="fas fa-plus"></i> Nuevo
                 </button>
             </div>
         </header>
@@ -32,11 +32,12 @@
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Client's Name</th>
-                    <th>Price</th>
-                    <th>Expiration Date</th>
-                    <th>Client's Phone number</th>
-                    <th>Actions</th>
+                    <th>Nombre del Cliente</th>
+                    <th>Precio total</th>
+                    <th>Fecha de expiración</th>
+                    <th>Teléfono del cliente</th>
+                    <th>Email Del Cliente</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,6 +49,7 @@
                             <td><button class="btn">{{$quote->quote_total}}</button></td>
                             <td>{{$quote->quote_expiration_date}}</td>
                             <td>{{$quote->quote_client_phone}}</td>
+                            <td>{{$quote->quote_client_email}}</td>
                             <td>
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>

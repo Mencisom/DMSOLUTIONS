@@ -5,13 +5,13 @@
             <li class="menu-item">
                 <a href="{{route('home')}}">
                     <i class="fas fa-home menu-icon"></i>
-                    <span class="menu-text">Home</span>
+                    <span class="menu-text">Inicio</span>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{route('browse')}}">
                     <i class="fas fa-search menu-icon"></i>
-                    <span class="menu-text">Browse</span>
+                    <span class="menu-text">Proyectos</span>
                 </a>
             </li>
         </ul>
@@ -20,39 +20,42 @@
             <li class="menu-item">
                 <a href="{{route('quote')}}">
                     <i class="fas fa-file-alt menu-icon"></i>
-                    <span class="menu-text">Quotes</span>
+                    <span class="menu-text">Cotizaciones</span>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{route('products')}}">
                     <i class="fas fa-tshirt menu-icon"></i>
-                    <span class="menu-text">Products</span>
+                    <span class="menu-text">Productos</span>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{route('clients')}}">
                     <i class="fas fa-smile menu-icon"></i>
-                    <span class="menu-text">Clients</span>
+                    <span class="menu-text">Clientes</span>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{route('providers')}}">
                     <i class="fas fa-truck menu-icon"></i>
-                    <span class="menu-text">Providers</span>
+                    <span class="menu-text">Proveedores</span>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="reminders.html">
                     <i class="fas fa-smile menu-icon"></i>
-                    <span class="menu-text">Reminders</span>
+                    <span class="menu-text">Recordatorios</span>
                 </a>
             </li>
         </ul>
     </nav>
     <div class="logout-section">
-        <button class="logout-button">
-            <i class="fas fa-sign-out-alt logout-icon"></i>
-            <span class="logout-text">Log Out</span>
-        </button>
+        <a href="{{route('login')}}">
+            <button class="logout-button" id="logout-button">
+                <i class="fas fa-sign-out-alt logout-icon"></i>
+                <span class="logout-text">Cerrar sesión</span>
+            </button>
+        </a>
     </div>
+
 </aside>

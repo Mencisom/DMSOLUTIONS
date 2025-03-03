@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('provider', function (Blueprint $table) {
             $table->id();
+            $table->string('provider_nit')->unique();
             $table->string('provider_name');
-            $table->string('provider_number');
+            $table->string('provider_number')->nullable();
+            $table->string('provider_email')->nullable();
             $table->timestamps();
         });
     }
