@@ -8,7 +8,7 @@ class QuoteController
 {
     public function index()
     {
-        $quotes = DB::table('quote')->get();
+        $quotes = DB::table('quotes')->get();
         return view('quotes', ['quotes' => $quotes]);
     }
 }

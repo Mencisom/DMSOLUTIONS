@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quote_material', function (Blueprint $table) {
-            $table->foreignId('quote_id')->references('id')->on('quote');
-            $table->foreignId('product_id')->references('id')->on('product');
+        Schema::create('quote_materials', function (Blueprint $table) {
+            $table->foreignId('quote_id')->references('id')->on('quotes');
+            $table->foreignId('product_id')->references('id')->on('products');
             $table->primary(['quote_id', 'product_id']);
             $table->double('quantity');
             $table->timestamps();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quote_material');
+        Schema::dropIfExists('quote_materials');
     }
 };

@@ -8,7 +8,7 @@ class ClientController
 {
     public function index()
     {
-        $clients = DB::table('client')->get();
+        $clients = DB::table('clients')->get();
         return view('clients', ['clients' => $clients]);
     }
 }

@@ -8,7 +8,7 @@ class ProjectController
 {
     public function index()
     {
-        $projects = DB::table('project')->get();
+        $projects = DB::table('projects')->get();
         return view('browse', ['projects' => $projects]);
     }
 }

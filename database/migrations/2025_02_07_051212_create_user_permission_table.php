@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_permission', function (Blueprint $table) {
-            $table->foreignId('user_id')->references('id')->on('user');
-            $table->foreignId('permission_id')->references('id')->on('permission');
+        Schema::create('user_permissions', function (Blueprint $table) {
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('permission_id')->references('id')->on('permissions');
             $table->primary(['user_id', 'permission_id']);
             $table->timestamps();
         });
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_permission');
+        Schema::dropIfExists('user_permissions');
     }
 };

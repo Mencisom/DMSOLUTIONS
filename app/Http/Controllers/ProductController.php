@@ -8,7 +8,7 @@ class ProductController
 {
     public function index()
     {
-        $products = DB::table('product')->get();
+        $products = DB::table('products')->get();
         return view('products', ['products' => $products]);
     }
 }

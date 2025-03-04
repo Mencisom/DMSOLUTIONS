@@ -56,7 +56,7 @@
                             </td>
                         </tr>
                     @endforeach
-                    endisset
+                @endisset
                 </tbody>
             </table>
         </div>
