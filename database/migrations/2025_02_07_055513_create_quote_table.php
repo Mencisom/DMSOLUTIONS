@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('quotes', function (Blueprint $table) {
             $table->id();
-            $table->string('quote_client_name');
-            $table->string('quote_client_id');
-            $table->string('quote_client_phone');
-            $table->string('quote_client_email');
+            $table->foreignId('quote_client_id')->references('id')->on('clients');
             $table->double('quote_material_total');
+            $table->double('quote_estimated_time');
+            $table->integer('quote_helpers');
+            $table->double('quote_helper_payday');
+            $table->double('quote_supervisor_payday');
             $table->double('quote_work_total');
+            $table->double('quote_other_costs');
             $table->double('quote_total');
             $table->date('quote_expiration_date');
             $table->timestamps();

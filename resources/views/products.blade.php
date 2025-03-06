@@ -42,8 +42,12 @@
                             <td>{{$product->prod_name}}</td>
                             <td>{{$product->prod_des}}</td>
                             <td>{{$product->id}}</td>
-                            <td>Active</td>
-                            <td>{{$product->prod_price}}</td>
+                            @if($product->prod_status == 1)
+                                <td>Activo</td>
+                            @else
+                                <td>Inactivo</td>
+                            @endif
+                            <td>{{$product->prod_price_sales}}</td>
                             <td><img src="{{asset("Images/martillo.jpg")}}" alt=""></td>
                             <td>
                                 <div class="action-menu">

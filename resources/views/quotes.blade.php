@@ -32,11 +32,17 @@
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Nombre del Cliente</th>
-                    <th>Precio total</th>
                     <th>Fecha de expiración</th>
-                    <th>Teléfono del cliente</th>
-                    <th>Email Del Cliente</th>
+                    <th>Nombre del Cliente</th>
+                    <th>Teléfono del Cliente</th>
+                    <th>Horas estimadas</th>
+                    <th>Precio Materiales</th>
+                    <th>Ayudantes</th>
+                    {{--<th>Precio Ayudante día</th>
+                    <th>Precio Supervisor Día</th>
+                    <th>Precio Mano de obra</th>--}}
+                    <th>Otros costos</th>
+                    <th>Precio total</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
@@ -45,11 +51,17 @@
                     @foreach($quotes as $quote)
                         <tr>
                             <td>{{$quote->id}}</td>
-                            <td>{{$quote->quote_client_name}}</td>
-                            <td><button class="btn">{{$quote->quote_total}}</button></td>
                             <td>{{$quote->quote_expiration_date}}</td>
-                            <td>{{$quote->quote_client_phone}}</td>
-                            <td>{{$quote->quote_client_email}}</td>
+                            <td>{{$quote->client_name}}</td>
+                            <td>{{$quote->client_ph}}</td>
+                            <td>{{$quote->quote_estimated_time}}</td>
+                            <td>{{$quote->quote_material_total}}</td>
+                            {{--<td>{{$quote->quote_helpers}}</td>
+                            <td>{{$quote->quote_helper_payday}}</td>
+                            <td>{{$quote->quote_supervisor_payday}}</td>--}}
+                            <td>{{$quote->quote_work_total}}</td>
+                            <td>{{$quote->quote_other_costs}}</td>
+                            <td><button class="btn">{{$quote->quote_total}}</button></td>
                             <td>
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>

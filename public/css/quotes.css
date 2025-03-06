@@ -150,16 +150,16 @@ html, body {
     display: inline-block;
     cursor: pointer;
   }
-  
+
   .action-dots {
     font-size: 1.5em;
     color: #888;
   }
-  
+
   .action-dots:hover {
     color: #000;
   }
-  
+
   /* Menú emergente oculto */
   .action-dropdown {
     position: absolute;
@@ -174,11 +174,11 @@ html, body {
     z-index: 100;
     padding: 10px;
   }
-  
+
   .action-dropdown.hidden {
     display: none;
   }
-  
+
   .action-btn {
     background: none;
     border: none;
@@ -189,11 +189,11 @@ html, body {
     cursor: pointer;
     transition: background 0.2s;
   }
-  
+
   .action-btn:hover {
     background: #f7f7f7;
   }
-  
+
 
 /* Tabla */
 .table-container {
@@ -256,12 +256,12 @@ html, body {
 
 .modal-content {
     background: #fff;
-    padding: 20px; 
+    padding: 20px;
     border-radius: 8px;
-    width: 70%; 
-    max-width: 600px; 
-    max-height: 80%; 
-    overflow-y: auto; 
+    width: 70%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
