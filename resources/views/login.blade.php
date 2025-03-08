@@ -115,7 +115,6 @@
             window.location.href = "{{route("home")}}";
         @endif
     @endisset
-
 </script>
 
 </body>

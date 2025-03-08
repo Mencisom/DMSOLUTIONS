@@ -6,13 +6,12 @@
     <title>Quotes - DM Solutions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="{{'css/quotes.css'}}">
+    <link rel="stylesheet" href="{{asset('css/quotes.css')}}">
 </head>
 <body>
 <div class="container">
     <!-- Barra lateral -->
     <x-lateral-bar></x-lateral-bar>
-
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
@@ -31,17 +30,11 @@
             <table class="project-table">
                 <thead>
                 <tr>
-                    <th>Id</th>
+                    <th>ID</th>
                     <th>Fecha de expiración</th>
-                    <th>Nombre del Cliente</th>
-                    <th>Teléfono del Cliente</th>
+                    <th>Nombre del cliente</th>
+                    <th>Teléfono del cliente</th>
                     <th>Horas estimadas</th>
-                    <th>Precio Materiales</th>
-                    <th>Ayudantes</th>
-                    {{--<th>Precio Ayudante día</th>
-                    <th>Precio Supervisor Día</th>
-                    <th>Precio Mano de obra</th>--}}
-                    <th>Otros costos</th>
                     <th>Precio total</th>
                     <th>Acciones</th>
                 </tr>
@@ -50,24 +43,21 @@
                 @isset($quotes)
                     @foreach($quotes as $quote)
                         <tr>
-                            <td>{{$quote->id}}</td>
+                            <td id="quote_id">{{$quote->id}}</td>
                             <td>{{$quote->quote_expiration_date}}</td>
                             <td>{{$quote->client_name}}</td>
                             <td>{{$quote->client_ph}}</td>
                             <td>{{$quote->quote_estimated_time}}</td>
-                            <td>{{$quote->quote_material_total}}</td>
-                            {{--<td>{{$quote->quote_helpers}}</td>
-                            <td>{{$quote->quote_helper_payday}}</td>
-                            <td>{{$quote->quote_supervisor_payday}}</td>--}}
-                            <td>{{$quote->quote_work_total}}</td>
-                            <td>{{$quote->quote_other_costs}}</td>
-                            <td><button class="btn">{{$quote->quote_total}}</button></td>
+                            <td>{{$quote->quote_total}}</td>
                             <td>
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
                                         <button class="action-btn">Eliminar</button>
                                         <button class="action-btn">Actualizar</button>
+
+                                            <button class="action-btn view-quote-detail" id="detail-quote">Ver Detalle</button>
+
                                     </div>
                                 </div>
                             </td>
@@ -80,115 +70,296 @@
     </main>
 </div>
 
+<!--Detalle de Cotización -->
+<div class="modal hidden" id="quoteDetailModal">
+    <div class="modal-content">
+        <h2>Detalle de Cotización</h2>
+        <table class="quote-detail-table">
+            <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+            </thead>
+            <tbody id="quoteDetailBody">
+            <tr>
+                <td>Cámara Sony A7</td>
+                <td>2</td>
+                <td>$120.00</td>
+            </tr>
+            <tr>
+                <td>Lente 50mm</td>
+                <td>1</td>
+                <td>$300.000</td>
+                <td>$300.000</td>
+            </tr>
+            <tr>
+                <td>Trípode Profesional</td>
+                <td>1</td>
+                <td>$150.000</td>
+                <td>$150.000</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="quote-summary-table">
+            <tfoot>
+            <tr>
+                <td colspan="3"><strong>Total Materiales:</strong></td>
+                <td id="totalMaterialsPrice"></td>
+            </tr>
+            <tr>
+                <td colspan="3"><strong>Ayudantes (2 personas x 2 días):</strong></td>
+                <td id="helperCost">$400.000</td>
+            </tr>
+            <tr>
+                <td colspan="3"><strong>Supervisor (1 persona x 2 días):</strong></td>
+                <td id="supervisorCost">$300.000</td>
+            </tr>
+            <tr>
+                <td colspan="3"><strong>Mano de obra:</strong></td>
+                <td id="laborCost">$500.000</td>
+            </tr>
+            <tr>
+                <td colspan="3"><strong>Otros costos:</strong></td>
+                <td id="otherCosts">$250.000</td>
+            </tr>
+            <tr>
+                <td colspan="3"><strong>Precio Total:</strong></td>
+                <td id="totalPrice">$4,300.000</td>
+            </tr>
+            </tfoot>
+        </table>
+
+        <button id="closeQuoteDetailModal" class="modal-button">Cerrar</button>
+    </div>
+</div>
+
 <!-- Formulario cotizacion -->
 <div class="modal hidden" id="newCotizationModal">
     <div class="modal-content">
         <h2>Nueva Cotización</h2>
-        <form>
-            <label>Nombre o Razón Social</label>
-            <input type="text" placeholder="Nombre o Razón Social">
 
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox"> C.C
-                </label>
-                <label>
-                    <input type="checkbox"> Nit
-                </label>
+        <form id="quoteForm">
+            <label for="clientName">Nombre o Razón Social</label>
+            <input type="text" id="clientName" placeholder="Nombre o Razón Social" required>
+
+            <div class="document-type">
+                <input type="radio" id="cc" name="document" value="C.C">
+                <label for="cc">C.C</label>
+                <input type="radio" id="nit" name="document" value="Nit">
+                <label for="nit">Nit</label>
             </div>
 
-            <label>Teléfono</label>
-            <input type="text" placeholder="Teléfono">
+            <label for="phone">Teléfono</label>
+            <input type="text" id="phone" placeholder="Teléfono" required>
 
-            <label>Dirección</label>
-            <input type="text" placeholder="Dirección">
+            <label for="address">Dirección</label>
+            <input type="text" id="address" placeholder="Dirección">
 
-            <label>Correo</label>
-            <input type="email" placeholder="Correo Electrónico">
+            <label for="email">Correo</label>
+            <input type="email" id="email" placeholder="Correo Electrónico">
 
-            <label>Requerimiento</label>
-            <textarea placeholder="Describe tu requerimiento"></textarea>
+            <label for="requirement">Requerimiento</label>
+            <textarea id="requirement" placeholder="Describe tu requerimiento"></textarea>
 
-            <label>Visita Técnica</label>
+            <label>Visita Técnica:</label>
             <div class="radio-group">
-                <label>
-                    <input type="radio" name="visita" id="visitaSi" value="si"> Sí
-                </label>
-                <label>
-                    <input type="radio" name="visita" id="visitaNo" value="no"> No
-                </label>
+                <input type="radio" id="yes" name="visit" value="Si">
+                <label for="yes">Si</label>
+                <input type="radio" id="no" name="visit" value="No" checked>
+                <label for="no">No</label>
             </div>
 
-            <!-- Calendario -->
-            <div id="calendarContainer" class="hidden">
-                <label>Seleccione una fecha:</label>
-                <input type="text" id="calendarInput" placeholder="Seleccione una fecha" disabled readonly>
+            <label for="calendarInput">Fecha y Hora</label>
+            <input type="text" id="calendarInput" placeholder="Selecciona fecha y hora">
+
+            <h3>Productos</h3>
+            <button type="button" id="addProductButton">Agregar Producto</button>
+
+            <div id="productList">
+                <!-- Aquí se agregarán los productos dinámicamente -->
             </div>
-        </form>
-        <button id="closeModalButton" class="close-modal-button">Cerrar</button>
-    </div>
-</div>
 
-<!-- Seleccionar la hora -->
-<div class="modal hidden" id="hourSelectionModal">
-    <div class="modal-content">
-        <h2>Selecciona una hora</h2>
-        <form id="hourForm">
-            <label for="hourSelect">Horas disponibles:</label>
-            <select id="hourSelect" required>
-                <option value="9:00">9:00 AM</option>
-                <option value="10:00">10:00 AM</option>
-                <option value="11:00">11:00 AM</option>
-                <option value="1:00">1:00 PM</option>
-                <option value="3:00">3:00 PM</option>
-            </select>
-            <button type="submit" class="modal-button">Confirmar Hora</button>
-        </form>
-    </div>
-</div>
+            <h3>Mano de Obra</h3>
 
-<!-- Confirmación -->
-<div class="modal hidden" id="confirmationModal">
-    <div class="modal-content">
-        <h2>¡Visita Agendada!</h2>
-        <p>Tu visita técnica ha sido programada exitosamente.</p>
-        <button id="closeConfirmationModal" class="modal-button">Cerrar</button>
+            <label for="estimatedHours">Horas Estimadas de Trabajo</label>
+            <input type="number" id="estimatedHours" placeholder="Horas" min="0">
+
+            <label for="numAssistants">Número de Auxiliares</label>
+            <input type="number" id="numAssistants" placeholder="Número de auxiliares" min="0">
+
+            <label for="assistantSalary">Valor Salario Diario del Auxiliar</label>
+            <input type="number" id="assistantSalary" placeholder="Salario auxiliar" min="0">
+
+            <label for="supervisorFee">Valor Día Supervisor de la Obra</label>
+            <input type="number" id="supervisorFee" placeholder="Valor Supervisor" min="0">
+
+            <label for="otherCosts">Otros Costos</label>
+            <input type="number" id="otherCosts" placeholder="Otros costos" min="0">
+
+            <button type="submit" class="modal-button">Guardar Cotización</button>
+            <button type="button" id="closeNewQuoteModal" class="modal-button">Cerrar</button>
+        </form>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     const openModalButton = document.getElementById('openModalButton');
-    const closeModalButton = document.getElementById('closeModalButton');
+    const closeModalButton = document.getElementById('closeNewQuoteModal');
     const modal = document.getElementById('newCotizationModal');
-    const visitaSi = document.getElementById('visitaSi');
-    const visitaNo = document.getElementById('visitaNo');
-    const calendarContainer = document.getElementById('calendarContainer');
-    const calendarInput = document.getElementById('calendarInput');
+    const visitaSi = document.getElementById("yes");
+    const visitaNo = document.getElementById("no");
+    const calendarContainer = document.getElementById("calendarContainer");
+    const calendarInput = document.getElementById("calendarInput");
     const hourSelectionModal = document.getElementById('hourSelectionModal');
     const hourForm = document.getElementById('hourForm');
     const confirmationModal = document.getElementById('confirmationModal');
     const closeConfirmationModal = document.getElementById('closeConfirmationModal');
-
     const actionMenus = document.querySelectorAll('.action-menu');
+
+    document.getElementById("addProductButton").addEventListener("click", function() {
+        const productList = document.getElementById("productList");
+
+        const productDiv = document.createElement("div");
+        productDiv.classList.add("product-entry");
+
+        productDiv.innerHTML = `
+        <input type="text" placeholder="Nombre del producto" class="product-name" required>
+        <input type="number" placeholder="Cantidad" class="product-quantity" min="1" required>
+        <input type="number" placeholder="Precio" class="product-price" min="0" required>
+        <button type="button" class="remove-product">❌</button>
+    `;
+
+        productList.appendChild(productDiv);
+
+        const productNameInput = productDiv.querySelector(".product-name");
+        let quantityInput = productDiv.querySelector(".product-quantity");
+        const productPriceInput = productDiv.querySelector(".product-price");
+        const removeButton = productDiv.querySelector(".remove-product");
+
+        // Evento para detectar si el producto contiene "cable"
+        productNameInput.addEventListener("input", function() {
+            if (productNameInput.value.toLowerCase().includes("cable", "CABLE", "Cable")) {
+                // Reemplazar el input de cantidad por un select con opciones de metros
+                const select = document.createElement("select");
+                select.classList.add("product-quantity");
+                select.innerHTML = `
+                <option value="10">10 metros</option>
+                <option value="20">20 metros</option>
+                <option value="30">30 metros</option>
+                <option value="50">50 metros</option>
+                <option value="100">100 metros</option>
+            `;
+                quantityInput.replaceWith(select);
+                quantityInput = select; // Actualizar la referencia
+            } else {
+                // Si se borra "cable", vuelve a ser un input de cantidad normal
+                if (quantityInput.tagName === "SELECT") {
+                    const input = document.createElement("input");
+                    input.type = "number";
+                    input.classList.add("product-quantity");
+                    input.placeholder = "Cantidad";
+                    input.min = "1";
+                    quantityInput.replaceWith(input);
+                    quantityInput = input;
+                }
+            }
+        });
+
+        removeButton.addEventListener("click", function() {
+            productDiv.remove();
+        });
+    });
+
+    // Abrir modal de cotización
+    openModalButton.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    // Cerrar modal de cotización
+    closeModalButton.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    // Cerrar modal al hacer clic fuera de él
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    // COTIZACION
+    const quoteDetailModal = document.getElementById("quoteDetailModal");
+    const closeQuoteDetailModal = document.getElementById("closeQuoteDetailModal");
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener todos los botones "Ver Detalle"
+        const botonesDetalle = document.querySelectorAll('.view-quote-detail');
+
+        botonesDetalle.forEach(function(boton) {
+            boton.addEventListener('click', function(event) {
+                // Evitar que el clic en el botón se propague
+                event.stopPropagation();
+
+                // Obtener la fila correspondiente al botón clickeado
+                let fila = boton.closest('tr');
+
+                // Acceder a los datos de la fila (ID, Fecha de expiración, Nombre, Teléfono, etc.)
+                let id = fila.cells[0].textContent;
+
+                const tbody = document.getElementById("quoteDetailBody");
+                tbody.innerHTML = ""
+                console.log(id)
+                fetch(`quote/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let total = 0;
+
+                        data.forEach(detail => {
+                            total += detail.quantity * detail.total_price;
+                            const row = `
+                        <tr>
+                            <td>${detail.product_id}</td>
+                            <td>${detail.quantity}</td>
+                            <td>$${detail.total_price.toFixed(2)}</td>
+                            <td>${total}</td>
+                        </tr>
+                        `;
+                            tbody.innerHTML += row;
+                        });
+
+                        // Aquí puedes actualizar el total si tienes un campo específico en tu HTML
+                        document.getElementById("totalMaterialsPrice").textContent = `$${total.toFixed(2)}`;
+                        document.getElementById("totalPrice").textContent = `$${fila.cells[5].textContent}`;
+                        quoteDetailModal.classList.remove("hidden");
+                    })
+                    .catch(error => console.error('Error al obtener los productos:', error));
+            });
+        });
+    });
+
+    closeQuoteDetailModal.addEventListener("click", () => {
+        quoteDetailModal.classList.add("hidden");
+    });
 
     actionMenus.forEach(menu => {
         const dots = menu.querySelector('.action-dots');
         const dropdown = menu.querySelector('.action-dropdown');
 
         dots.addEventListener('click', () => {
-            // Oculta otros menús abiertos
             document.querySelectorAll('.action-dropdown').forEach(drop => {
                 if (drop !== dropdown) {
                     drop.classList.add('hidden');
                 }
             });
 
-            // Alterna el menú actual
             dropdown.classList.toggle('hidden');
         });
 
-        // Cierra el menú al hacer clic fuera
         document.addEventListener('click', (event) => {
             if (!menu.contains(event.target)) {
                 dropdown.classList.add('hidden');
@@ -206,40 +377,39 @@
         modal.classList.add('hidden');
     });
 
-    // Mostrar u ocultar calendario
-    visitaSi.addEventListener('click', () => {
-        calendarContainer.classList.remove('hidden');
-        calendarInput.disabled = false;
-    });
+    // CALENDARIO
 
-    visitaNo.addEventListener('click', () => {
-        calendarContainer.classList.add('hidden');
-        calendarInput.disabled = true;
+    let calendarInstance;
+
+    visitaNo.addEventListener("click", () => {
         calendarInput.value = "";
+        if (calendarInstance) {
+            calendarInstance.destroy();
+            calendarInstance = null;
+        }
+        calendarInput.disabled = true;
+        calendarInput.classList.add("hidden");
     });
 
-    // Inicializar calendario y manejar selección de fecha
-    flatpickr(calendarInput, {
-        enableTime: false,
-        dateFormat: "Y-m-d",
-        onChange: function (selectedDates, dateStr) {
-            modal.classList.add('hidden');
-            hourSelectionModal.classList.remove('hidden');
-        },
-    });
+    visitaSi.addEventListener("click", () => {
+        calendarInput.disabled = false;
+        calendarInput.classList.remove("hidden");
 
-    // Manejar la selección de hora
-    hourForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        hourSelectionModal.classList.add('hidden');
-        confirmationModal.classList.remove('hidden');
+        if (calendarInstance) {
+            calendarInstance.destroy();
+        }
+
+        calendarInstance = flatpickr(calendarInput, {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true
+        });
     });
 
     // Cerrar mensaje de confirmación
     closeConfirmationModal.addEventListener('click', () => {
         confirmationModal.classList.add('hidden');
     });
-
 </script>
 </body>
 </html>
