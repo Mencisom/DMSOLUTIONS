@@ -10,45 +10,11 @@
 <body>
 
 <div class="form">
-    <ul class="tab-group">
-        <li class="tab active"><a href="#signup">Registrarse</a></li>
-        <li class="tab"><a href="#login">Iniciar Sesión</a></li>
-    </ul>
 
     <div class="tab-content">
         <!-- REGISTRO -->
-        <div id="signup" class="active">
-            <h1>Registro - DM Solutions</h1>
-            <form action="/" method="post">
-                @csrf
-                <div class="top-row">
-                    <div class="field-wrap">
-                        <label>Nombre<span class="req">*</span></label>
-                        <input type="text" required autocomplete="off">
-                    </div>
-
-                    <div class="field-wrap">
-                        <label>Apellido<span class="req">*</span></label>
-                        <input type="text" required autocomplete="off">
-                    </div>
-                </div>
-
-                <div class="field-wrap">
-                    <label>Correo Electrónico<span class="req">*</span></label>
-                    <input type="email" required autocomplete="off">
-                </div>
-
-                <div class="field-wrap">
-                    <label>Contraseña<span class="req">*</span></label>
-                    <input type="password" required autocomplete="off">
-                </div>
-
-                <button type="submit" class="button button-block">Comenzar</button>
-            </form>
-        </div>
-
         <!-- INICIO DE SESIÓN -->
-        <div id="login">
+        <div id="login" class="active">
             <h1>¡Bienvenid@ de Nuevo!</h1>
             <form action="{{route('login_validation')}}" method="post">
                 @csrf
@@ -61,50 +27,12 @@
                     <label>Contraseña<span class="req">*</span></label>
                     <input type="password" name="password" required autocomplete="off">
                 </div>
-
-                <p class="forgot"><a href="#">¿Olvidaste tu contraseña?</a></p>
+                
                 <button class="button button-block" >Iniciar Sesión</button>
             </form>
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        // Mostrar solo la pestaña activa
-        $('.tab-content > div').removeClass('active').hide();
-        $('#signup').addClass('active').show();
-
-        $('.tab a').on('click', function (e) {
-            e.preventDefault();
-
-            $(this).parent().addClass('active');
-            $(this).parent().siblings().removeClass('active');
-
-            var target = $(this).attr('href');
-
-            $('.tab-content > div').removeClass('active').hide();
-            $(target).addClass('active').fadeIn(600);
-        });
-
-        // Animación cuando cambias de boton
-        $('.form').find('input').on('keyup blur focus', function (e) {
-            var $this = $(this),
-                label = $this.prev('label');
-
-            if (e.type === 'keyup') {
-                label.toggleClass('active highlight', $this.val() !== '');
-            } else if (e.type === 'blur') {
-                label.removeClass('highlight');
-                if ($this.val() === '') {
-                    label.removeClass('active');
-                }
-            } else if (e.type === 'focus') {
-                label.addClass('highlight');
-            }
-        });
-    });
-</script>
 <script>
     @isset($user)
         @if($user == null || "")

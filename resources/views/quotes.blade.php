@@ -55,9 +55,7 @@
                                     <div class="action-dropdown hidden">
                                         <button class="action-btn">Eliminar</button>
                                         <button class="action-btn">Actualizar</button>
-
-                                            <button class="action-btn view-quote-detail" id="detail-quote">Ver Detalle</button>
-
+                                        <button class="action-btn view-quote-detail" id="detail-quote">Ver Detalle</button>
                                     </div>
                                 </div>
                             </td>
@@ -80,7 +78,9 @@
                 <th>Producto</th>
                 <th>Cantidad</th>
                 <th>Precio Unitario</th>
+                <th>Proveedor</th>
                 <th>Subtotal</th>
+
             </tr>
             </thead>
             <tbody id="quoteDetailBody">
@@ -295,7 +295,7 @@
     // COTIZACION
     const quoteDetailModal = document.getElementById("quoteDetailModal");
     const closeQuoteDetailModal = document.getElementById("closeQuoteDetailModal");
-    
+
     document.addEventListener('DOMContentLoaded', function() {
         // Obtener todos los botones "Ver Detalle"
         const botonesDetalle = document.querySelectorAll('.view-quote-detail');
@@ -323,21 +323,33 @@
                             total += detail.quantity * detail.total_price;
                             const row = `
                         <tr>
-                            <td>${detail.product_id}</td>
+                            <td>${detail.prod_name}</td>
                             <td>${detail.quantity}</td>
                             <td>$${detail.total_price.toFixed(2)}</td>
+                            <td>${detail.provider_name}</td>
                             <td>${total}</td>
+
                         </tr>
                         `;
                             tbody.innerHTML += row;
                         });
-
-                        // Aquí puedes actualizar el total si tienes un campo específico en tu HTML
                         document.getElementById("totalMaterialsPrice").textContent = `$${total.toFixed(2)}`;
                         document.getElementById("totalPrice").textContent = `$${fila.cells[5].textContent}`;
-                        quoteDetailModal.classList.remove("hidden");
                     })
                     .catch(error => console.error('Error al obtener los productos:', error));
+
+                fetch(`quote/detailed/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(r => {
+                            console.log(r)
+                            document.getElementById("helperCost").textContent = `$${r.quote_helper_payday}`;
+                            document.getElementById("supervisorCost").textContent = `$${r.quote_supervisor_payday}`;
+                            document.getElementById("laborCost").textContent = `$${r.quote_work_total}`;
+                            document.getElementById("otherCosts").textContent = `$${r.quote_other_costs}`
+                        })
+                    })
+                quoteDetailModal.classList.remove("hidden");
             });
         });
     });

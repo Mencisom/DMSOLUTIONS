@@ -9,7 +9,15 @@ class QueueProductsController
 {
     public function index(Request $request){
 
-        $detail = DB::table('quote_materials')->where('quote_id',$request->id)->get();
+        $detail = DB::table('quote_detail')->where('quote_id',$request->id)->get();
+        return $detail;
+    }
+
+    public function consult(Request $r)
+    {
+        $detail = DB::table('quotes')
+            ->select('quote_helpers', 'quote_helper_payday', 'quote_supervisor_payday', 'quote_work_total','quote_other_costs')
+            ->where('id', $r->id)->get();
         return $detail;
     }
 }

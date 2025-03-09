@@ -150,16 +150,16 @@ html, body {
     display: inline-block;
     cursor: pointer;
   }
-  
+
   .action-dots {
     font-size: 1.5em;
     color: #888;
   }
-  
+
   .action-dots:hover {
     color: #000;
   }
-  
+
   /* Menú emergente oculto */
   .action-dropdown {
     position: absolute;
@@ -174,11 +174,11 @@ html, body {
     z-index: 100;
     padding: 10px;
   }
-  
+
   .action-dropdown.hidden {
     display: none;
   }
-  
+
   .action-btn {
     background: none;
     border: none;
@@ -189,11 +189,11 @@ html, body {
     cursor: pointer;
     transition: background 0.2s;
   }
-  
+
   .action-btn:hover {
     background: #f7f7f7;
   }
-  
+
 
 /* Tabla */
 .table-container {
@@ -272,7 +272,7 @@ html, body {
     margin-top: 10px;
 }
 
-.quote-detail-table th, 
+.quote-detail-table th,
 .quote-detail-table td {
     border: 1px solid #ddd;
     padding: 10px;
@@ -471,3 +471,8 @@ select.product-quantity {
 select.product-quantity::-ms-expand {
     display: none;
 }
+
+ .hidden-column {
+     visibility: hidden;
+ }
+
