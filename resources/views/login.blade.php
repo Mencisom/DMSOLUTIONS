@@ -27,7 +27,7 @@
                     <label>Contraseña<span class="req">*</span></label>
                     <input type="password" name="password" required autocomplete="off">
                 </div>
-                
+
                 <button class="button button-block" >Iniciar Sesión</button>
             </form>
         </div>

@@ -23,4 +23,5 @@ Route::get('/providers',[ProviderController::class,'index'])->name('providers');
 //detalle cotización
 Route::get('/quote/{id}',[QueueProductsController::class,'index'])->name('quote-detail');
 Route::get('/quote/detailed/{id}',[QueueProductsController::class,'consult'])->name('quote-detail-work');
+Route::post('/quote',[QuoteController::class,'store'])->name('quote-save');
 

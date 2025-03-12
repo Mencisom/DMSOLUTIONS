@@ -142,9 +142,9 @@
     <div class="modal-content">
         <h2>Nueva Cotización</h2>
 
-        <form id="quoteForm">
+        <form action="{{Route('quote-save')}}" id="quoteForm" method="POST">
             <label for="clientName">Nombre o Razón Social</label>
-            <input type="text" id="clientName" placeholder="Nombre o Razón Social" required>
+        <input type="text" name="clientName" id="clientName" placeholder="Nombre o Razón Social" required>
 
             <div class="document-type">
                 <input type="radio" id="cc" name="document" value="C.C">
@@ -153,14 +153,16 @@
                 <label for="nit">Nit</label>
             </div>
 
+            <input type="text" name="clientId" id="clientId" placeholder="Identificación" required>
+
             <label for="phone">Teléfono</label>
-            <input type="text" id="phone" placeholder="Teléfono" required>
+            <input type="text" name="phone" id="phone" placeholder="Teléfono" required>
 
             <label for="address">Dirección</label>
-            <input type="text" id="address" placeholder="Dirección">
+            <input type="text" name="address" id="address" placeholder="Dirección">
 
             <label for="email">Correo</label>
-            <input type="email" id="email" placeholder="Correo Electrónico">
+            <input type="email" name="email" id="email" placeholder="Correo Electrónico">
 
             <label for="requirement">Requerimiento</label>
             <textarea id="requirement" placeholder="Describe tu requerimiento"></textarea>
@@ -292,7 +294,7 @@
         }
     });
 
-    // COTIZACION
+    // DETALLE COTIZACION
     const quoteDetailModal = document.getElementById("quoteDetailModal");
     const closeQuoteDetailModal = document.getElementById("closeQuoteDetailModal");
 
@@ -333,7 +335,7 @@
                         `;
                             tbody.innerHTML += row;
                         });
-                        document.getElementById("totalMaterialsPrice").textContent = `$${total.toFixed(2)}`;
+                        document.getElementById("totalMaterialsPrice").textContent = `$${total}`;
                         document.getElementById("totalPrice").textContent = `$${fila.cells[5].textContent}`;
                     })
                     .catch(error => console.error('Error al obtener los productos:', error));
