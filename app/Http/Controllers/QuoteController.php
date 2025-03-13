@@ -21,7 +21,7 @@ class QuoteController
         $client = DB::table('clients')->where('client_identification',$request->input('clientId'))->get();
         $quote = new Quote();
 
-        if($client == nullOrEmptyString()){
+        if($client == null){
             $client -> id = 0;
             $client -> client_name = $request-> input('clientName');
             $client -> client_ph = $request-> input('phone');

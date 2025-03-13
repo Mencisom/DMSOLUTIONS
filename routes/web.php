@@ -23,5 +23,9 @@ Route::get('/providers',[ProviderController::class,'index'])->name('providers');
 //detalle cotización
 Route::get('/quote/{id}',[QueueProductsController::class,'index'])->name('quote-detail');
 Route::get('/quote/detailed/{id}',[QueueProductsController::class,'consult'])->name('quote-detail-work');
+//Cotización
 Route::post('/quote',[QuoteController::class,'store'])->name('quote-save');
 
+//Cliente
+Route::post('clients/create',[ClientController::class,'store'])->name('client-save');
+Route::delete('clients/{client}',[ClientController::class,'destroy'])->name('client-delete');

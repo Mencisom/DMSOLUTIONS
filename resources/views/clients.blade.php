@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{asset('css/clients.css')}}">
 </head>
+@if(session('status'))
+    <script>
+        alert("{{session('status')}}")
+    </script>
+@endif
 <body>
 <div class="container">
     <!-- Barra lateral -->
@@ -48,7 +53,11 @@
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
-                                        <button class="action-btn">Eliminar</button>
+                                        <form action="{{route('client-delete',$client)}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="action-btn">Eliminar</button>
+                                        </form>
                                         <button class="action-btn">Actualizar</button>
                                     </div>
                                 </div>
@@ -66,27 +75,26 @@
 <div class="modal hidden" id="clientModal">
     <div class="modal-content">
         <h2>Agregar Cliente</h2>
-        <form id="clientForm">
-
-            <label for="clientId">ID:</label>
-            <input type="text" id="clientId" required>
-
+        <br>
+        <form id="clientForm" method="POST" action="{{route('client-save')}}">
+            @csrf
             <label for="clientName">Nombre:</label>
-            <input type="text" id="clientName" required>
+            <input type="text" name="clientName" id="clientName" value="{{old('clientName')}}" required>
 
             <label for="clientPhone">Teléfono:</label>
-            <input type="text" id="clientPhone" required>
+            <input type="text" name="clientPhone" id="clientPhone" value="{{old('clientPhone')}}" required>
 
             <label for="clientEmail">Email:</label>
-            <input type="email" id="clientEmail" required>
+            <input type="email" name="clientEmail" id="clientEmail" value="{{old('clientEmail')}}" required>
 
             <label for="clientIdentification">Identificación:</label>
-            <input type="text" id="clientIdentification" required>
+            <input type="text" name="clientIdentification" id="clientIdentification" value="{{old('clientIdentification')}}" required>
 
             <label for="clientAddress">Dirección:</label>
-            <input type="text" id="clientAddress" required>
+            <input type="text" name="clientAddress" id="clientAddress" value="{{old('clientAddress')}}" required>
 
             <button type="submit">Guardar Cliente</button>
+
             <button type="button" id="closeFormButton" class="close-form-button">Cerrar</button>
 
         </form>
@@ -140,24 +148,38 @@
         });
     });
 
-    document.getElementById('clientForm').addEventListener('submit', (event) => {
+    /*document.getElementById('clientForm').addEventListener('submit', async (event) => {
         event.preventDefault();
-
-        const name = document.getElementById('clientName').value;
-        const id = document.getElementById('clientId').value;
-        const phone = document.getElementById('clientPhone').value;
-        const email = document.getElementById('clientEmail').value;
-        const identification = document.getElementById('clientIdentification').value;
-        const address = document.getElementById('clientAddress').value;
-
-        if (name && id && phone && email && identification && address) {
-            alert('Cliente guardado con éxito');
-            document.getElementById('clientModal').classList.add('hidden');
-            document.getElementById('clientForm').reset();
-        } else {
-            alert('Por favor completa todos los campos.');
+        const data = {
+            clientName: document.getElementById('clientName').value,
+            clientPhone: document.getElementById('clientPhone').value,
+            clientEmail: document.getElementById('clientEmail').value,
+            clientIdentification: document.getElementById('clientIdentification').value,
+            clientAddress: document.getElementById('clientAddress').value,
+            token: document.getElementsByName('_token').value
         }
-    });
+        try {
+            const response = await fetch('clients/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Si necesitas incluir un token CSRF en Laravel (para proteger de CSRF), añade este encabezado:
+                    'X-CSRF-TOKEN':data.token
+                },
+                body: JSON.stringify(data)  // Enviar los datos en el cuerpo de la solicitud
+            });
+
+            // Verificar si la respuesta es exitosa
+            if (response.ok) {
+                const result = await response.json();  // Obtener la respuesta como JSON
+                alert('Mensaje desde el servidor:'+result.message);
+            } else {
+                alert('Hubo un problema con la solicitud');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });*/
 </script>
 </body>
 </html>
