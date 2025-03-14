@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Quote;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 
 class QuoteController
 {
@@ -51,5 +53,28 @@ class QuoteController
         $quote -> quote_total = $quote ->quote_work_total + $quote -> quote_other_costs + $quote -> quote_material_total;
         $quote ->  quote_expiration_date ="2026-02-17";
         $quote -> save();
+    }
+
+    public function export(Request $request){
+
+        $quote = DB::table('quote_client')->where('id',$request->quote) ->get();
+        $detail = DB::table('quote_detail')->where('quote_id',$request->quote)->get();
+        echo ($quote);
+        $data = [
+            'title' => 'Cotización',
+            'content' => 'Este es un ejemplo de cómo generar un PDF con Laravel.',
+            'logo'=>public_path('Images/logo/logo.png'),
+            'quote' => $quote,
+            'detail' => $detail
+        ];
+
+        // Generar el PDF a partir de la vista
+        $pdf = PDF::loadView('pdf', $data);
+
+        // Retornar el PDF directamente al navegador
+        return $pdf->stream('archivo_generado.pdf');
+
+        // O guardar el archivo en el sistema de archivos
+        // return $pdf->download('archivo_generado.pdf');
     }
 }

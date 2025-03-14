@@ -53,9 +53,12 @@
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
-                                        <button class="action-btn">Eliminar</button>
                                         <button class="action-btn">Actualizar</button>
+                                        <button class="action-btn">Eliminar</button>
                                         <button class="action-btn view-quote-detail" id="detail-quote">Ver Detalle</button>
+                                        <a href="{{route('quote-export',$quote->id)}}">
+                                            <button class="action-btn">Exportar</button>
+                                        </a>
                                     </div>
                                 </div>
                             </td>
@@ -322,15 +325,14 @@
                         let total = 0;
 
                         data.forEach(detail => {
-                            total += detail.quantity * detail.total_price;
+                            total += detail.quantity * detail.prod_price_sales;
                             const row = `
                         <tr>
                             <td>${detail.prod_name}</td>
                             <td>${detail.quantity}</td>
-                            <td>$${detail.total_price.toFixed(2)}</td>
+                            <td>$${detail.prod_price_sales.toFixed(2)}</td>
                             <td>${detail.provider_name}</td>
                             <td>${total}</td>
-
                         </tr>
                         `;
                             tbody.innerHTML += row;
