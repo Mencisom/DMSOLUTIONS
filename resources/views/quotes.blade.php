@@ -225,30 +225,47 @@
     const confirmationModal = document.getElementById('confirmationModal');
     const closeConfirmationModal = document.getElementById('closeConfirmationModal');
     const actionMenus = document.querySelectorAll('.action-menu');
-
     document.getElementById("addProductButton").addEventListener("click", function() {
-        const productList = document.getElementById("productList");
+        cargarProductos();
+    });
 
+    document.getElementById("addProductButton").addEventListener("click", function () {
+        const productList = document.getElementById("productList");
         const productDiv = document.createElement("div");
         productDiv.classList.add("product-entry");
 
         productDiv.innerHTML = `
-        <input type="text" placeholder="Nombre del producto" class="product-name" required>
+       <select name="products" class="product-list">
+            <option value="">Cargando productos...</option>
+        </select>
         <input type="number" placeholder="Cantidad" class="product-quantity" min="1" required>
-        <input type="number" placeholder="Precio" class="product-price" min="0" required>
+        <input type="text" placeholder="Precio" class="product-price" min="0" required value="0">
         <button type="button" class="remove-product">❌</button>
+
     `;
 
         productList.appendChild(productDiv);
 
+        const productPriceInput = productDiv.querySelector(".product-price");
         const productNameInput = productDiv.querySelector(".product-name");
         let quantityInput = productDiv.querySelector(".product-quantity");
-        const productPriceInput = productDiv.querySelector(".product-price");
+        const productSelect = productDiv.querySelector(".product-list");
         const removeButton = productDiv.querySelector(".remove-product");
-
-        // Evento para detectar si el producto contiene "cable"
-        productNameInput.addEventListener("input", function() {
-            if (productNameInput.value.toLowerCase().includes("cable", "CABLE", "Cable")) {
+        cargarProductos(productSelect);
+        console.log("sexooo",productSelect)
+        productSelect.addEventListener("change", function() {
+            console.log("Producto seleccionado:", productSelect.options[productSelect.selectedIndex].text);
+            console.log("Precio del producto seleccionado:", productSelect.value);
+            console.log("LA MONDA TIENE VALOR", productPriceInput.value)
+            console.log("Producto seleccionado:", productSelect.options[productSelect.selectedIndex].text);
+            console.log("Precio del producto seleccionado:", productSelect.value);
+            productPriceInput.value = productSelect.value;
+            console.log("LA MONDA TIENE VALOR", productPriceInput.value)
+        })
+// Evento para detectar si el producto contiene "cable"
+        productSelect.addEventListener("change", function() {
+            const nameselect = productSelect.options[productSelect.selectedIndex].text
+            if (nameselect.toLowerCase().includes("cable", "CABLE", "Cable")) {
                 // Reemplazar el input de cantidad por un select con opciones de metros
                 const select = document.createElement("select");
                 select.classList.add("product-quantity");
@@ -426,6 +443,27 @@
     closeConfirmationModal.addEventListener('click', () => {
         confirmationModal.classList.add('hidden');
     });
+    function cargarProductos(selectElement) {
+    fetch("{{route('quoteproducts')}}")
+    .then(response => response.json())
+        .then(data => {
+             selectElement.innerHTML = '<option value="">Selecciona un producto</option>';
+            if (data.success && Array.isArray(data.data)) {
+
+                data.data.forEach(producto => {
+                    const option = document.createElement("option");
+                    option.value = producto.prod_price_sales;
+                    option.textContent = producto.prod_name;
+                    selectElement.appendChild(option);
+                });
+            } else {
+                console.error("Error en la respuesta del servidor:", data.message || "Formato incorrecto");
+            }
+        })
+        .catch(error => console.error("Error al cargar los productos:", error));
+}
+
+
 </script>
 </body>
 </html>

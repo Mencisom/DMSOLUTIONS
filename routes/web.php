@@ -22,7 +22,7 @@ Route::get('/providers',[ProviderController::class,'index'])->name('providers');
 //login
 Route::view('/','login')->name('login');
 Route::post('/', [UserController::class, 'login'])->name('login_validation');
-
+Route::get('/quote/addproduct',[ProductController::class,'consult'])->name('quoteproducts');
 //detalle cotización
 Route::get('/quote/{id}',[QueueProductsController::class,'index'])->name('quote-detail');
 Route::get('/quote/detailed/{id}',[QueueProductsController::class,'consult'])->name('quote-detail-work');
