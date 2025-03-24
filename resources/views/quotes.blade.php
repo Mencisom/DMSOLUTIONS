@@ -48,7 +48,7 @@
                             <td>{{$quote->client_name}}</td>
                             <td>{{$quote->client_ph}}</td>
                             <td>{{$quote->quote_estimated_time}}</td>
-                            <td>{{$quote->quote_total}}</td>
+                            <td>{{number_format($quote->quote_total)}}</td>
                             <td>
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
