@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quotes - DM Solutions</title>
@@ -145,9 +146,10 @@
     <div class="modal-content">
         <h2>Nueva Cotización</h2>
 
-        <form action="{{Route('quote-save')}}" id="quoteForm" method="POST">
+        <form  id="quoteForm" action="{{ route('quote-save') }}" method="POST" >
+            @csrf
             <label for="clientName">Nombre o Razón Social</label>
-        <input type="text" name="clientName" id="clientName" placeholder="Nombre o Razón Social" required>
+            <input type="text" name="clientName" id="clientName" placeholder="Nombre o Razón Social" required>
 
             <div class="document-type">
                 <input type="radio" id="cc" name="document" value="C.C">
@@ -162,13 +164,29 @@
             <input type="text" name="phone" id="phone" placeholder="Teléfono" required>
 
             <label for="address">Dirección</label>
-            <input type="text" name="address" id="address" placeholder="Dirección">
+            <input type="text" name="address" id="address" placeholder="Dirección" required>
 
             <label for="email">Correo</label>
-            <input type="email" name="email" id="email" placeholder="Correo Electrónico">
-
+            <input type="email" name="email" id="email" placeholder="Correo Electrónico"required>
             <label for="requirement">Requerimiento</label>
-            <textarea id="requirement" placeholder="Describe tu requerimiento"></textarea>
+            <textarea id="requirement" name="requirement" placeholder="Describe tu requerimiento"></textarea>
+
+            <h3>Mano de Obra</h3>
+
+            <label for="estimatedHours">Horas Estimadas de Trabajo</label>
+            <input type="number" id="estimatedHours" name="estimatedHours" placeholder="Horas" min="0">
+
+            <label for="numAssistants">Número de Auxiliares</label>
+            <input type="number" id="numAssistants" name="numAssistants" placeholder="Número de auxiliares" min="0">
+
+            <label for="assistantSalary">Valor Salario Diario del Auxiliar</label>
+            <input type="number" id="assistantSalary" name="assistantSalary" placeholder="Salario auxiliar" min="0">
+
+            <label for="supervisorFee">Valor Día Supervisor de la Obra</label>
+            <input type="number" id="supervisorFee" name="supervisorFee" placeholder="Valor Supervisor" min="0">
+
+            <label for="otherCosts">Otros Costos</label>
+            <input type="number" id="otherCosts" name="otherCosts" placeholder="Otros costos" min="0">
 
             <label>Visita Técnica:</label>
             <div class="radio-group">
@@ -179,40 +197,28 @@
             </div>
 
             <label for="calendarInput">Fecha y Hora</label>
-            <input type="text" id="calendarInput" placeholder="Selecciona fecha y hora">
+            <input name="calendar" type="text" id="calendarInput" placeholder="Selecciona fecha y hora">
 
             <h3>Productos</h3>
             <button type="button" id="addProductButton">Agregar Producto</button>
+
 
             <div id="productList">
                 <!-- Aquí se agregarán los productos dinámicamente -->
             </div>
 
-            <h3>Mano de Obra</h3>
 
-            <label for="estimatedHours">Horas Estimadas de Trabajo</label>
-            <input type="number" id="estimatedHours" placeholder="Horas" min="0">
-
-            <label for="numAssistants">Número de Auxiliares</label>
-            <input type="number" id="numAssistants" placeholder="Número de auxiliares" min="0">
-
-            <label for="assistantSalary">Valor Salario Diario del Auxiliar</label>
-            <input type="number" id="assistantSalary" placeholder="Salario auxiliar" min="0">
-
-            <label for="supervisorFee">Valor Día Supervisor de la Obra</label>
-            <input type="number" id="supervisorFee" placeholder="Valor Supervisor" min="0">
-
-            <label for="otherCosts">Otros Costos</label>
-            <input type="number" id="otherCosts" placeholder="Otros costos" min="0">
-
+            <input type="hidden" name="products" id="hiddenProducts">
             <button type="submit" class="modal-button">Guardar Cotización</button>
             <button type="button" id="closeNewQuoteModal" class="modal-button">Cerrar</button>
         </form>
     </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    let productList = [];
     const openModalButton = document.getElementById('openModalButton');
     const closeModalButton = document.getElementById('closeNewQuoteModal');
     const modal = document.getElementById('newCotizationModal');
@@ -227,7 +233,9 @@
     const actionMenus = document.querySelectorAll('.action-menu');
     document.getElementById("addProductButton").addEventListener("click", function() {
         cargarProductos();
+
     });
+
 
     document.getElementById("addProductButton").addEventListener("click", function () {
         const productList = document.getElementById("productList");
@@ -235,11 +243,11 @@
         productDiv.classList.add("product-entry");
 
         productDiv.innerHTML = `
-       <select name="products" class="product-list">
-            <option value="">Cargando productos...</option>
+       <select  class="product-list">
+            <option value="" required>Cargando productos...</option>
         </select>
-        <input type="number" placeholder="Cantidad" class="product-quantity" min="1" required>
-        <input type="text" placeholder="Precio" class="product-price" min="0" required value="0">
+        <input  type="number" placeholder="Cantidad" class="product-quantity" min="1" required>
+        <input  type="number" placeholder="Precio" class="product-price" min="0" required value="0">
         <button type="button" class="remove-product">❌</button>
 
     `;
@@ -247,20 +255,14 @@
         productList.appendChild(productDiv);
 
         const productPriceInput = productDiv.querySelector(".product-price");
-        const productNameInput = productDiv.querySelector(".product-name");
         let quantityInput = productDiv.querySelector(".product-quantity");
         const productSelect = productDiv.querySelector(".product-list");
         const removeButton = productDiv.querySelector(".remove-product");
         cargarProductos(productSelect);
-        console.log("sexooo",productSelect)
+
+
         productSelect.addEventListener("change", function() {
-            console.log("Producto seleccionado:", productSelect.options[productSelect.selectedIndex].text);
-            console.log("Precio del producto seleccionado:", productSelect.value);
-            console.log("LA MONDA TIENE VALOR", productPriceInput.value)
-            console.log("Producto seleccionado:", productSelect.options[productSelect.selectedIndex].text);
-            console.log("Precio del producto seleccionado:", productSelect.value);
-            productPriceInput.value = productSelect.value;
-            console.log("LA MONDA TIENE VALOR", productPriceInput.value)
+             productPriceInput.value = productSelect.value;
         })
 // Evento para detectar si el producto contiene "cable"
         productSelect.addEventListener("change", function() {
@@ -269,7 +271,9 @@
                 // Reemplazar el input de cantidad por un select con opciones de metros
                 const select = document.createElement("select");
                 select.classList.add("product-quantity");
+                // select.name = "quantity";
                 select.innerHTML = `
+                <option value="0">Elija</option>
                 <option value="10">10 metros</option>
                 <option value="20">20 metros</option>
                 <option value="30">30 metros</option>
@@ -290,12 +294,34 @@
                     quantityInput = input;
                 }
             }
+
+            quantityInput.addEventListener("input", function () {
+                addProductToList(productSelect.options[productSelect.selectedIndex].text, quantityInput.value, productPriceInput.value);
+            });
+
+
         });
 
         removeButton.addEventListener("click", function() {
+            let index = Array.from(productList.children).indexOf(productDiv);
+            removeProductFromList(index);
             productDiv.remove();
+
         });
     });
+
+    /////////
+    function addProductToList(productId, quantity, price) {
+        productList.push({ id: productId, quantity: quantity, price: price });
+        document.getElementById("hiddenProducts").value = JSON.stringify(productList);
+    }
+    ///////////////////////////
+    function removeProductFromList(index) {
+        productList.splice(index, 1);
+        document.getElementById("hiddenProducts").value = JSON.stringify(productList);
+    }
+
+    ////////////
 
     // Abrir modal de cotización
     openModalButton.addEventListener('click', () => {
@@ -313,6 +339,8 @@
             modal.classList.add('hidden');
         }
     });
+    //
+
 
     // DETALLE COTIZACION
     const quoteDetailModal = document.getElementById("quoteDetailModal");
@@ -443,25 +471,27 @@
     closeConfirmationModal.addEventListener('click', () => {
         confirmationModal.classList.add('hidden');
     });
-    function cargarProductos(selectElement) {
-    fetch("{{route('quoteproducts')}}")
-    .then(response => response.json())
-        .then(data => {
-             selectElement.innerHTML = '<option value="">Selecciona un producto</option>';
-            if (data.success && Array.isArray(data.data)) {
 
-                data.data.forEach(producto => {
-                    const option = document.createElement("option");
-                    option.value = producto.prod_price_sales;
-                    option.textContent = producto.prod_name;
-                    selectElement.appendChild(option);
-                });
-            } else {
-                console.error("Error en la respuesta del servidor:", data.message || "Formato incorrecto");
-            }
-        })
-        .catch(error => console.error("Error al cargar los productos:", error));
-}
+
+    function cargarProductos(selectElement) {
+        fetch("{{route('quoteproducts')}}")
+            .then(response => response.json())
+            .then(data => {
+                selectElement.innerHTML = '<option value="">Selecciona un producto</option>';
+                if (data.success && Array.isArray(data.data)) {
+
+                    data.data.forEach(producto => {
+                        const option = document.createElement("option");
+                        option.value = producto.prod_price_sales;
+                        option.textContent = producto.prod_name;
+                        selectElement.appendChild(option);
+                    });
+                } else {
+                    console.error("Error en la respuesta del servidor:", data.message || "Formato incorrecto");
+                }
+            })
+            .catch(error => console.error("Error al cargar los productos:", error));
+    }
 
 
 </script>

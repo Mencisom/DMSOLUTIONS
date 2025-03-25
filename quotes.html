@@ -53,7 +53,7 @@
                 <i class="fas fa-truck menu-icon"></i>
                 <span class="menu-text">Proveedores</span>
             </a>
-        </li> 
+        </li>
         </ul>
       </nav>
       <div class="logout-section">
@@ -120,7 +120,7 @@
   <div class="modal hidden" id="quoteDetailModal">
     <div class="modal-content">
       <h2>Detalle de Cotización</h2>
-      
+
       <table class="quote-detail-table">
         <thead>
           <tr>
@@ -275,7 +275,7 @@
     productDiv.classList.add("product-entry");
 
     productDiv.innerHTML = `
-        <input type="text" placeholder="Nombre del producto" class="product-name" required>
+<!--        <input type="text" placeholder="Nombre del producto" class="product-name" required>-->
         <input type="number" placeholder="Cantidad" class="product-quantity" min="1" required>
         <input type="number" placeholder="Precio" class="product-price" min="0" required>
         <button type="button" class="remove-product">❌</button>
@@ -312,7 +312,7 @@
                 input.placeholder = "Cantidad";
                 input.min = "1";
                 quantityInput.replaceWith(input);
-                quantityInput = input; 
+                quantityInput = input;
             }
         }
     });
@@ -346,7 +346,7 @@
     document.querySelectorAll(".view-quote-detail").forEach(button => {
       button.addEventListener("click", () => {
         const tbody = document.getElementById("quoteDetailBody");
-        tbody.innerHTML = ""; 
+        tbody.innerHTML = "";
 
         const sampleProducts = [
           { name: "Cámara Sony A7", quantity: 2, price: 1200 },
@@ -409,22 +409,22 @@
     });
 
     // CALENDARIO
-    
+
     let calendarInstance;
 
     visitaNo.addEventListener("click", () => {
-    calendarInput.value = ""; 
+    calendarInput.value = "";
     if (calendarInstance) {
     calendarInstance.destroy();
     calendarInstance = null;
     }
-    calendarInput.disabled = true; 
-    calendarInput.classList.add("hidden"); 
+    calendarInput.disabled = true;
+    calendarInput.classList.add("hidden");
     });
 
     visitaSi.addEventListener("click", () => {
-    calendarInput.disabled = false; 
-    calendarInput.classList.remove("hidden"); 
+    calendarInput.disabled = false;
+    calendarInput.classList.remove("hidden");
 
     if (calendarInstance) {
     calendarInstance.destroy();
@@ -441,7 +441,7 @@
     closeConfirmationModal.addEventListener('click', () => {
       confirmationModal.classList.add('hidden');
     });
-    
+
 
 </script>
 </body>
