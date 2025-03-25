@@ -50,4 +50,24 @@ class ClientController
         $client->delete();
         return to_route('clients');
     }
+
+    public function update(Request $request)
+    {
+        $message = "";
+        $client = Client::where('client_identification',$request->input('clientIdentification'))->get()->first();
+        $client -> client_name = $request->input('clientName');
+        $client -> client_ph = $request->input('clientPhone');
+        $client -> client_sec_ph = null;
+        $client -> client_email = $request->input('clientEmail');
+        $client -> client_identification = $request->input('clientIdentification');
+        $client -> client_address = $request->input('clientAddress');
+        try {
+            $client -> save();
+            $message = 'Client successfully updated!';
+        }catch (Exception $e) {
+            $message = $e->getCode();
+        }
+
+        return to_route('clients')->with('status', $message);
+    }
 }

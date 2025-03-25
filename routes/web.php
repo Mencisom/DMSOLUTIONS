@@ -37,4 +37,5 @@ Route::get('/quote/export/{quote}',[QuoteController::class,'export'])->name('quo
 Route::get('/clients',[ClientController::class,'index'])->name('clients');
 Route::post('clients/create',[ClientController::class,'store'])->name('client-save');
 Route::delete('clients/{client}',[ClientController::class,'destroy'])->name('client-delete');
+Route::patch('clients/update',[ClientController::class,'update'])->name('client-update');
 //

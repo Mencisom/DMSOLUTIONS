@@ -53,7 +53,7 @@
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
-                                        <button class="action-btn">Actualizar</button>
+                                        <button class="action-btn view-update-client" id="open-update-btn">Actualizar</button>
                                         <form action="{{route('client-delete',$client)}}" method="POST">
                                             @csrf
                                             @method('DELETE')
@@ -74,7 +74,7 @@
 <!-- Modal para agregar cliente -->
 <div class="modal hidden" id="clientModal">
     <div class="modal-content">
-        <h2>Agregar Cliente</h2>
+        <h2>Actualizar Cliente</h2>
         <br>
         <form id="clientForm" method="POST" action="{{route('client-save')}}">
             @csrf
@@ -96,6 +96,36 @@
             <button type="submit">Guardar Cliente</button>
 
             <button type="button" id="closeFormButton" class="close-form-button">Cerrar</button>
+
+        </form>
+    </div>
+</div>
+
+<!-- Modal para actualizar cliente -->
+<div class="modal hidden" id="clientUpdate">
+    <div class="modal-content">
+        <h2>Agregar Cliente</h2>
+        <br>
+        <form id="clientForm" method="POST" action="{{ route('client-update') }}">
+            @csrf @method('PATCH')
+            <label for="clientName">Nombre:</label>
+            <input type="text" name="clientName" id="update-clientName" value="{{old('clientName')}}" required>
+
+            <label for="clientPhone">Teléfono:</label>
+            <input type="text" name="clientPhone" id="update-clientPhone" value="{{old('clientPhone')}}" required>
+
+            <label for="clientEmail">Email:</label>
+            <input type="email" name="clientEmail" id="update-clientEmail" value="{{old('clientEmail')}}" required>
+
+            <label for="clientIdentification">Identificación:</label>
+            <input type="text" name="clientIdentification" id="update-clientIdentification" value="{{old('clientIdentification')}}" required>
+
+            <label for="clientAddress">Dirección:</label>
+            <input type="text" name="clientAddress" id="update-clientAddress" value="{{old('clientAddress')}}" required>
+
+            <button type="submit" id="updateButton">Actualizar Cliente</button>
+
+            <button type="button" id="closeUpdateButton" class="close-form-button">Cerrar</button>
 
         </form>
     </div>
@@ -125,6 +155,45 @@
         });
     });
 
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById("clientUpdate");
+        const openModalButton = document.getElementById("open-update-btn");
+        const closeFormButton = document.getElementById("closeUpdateButton");
+        const botonesDetalle = document.querySelectorAll('.view-update-client');
+
+        botonesDetalle.forEach(function(boton) {
+            boton.addEventListener('click', function(event) {
+                // Evitar que el clic en el botón se propague
+                event.stopPropagation();
+
+                // Obtener la fila correspondiente al botón clickeado
+                let fila = boton.closest('tr');
+
+                // Acceder a los datos de la fila (ID, Fecha de expiración, Nombre, Teléfono, etc.)
+                document.getElementById("update-clientName").setAttribute("value",fila.cells[1].textContent);
+                document.getElementById("update-clientPhone").setAttribute("value",fila.cells[2].textContent);
+                document.getElementById("update-clientEmail").setAttribute("value",fila.cells[3].textContent);
+                document.getElementById("update-clientIdentification").setAttribute("value",fila.cells[4].textContent);
+                document.getElementById("update-clientAddress").setAttribute("value",fila.cells[5].textContent);
+
+                modal.classList.remove("hidden");
+            });
+        });
+
+        // Cierra el modal al hacer clic en "Cerrar"
+        closeFormButton.addEventListener("click", () => {
+            modal.classList.add("hidden");
+        });
+
+        // Cierra el modal si el usuario hace clic fuera del contenido del modal
+        window.addEventListener("click", (event) => {
+            if (event.target === modal) {
+                modal.classList.add("hidden");
+            }
+        });
+    });
+
+
     const actionMenus = document.querySelectorAll('.action-menu');
 
     actionMenus.forEach(menu => {
@@ -147,6 +216,25 @@
             }
         });
     });
+
+   /* document.addEventListener('DOMContentLoaded',function (){
+        document.getElementById('updateButton').addEventListener('click',function () {
+            const client = document.getElementById('update-clientIdentification').getAttribute("value");
+            console.log("sexo anal duro",client)
+            try{
+                fetch(`clients/${client}/update`)
+                .then(response => response.json())
+                if (response.ok) {
+                    alert('Cliente actualizado exitosamente');
+                } else {
+                    alert('Hubo un problema con la solicitud');
+                }
+            }
+            catch (error){
+                alert('Error'+error);
+            }
+        })
+    });*/
 
     /*document.getElementById('clientForm').addEventListener('submit', async (event) => {
         event.preventDefault();
