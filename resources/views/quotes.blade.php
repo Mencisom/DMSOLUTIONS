@@ -206,8 +206,16 @@
             <div id="productList">
                 <!-- Aquí se agregarán los productos dinámicamente -->
             </div>
-
-
+            @if(session('error'))
+                <script>
+                    alert("{{ session('error') }}");
+                </script>
+            @endif
+            @if(session('success'))
+                <script>
+                    alert("{{ session('success') }}");
+                </script>
+            @endif
             <input type="hidden" name="products" id="hiddenProducts">
             <button type="submit" class="modal-button">Guardar Cotización</button>
             <button type="button" id="closeNewQuoteModal" class="modal-button">Cerrar</button>
