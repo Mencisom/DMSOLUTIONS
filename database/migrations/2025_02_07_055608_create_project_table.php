@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('proj_name');
             $table->date('proj_start_date');
             $table->date('proj_end_date');
-            $table->boolean('proj_visit');
+            $table->dateTime('proj_visit')->nullable();
             $table->double('proj_deposit');
-            $table->date('proj_warranty');
+            $table->date('proj_warranty')->nullable();
             $table->foreignId('status_id')->references('id')->on('statuses');
             $table->timestamps();
         });

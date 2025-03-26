@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('product_id')->references('id')->on('products');
             $table->primary(['quote_id', 'product_id']);
             $table->double('quantity');
+            $table->double('unit_price');
             $table->double('total_price');
             $table->timestamps();
         });

@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="{{asset('css/quotes.css')}}">
 </head>
+@if(session('status'))
+    <script>
+        alert("{{session('status')}}")
+    </script>
+@endif
 <body>
 <div class="container">
     <!-- Barra lateral -->
@@ -57,6 +62,7 @@
                                         <button class="action-btn">Actualizar</button>
                                         <button class="action-btn">Eliminar</button>
                                         <button class="action-btn view-quote-detail" id="detail-quote">Ver Detalle</button>
+                                        <button class="action-btn become-project">pasar a proyecto</button>
                                         <a href="{{route('quote-export',$quote->id)}}">
                                             <button class="action-btn">Exportar</button>
                                         </a>
@@ -188,17 +194,17 @@
             <label for="otherCosts">Otros Costos</label>
             <input type="number" id="otherCosts" name="otherCosts" placeholder="Otros costos" min="0">
 
-            <label>Visita Técnica:</label>
+           {{-- <label>Visita Técnica:</label>
             <div class="radio-group">
                 <input type="radio" id="yes" name="visit" value="Si">
                 <label for="yes">Si</label>
                 <input type="radio" id="no" name="visit" value="No" checked>
                 <label for="no">No</label>
-            </div>
+            </div>--}}
 
-            <label for="calendarInput">Fecha y Hora</label>
+            {{--<label for="calendarInput">Fecha y Hora</label>
             <input name="calendar" type="text" id="calendarInput" placeholder="Selecciona fecha y hora">
-
+--}}4
             <h3>Productos</h3>
             <button type="button" id="addProductButton">Agregar Producto</button>
 
@@ -213,7 +219,44 @@
             <button type="button" id="closeNewQuoteModal" class="modal-button">Cerrar</button>
         </form>
     </div>
+</div>
 
+<!--Convertir a Cotización-->
+<div class="modal hidden" id="becomeProjectModal">
+    <div class="modal-content">
+        <h1>PROYECTO NUEVO: </h1> <br>
+        <form id="ProjectForm" method="POST" action="{{route('project-save')}}">
+            @csrf
+            <input type="hidden" name="hiddenQuoteId" id="hiddenQuoteId">
+            <label>Visita Técnica:</label>
+            <div class="radio-group">
+                <input type="radio" id="yes" name="visit" value="Si">
+                <label for="yes">Si</label>
+                <input type="radio" id="no" name="visit" value="No" checked>
+                <label for="no">No</label>
+            </div>
+            <label for="calendarInput">Fecha y Hora</label>
+            <input name="calendar" type="text" id="calendarInput" placeholder="Selecciona fecha y hora">
+
+            <label>Nombre del proyecto:</label>
+            <input name="projName" type="text" id="proj-name" required>
+
+            <label>Fecha de inicio:</label>
+            <input name="projStartDate" type="date" id="proj-start" required>
+
+            <label>Fecha de finalización:</label>
+            <input name="projEndDate" type="date" id="proj-end" required>
+
+            <label>Anticipo:</label>
+            <input name="projDeposit" type="number" id="proj-deposit" required>
+
+            <label>Garantía:</label>
+            <input name="projWarranty" type="date" id="proj-warranty" required>
+
+            <button type="submit" class="modal-button">Guardar Cotización</button>
+            <button type="button" id="closeBecomeProjectModal" class="modal-button">Cerrar</button>
+        </form>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -370,12 +413,12 @@
                         let total = 0;
 
                         data.forEach(detail => {
-                            total += detail.quantity * detail.prod_price_sales;
+                            total += detail.quantity * detail.unit_price;
                             const row = `
                         <tr>
                             <td>${detail.prod_name}</td>
                             <td>${detail.quantity}</td>
-                            <td>$${detail.prod_price_sales.toFixed(2)}</td>
+                            <td>$${detail.unit_price.toFixed(2)}</td>
                             <td>${detail.provider_name}</td>
                             <td>${total}</td>
                         </tr>
@@ -466,6 +509,43 @@
             time_24hr: true
         });
     });
+    //Consultar si ya es Proyecto
+    const openModalProject = document.getElementById("becomeProjectModal"); // Selecciona el modal
+    const closeProjectModalButton = document.getElementById('closeBecomeProjectModal'); // Botón de cerrar el modal
+    document.addEventListener('DOMContentLoaded', function() {
+        const botonesProyecto = document.querySelectorAll('.become-project');
+
+        botonesProyecto.forEach(function(boton) {
+            boton.addEventListener('click', function(event) {
+                // Evitar que el clic en el botón se propague
+                event.stopPropagation();
+                let fila = boton.closest('tr');
+                let project = fila.cells[0].textContent;
+                document.getElementById("hiddenQuoteId").value = project;
+                console.log(project);
+                fetch(`projects/${project}`)
+                    .then(response => {
+                        if (!response.ok){
+                            openModalProject.classList.remove("hidden");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        alert(`Cotización ya creada bajo id: ${data.data.id} y nombre: ${data.data.proj_name}`);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error.message);
+                    })
+            });
+        });
+    });
+
+    //Cerrar modal proyecto
+    closeProjectModalButton.addEventListener('click', () => {
+        openModalProject.classList.add('hidden');
+    });
+
 
     // Cerrar mensaje de confirmación
     closeConfirmationModal.addEventListener('click', () => {
@@ -492,8 +572,6 @@
             })
             .catch(error => console.error("Error al cargar los productos:", error));
     }
-
-
 </script>
 </body>
 </html>
