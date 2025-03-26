@@ -112,7 +112,6 @@ class QuoteController
 
         $quote = DB::table('quote_client')->where('id',$request->quote) ->get();
         $detail = DB::table('quote_detail')->where('quote_id',$request->quote)->get();
-        echo ($quote);
         $data = [
             'title' => 'Cotización',
             'content' => 'Este es un ejemplo de cómo generar un PDF con Laravel.',
@@ -121,13 +120,10 @@ class QuoteController
             'detail' => $detail
         ];
 
-        // Generar el PDF a partir de la vista
         $pdf = PDF::loadView('pdf', $data);
 
-        // Retornar el PDF directamente al navegador
-        return $pdf->stream('archivo_generado.pdf');
+        // Retornar el PDF descargado
+        return $pdf->download("Cotización {$quote[0]->client_name}.pdf");
 
-        // O guardar el archivo en el sistema de archivos
-        // return $pdf->download('archivo_generado.pdf');
     }
 }

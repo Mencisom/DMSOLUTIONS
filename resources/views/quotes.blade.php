@@ -204,7 +204,7 @@
 
             {{--<label for="calendarInput">Fecha y Hora</label>
             <input name="calendar" type="text" id="calendarInput" placeholder="Selecciona fecha y hora">
---}}4
+--}}
             <h3>Productos</h3>
             <button type="button" id="addProductButton">Agregar Producto</button>
 

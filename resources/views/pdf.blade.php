@@ -49,13 +49,13 @@
     {{$subtotal = 0}}
     {{$contador = 1}}
     @foreach($detail as $detalle)
-        {{$subtotal += $detalle->quantity * $detalle-> prod_price_sales}}
+        {{$subtotal += $detalle->quantity * $detalle-> unit_price}}
         <tr style="padding: 15px; border-bottom: 1px solid #ddd;">
             <td>{{$contador}}</td>
             <td>{{$detalle -> prod_name}}</td>
             <td>{{$detalle -> quantity}}</td>
-            <td>$ {{ number_format($detalle -> prod_price_sales)}}</td>
-            <td>$ {{number_format($detalle->quantity * $detalle-> prod_price_sales)}}</td>
+            <td>$ {{ number_format($detalle -> unit_price)}}</td>
+            <td>$ {{number_format($detalle->quantity * $detalle-> unit_price)}}</td>
             <td>$ {{ number_format($subtotal) }}</td>
         </tr>
         {{$contador += 1}}
