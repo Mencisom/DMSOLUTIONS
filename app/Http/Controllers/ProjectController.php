@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Project;
 use Exception;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class ProjectController
 {
     public function index()
     {
-        $projects = DB::table('projects')->get();
+        $projects = DB::table('project_status')->get();
         return view('browse', ['projects' => $projects]);
     }
 
@@ -39,6 +40,30 @@ class ProjectController
         }
     }
 
+    public function consultDetail(Request $request)
+    {
+        try {
+            $projectConsult = DB::table('projects')->where('id', $request->projectDetail)->first();
+            if ($projectConsult) {
+                return response()->json([
+                    'success' => 'true',
+                    'data' => $projectConsult
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron proyectos'
+                ], 404);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+
+        }
+    }
+
     public function store(Request $request, Project $project){
         $project -> id = 0;
         $project -> quote_id = $request->hiddenQuoteId;
@@ -55,5 +80,25 @@ class ProjectController
         }catch (Exception $e){
             return to_route('browse')->with('status','Error al agregar el proyecto');
         }
+    }
+
+    public function update(Request $request,Project $project)
+    {
+        $project = Project::find($request->hiddenProjectId);
+        $project -> proj_name= $request->projName;
+        $project -> proj_start_date = $request->projStartDate;
+        $project -> proj_end_date = $request->projEndDate;
+        $project -> proj_visit = $request->calendar;
+        $project -> proj_deposit = $request->projDeposit;
+        $project -> proj_warranty = $request->projWarranty;
+        $project -> status_id = $request -> menuStatus;
+
+        try {
+            $project->save();
+            return redirect()->back()->with('status','Proyecto Actualizado exitosamente');
+        }catch (Exception $e){
+            return redirect()->back()->with('status',$e->getMessage());
+        }
+
     }
 }

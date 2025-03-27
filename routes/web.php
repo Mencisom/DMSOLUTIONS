@@ -6,6 +6,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\QueueProductsController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\StatusController;
 use App\Http\Controllers\UserController;
 use App\Models\Project;
 use App\Models\Quote;
@@ -42,4 +43,9 @@ Route::patch('clients/update',[ClientController::class,'update'])->name('client-
 //Project
 
 Route::get('projects/{project}',[ProjectController::class,'consult'])->name('projects-consult');
+Route::get('projects/detail/{projectDetail}',[ProjectController::class,'consultDetail'])->name('projects-detail');
 Route::post('projects/create',[ProjectController::class,'store'])->name('project-save');
+Route::patch('projects/update',[ProjectController::class,'update'])->name('project-update');
+
+//status
+route::get('/status',[StatusController::Class,'index'])->name('status');
