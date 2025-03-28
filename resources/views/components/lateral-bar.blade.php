@@ -42,7 +42,7 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="reminders.html">
+                <a href="{{route('dashboard')}}">
                     <i class="fas fa-smile menu-icon"></i>
                     <span class="menu-text">Recordatorios</span>
                 </a>

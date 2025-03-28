@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProviderController;
@@ -49,3 +50,8 @@ Route::patch('projects/update',[ProjectController::class,'update'])->name('proje
 
 //status
 route::get('/status',[StatusController::Class,'index'])->name('status');
+
+//dashboard
+
+Route::view('/dashboard','dashboard')->name('dashboard');
+Route::get('/dashboard/status',[DashboardController::Class,'proj_status'])->name('proj-status');
