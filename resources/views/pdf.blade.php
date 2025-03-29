@@ -4,12 +4,12 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('{{ $logo }}'); /* Aquí es donde se coloca la URL de la imagen */
-            background-position: right top; /* Posiciona la imagen en la esquina superior derecha */
-            background-repeat: no-repeat; /* Evita que la imagen se repita */
-            padding-top: 30px; /* Agrega algo de espacio arriba si es necesario para el contenido */
-            height: 100%;
-            width: 100%;
+            background-image: url('{{ $logo }}'); /* Imagen de fondo */
+            background-position: right top; /* Posición en la parte superior derecha */
+            background-repeat: no-repeat; /* No repetir la imagen */
+            padding-top: 80px; /* Espaciado para evitar que el texto toque la imagen */
+            position: relative;
+
         }
         h1 {
             color: #333;
@@ -20,21 +20,36 @@
         tr{
             padding: 15px; border-bottom: 1px solid #ddd;
         }
+        /* Agregar información debajo del logo */
+        .logo-info {
+            position: absolute;
+            top: 100px; /* Ajusta según sea necesario */
+            right: 20px; /* Margen derecho */
+            background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+            padding-top: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
+<div class="logo-info">
+    <p>Información Adicional</p>
+</div>
 <h1>{{ $title }}</h1>
 @foreach($quote as $registro)
     <p>Fecha de expiración: {{$registro->quote_expiration_date}}</p>
     <h2>Cliente: </h2>
-    <p> Nombre: {{$registro->client_name}}</p>
+    <p>NIT/CC: {{$registro->client_identification}}</p>
+    <p>Nombre: {{$registro->client_name}}</p>
     <p>Número de teléfono: {{$registro->client_ph}}</p>
+    <p>Dirección: {{$registro->client_address}}</p>
+    <p>Email: {{$registro->client_email}}</p>
     <h2>Detalle: </h2>
     <p>Horas de trabajo: {{$registro->quote_estimated_time}}</p>
     <p>Total: {{number_format($registro->quote_total)}}</p>
 @endforeach
-
-<table style="width: 100%;  border-collapse: collapse; text-align: center; padding-top: 10% ">
+<table style="width: 100%;  border-collapse: collapse; text-align: center; padding-top: 5% ">
     <thead style="background-color: #f7f7f7; font-weight: bold; color: #333; ">
     <tr style="padding: 15px; border-bottom: 1px solid #ddd;">
         <th>Item</th>

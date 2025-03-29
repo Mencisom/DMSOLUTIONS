@@ -55,3 +55,4 @@ route::get('/status',[StatusController::Class,'index'])->name('status');
 
 Route::view('/dashboard','dashboard')->name('dashboard');
 Route::get('/dashboard/status',[DashboardController::Class,'proj_status'])->name('proj-status');
+Route::get('/dashboard/clients',[DashboardController::Class,'proj_clients'])->name('proj-clients');

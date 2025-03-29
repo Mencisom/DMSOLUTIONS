@@ -11,4 +11,9 @@ class DashboardController
         return $proj_status;
     }
 
+    public function proj_clients(){
+        $proj_clients = DB::table('projects_by_clients')->get();
+        return $proj_clients;
+    }
+
 }

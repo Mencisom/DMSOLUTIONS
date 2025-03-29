@@ -39,22 +39,26 @@
             <!-- Gráfico 1: Estado de Proyectos -->
             <div class="chart-container">
                 <h2>Proyectos por Estado</h2>
+                <br>
                 <canvas id="projectStatusChart1"></canvas>
             </div>
 
             <!-- Gráfico 2: Proyectos por Cliente -->
             <div class="chart-container">
                 <h2>Proyectos por Cliente</h2>
+                <br>
                 <canvas id="projectStatusChart2"></canvas>
             </div>
             <!-- Gráfico 3: Proyectos por Fecha -->
             <div class="chart-container">
                 <h2>Proyectos por Fecha</h2>
+                <br>
                 <canvas id="projectStatusChart3"></canvas>
             </div>
             <!-- Gráfico 4: Proyectos por Anticipo -->
             <div class="chart-container">
                 <h2>Proyectos por Anticipo</h2>
+                <br>
                 <canvas id="projectStatusChart4"></canvas>
             </div>
 
@@ -66,6 +70,8 @@
 <script>
     let keys_status = []
     let value_status = []
+    let keys_client = []
+    let value_client = []
     // Función para crear gráfico de torta
     function createPieChart(ctx, labels, data, backgroundColor) {
             return new Chart(ctx, {
@@ -107,31 +113,40 @@
             "Medio": 10,
             "Alto": 7
         };
+     window.onload = function() {
+         //Proyectos por estado
+        fetch("/dashboard/status")
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                keys_status = data.map(item => item.status_name);
+                console.log ("labels",keys_status);
+                value_status = data.map(item => item.cantidad);
+                console.log ("Values",value_status);
+                createPieChart(
+                    document.getElementById('projectStatusChart1').getContext('2d'),
+                    keys_status,
+                    value_status,
+                    ['rgba(36, 191, 164, 0.6)', 'rgba(153, 102, 255, 0.6)','rgba(255, 159, 64, 0.6)', 'rgba(255, 99, 132, 0.6)']
+                );
+            })
 
-        // Crear los gráficos para cada uno de los canvas
-        window.onload = function() {
-            fetch("/dashboard/status")
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                    keys_status = data.map(item => item.status_name);
-                    console.log ("labels",keys_status);
-                    value_status = data.map(item => item.cantidad);
-                    console.log ("Values",value_status);
-                    createPieChart(
-                        document.getElementById('projectStatusChart1').getContext('2d'),
-                        keys_status,
-                        value_status,
-                        ['rgba(36, 191, 164, 0.6)', 'rgba(153, 102, 255, 0.6)','rgba(255, 159, 64, 0.6)', 'rgba(255, 99, 132, 0.6)']
-                    );
-                })
+            //proyectos por cliente
 
-            createPieChart(
-                document.getElementById('projectStatusChart2').getContext('2d'),
-                Object.keys(projectData2),
-                Object.values(projectData2),
-                ['rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 159, 64, 0.6)', 'rgba(36, 191, 164, 0.6)']
-            );
+        fetch("/dashboard/clients")
+            .then(response => response.json())
+            .then(data => {
+                keys_client = data.map(item => item.client_name);
+                console.log ("labels",keys_status);
+                value_client = data.map(item => item.cantidad);
+                console.log ("Values",value_status);
+                createPieChart(
+                    document.getElementById('projectStatusChart2').getContext('2d'),
+                    keys_client,
+                    value_client,
+                    ['rgba(36, 191, 164, 0.6)', 'rgba(153, 102, 255, 0.6)','rgba(255, 159, 64, 0.6)', 'rgba(255, 99, 132, 0.6)']
+                );
+            })
 
             createPieChart(
                 document.getElementById('projectStatusChart3').getContext('2d'),

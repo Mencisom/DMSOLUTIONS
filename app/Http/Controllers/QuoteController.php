@@ -123,7 +123,8 @@ class QuoteController
         $pdf = PDF::loadView('pdf', $data);
 
         // Retornar el PDF descargado
-        return $pdf->download("Cotización {$quote[0]->client_name}.pdf");
+       // return $pdf->download("Cotización {$quote[0]->client_name}.pdf");
+        return $pdf->stream("Cotización {$quote[0]->client_name}.pdf");
 
     }
 }

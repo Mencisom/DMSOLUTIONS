@@ -9,7 +9,7 @@ class ProductController
     public function index()
     {
         $products = DB::table('products')->get();
-        return $products;
+        return view('products', ['products' => $products]);
     }
     public function show(){
         $product = DB::table('products')->get();
