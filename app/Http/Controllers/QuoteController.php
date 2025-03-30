@@ -17,6 +17,45 @@ class QuoteController
         return view('quotes', ['quotes' => $quotes]);
     }
 
+    public function edit($id)
+    {
+
+        $quote = Quote::with('client','products')->find($id);
+
+        if (!$quote) {
+            return response()->json(['error' => 'Cotización no encontrada'], 404);
+        }
+
+        return response()->json([
+
+            'id' => $quote->id,
+            'client_name' => $quote->client,
+            'total' => $quote->quote_total ?? 0,
+            'quote_estimated_time' => $quote->quote_estimated_time ?? 0,
+            'quote_helpers' => $quote->quote_helpers ?? 0,
+            'quote_helper_payday' => $quote->quote_helper_payday ?? 0,
+            'quote_supervisor_payday' => $quote->quote_supervisor_payday ?? 0,
+            'quote_other_costs' => $quote->quote_other_costs ?? 0,
+            'products' => $quote->products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'prod_name' => $product->prod_name,
+                    'prod_reference' => $product->prod_reference,
+                    'prod_des' => $product->prod_des,
+                    'provider_id' => $product->provider_id,
+                    'prod_status' => $product->prod_status,
+                    'prod_price_purchase' => $product->prod_price_purchase,
+                    'prod_price_sales' => $product->prod_price_sales,
+                    'prod_image' => $product->prod_image,
+                    'created_at' => $product->created_at,
+                    'updated_at' => $product->updated_at,
+                    'quantity' => $product->pivot->quantity ?? 0,
+                    'total_price' => $product->pivot->total_price ?? 0,
+                ];
+            }),
+        ]);
+    }
+
     public function store(Request $request)
     {
         try {
@@ -53,7 +92,7 @@ class QuoteController
                 (($quote->quote_supervisor_payday / 8) * $quote->quote_estimated_time);
 
             $quote->quote_material_total = 0;
-            $quote->quote_total = 0;
+            $quote->quote_subtotal = 0;
             $quote->quote_expiration_date = "2026-02-17";
             $quote->save();
 
@@ -67,7 +106,7 @@ class QuoteController
             }
 
             $quote->quote_material_total = $materialTotal;
-            $quote->quote_total = $quote->quote_work_total + $quote->quote_other_costs + $quote->quote_material_total;
+            $quote->quote_subtotal = $quote->quote_work_total + $quote->quote_other_costs + $quote->quote_material_total;
             $quote->save();
 
             foreach ($products as $p) {
@@ -86,6 +125,7 @@ class QuoteController
                 DB::table('quote_materials')->insert([
                     'quote_id' => $quote->id,
                     'product_id' => $materialId,
+                    'unit_price' => $p['price'],
                     'quantity' => $p['quantity'],
                     'total_price' => $p['quantity'] * $p['price'],
                     'created_at' => now(),
@@ -107,6 +147,107 @@ class QuoteController
             return back()->with('error', 'Error inesperado: ' . $e->getMessage());
         }
     }
+    public function update(Request $request)
+    {
+        try {
+            $quote = Quote::find($request->input('quoteId'));
+
+            if (!$quote) {
+                return back()->with('error', 'Cotización no encontrada.');
+            }
+
+
+            $quote->quote_estimated_time = $request->input('estimatedHours');
+            $quote->quote_helpers = $request->input('numAssistants');
+            $quote->quote_helper_payday = $request->input('assistantSalary');
+            $quote->quote_supervisor_payday = $request->input('supervisorFee');
+            $quote->quote_other_costs = $request->input('otherCosts');
+
+
+            $quote->quote_work_total =
+                (($quote->quote_helper_payday / 8) * $quote->quote_estimated_time) +
+                (($quote->quote_supervisor_payday / 8) * $quote->quote_estimated_time);
+
+            $quote->quote_material_total = 0;
+            $quote->quote_subtotal = 0;
+            $quote->quote_expiration_date = "2026-02-17";
+            $quote->save();
+
+
+            $currentProducts = DB::table('quote_materials')
+                ->where('quote_id', $quote->id)
+                ->get()
+                ->keyBy('product_id'); // Indexamos por ID de producto para acceso rápido
+
+            // Procesar la nueva lista de productos
+            $productsJson = $request->input('products');
+            $newProducts = json_decode($productsJson, true);
+
+            $materialTotal = 0;
+            $newProductIds = [];
+
+            foreach ($newProducts as $p) {
+                $materialName = $p['id'];
+
+                $material = DB::table('products')
+                    ->where('prod_name', $materialName)
+                    ->first();
+
+                if (!$material) {
+                    return back()->with('error', "El material '{$materialName}' NO EXISTE. Verifica los datos.");
+                }
+
+                $materialId = $material->id;
+                $unitPrice = $p['price'];
+                $quantity = $p['quantity'];
+                $totalPrice = $quantity * $unitPrice;
+
+                $newProductIds[] = $materialId;
+                    /// condicional  para mirar si existe
+                if (isset($currentProducts[$materialId])) {
+                    DB::table('quote_materials')
+                        ->where('quote_id', $quote->id)
+                        ->where('product_id', $materialId)
+                        ->update([
+                            'unit_price' => $unitPrice,
+                            'quantity' => $quantity,
+                            'total_price' => $totalPrice,
+                            'updated_at' => now()
+                        ]);
+                } else {
+
+                    DB::table('quote_materials')->insert([
+                        'quote_id' => $quote->id,
+                        'product_id' => $materialId,
+                        'unit_price' => $unitPrice,
+                        'quantity' => $quantity,
+                        'total_price' => $totalPrice,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
+                $materialTotal += $totalPrice;
+            }
+
+            // insertar los nuevos productos
+            DB::table('quote_materials')
+                ->where('quote_id', $quote->id)
+                ->whereNotIn('product_id', $newProductIds)
+                ->delete();
+
+
+            $quote->quote_material_total = $materialTotal;
+            $quote->quote_subtotal = $quote->quote_work_total + $quote->quote_other_costs + $quote->quote_material_total;
+            $quote->save();
+
+            return redirect()->back()->with('success', 'Cotización actualizada correctamente.');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error inesperado: ' . $e->getMessage());
+        }
+    }
+
 
     public function export(Request $request){
 

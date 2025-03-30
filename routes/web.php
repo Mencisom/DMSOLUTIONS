@@ -32,8 +32,9 @@ Route::get('/quote/detailed/{id}',[QueueProductsController::class,'consult'])->n
 //Cotización
 Route::get('/quote',[QuoteController::class,'index'])->name('quote');
 Route::post('/quote',[QuoteController::class,'store'])->name('quote-save');
+Route::get('/quotes/{id}/data', [QuoteController::class, 'edit'])->name('quotes-edit');
 Route::get('/quote/export/{quote}',[QuoteController::class,'export'])->name('quote-export');
-
+Route::patch('/quote/update',[QuoteController::class,'update'])->name('quote-update');
 //Cliente
 
 Route::get('/clients',[ClientController::class,'index'])->name('clients');
