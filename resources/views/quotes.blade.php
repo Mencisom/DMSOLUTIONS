@@ -59,7 +59,9 @@
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
-                                        <button class="action-btn">Actualizar</button>
+                                        <button class="btn btn-primary btn-sm" onclick="loadQuoteData({{ $quote->id }})">
+                                            Actualizar
+                                        </button>
                                         <button class="action-btn">Eliminar</button>
                                         <button class="action-btn view-quote-detail" id="detail-quote">Ver Detalle</button>
                                         <button class="action-btn become-project">pasar a proyecto</button>
@@ -76,6 +78,61 @@
             </table>
         </div>
     </main>
+</div>
+<!-- Update Quote Modal -->
+<div id="updateQuoteModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('updateQuoteModal')">&times;</span>
+        <h2>Actualizar Cotización</h2>
+        <form id="updateQuoteForm" method="POST" action="{{ route('quote-update') }}">
+            @csrf @method('PATCH')
+            <input type="hidden" id="updateQuoteId" name="quoteId">
+
+            <!-- Reusable Form Fields -->
+            <label>Cliente:</label>
+            <input type="text" id="updateClientName" name="clientName" required>
+
+
+            <label>Horas estimadas:</label>
+            <input type="number" id="updateEstimatedHours" name="estimatedHours" required>
+
+            <label>Número de asistentes:</label>
+            <input type="number" id="updateNumAssistants" name="numAssistants" required>
+
+            <label>Salario Asistentes:</label>
+            <input type="number" id="updateAssistantSalary" name="assistantSalary" required>
+
+            <label>Pago Supervisor:</label>
+            <input type="number" id="updateSupervisorFee" name="supervisorFee" required>
+
+            <label>Otros Costos:</label>
+            <input type="number" id="updateOtherCosts" name="otherCosts" required>
+
+            <!-- Products Table (Non-Editable) -->
+            <h3>Productos en la Cotización</h3>
+            <table id="updateProductsTable">
+                <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Precio Total</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Product rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+
+            <!-- Add New Product Button -->
+            <button class="addProductButton">Agregar Producto</button>
+            <div class="productList"></div>
+            <input type="hidden" name="products" id="hiddenProducts">
+            <button type="submit" class="modal-button">Guardar Cotización</button>
+            <button type="button" id="closeupdateQuoteModal" class="modal-button">Cerrar</button>
+        </form>
+    </div>
 </div>
 
 <!--Detalle de Cotización -->
@@ -156,7 +213,7 @@
             @csrf
             <label for="clientName">Nombre o Razón Social</label>
             <input type="text" name="clientName" id="clientName" placeholder="Nombre o Razón Social" required>
-
+            <input type="hidden" id="quote_id" name="quote_id">
             <div class="document-type">
                 <input type="radio" id="cc" name="document" value="C.C">
                 <label for="cc">C.C</label>
@@ -206,12 +263,8 @@
             <input name="calendar" type="text" id="calendarInput" placeholder="Selecciona fecha y hora">
 --}}
             <h3>Productos</h3>
-            <button type="button" id="addProductButton">Agregar Producto</button>
-
-
-            <div id="productList">
-                <!-- Aquí se agregarán los productos dinámicamente -->
-            </div>
+            <button class="addProductButton">Agregar Producto</button>
+            <div class="productList"></div>
             @if(session('error'))
                 <script>
                     alert("{{ session('error') }}");
@@ -235,7 +288,7 @@
         <h1>PROYECTO NUEVO: </h1> <br>
         <form id="ProjectForm" method="POST" action="{{route('project-save')}}">
             @csrf
-            <input type="hidden" name="hiddenQuoteId" id="hiddenQuoteId">
+            <input type="hidden" id="quoteId" name="quoteId">
             <label>Visita Técnica:</label>
             <div class="radio-group">
                 <input type="radio" id="yes" name="visit" value="Si">
@@ -266,13 +319,14 @@
         </form>
     </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     let productList = [];
     const openModalButton = document.getElementById('openModalButton');
     const closeModalButton = document.getElementById('closeNewQuoteModal');
     const modal = document.getElementById('newCotizationModal');
+    const modalupdate= document.getElementById('updateQuoteModal');
     const visitaSi = document.getElementById("yes");
     const visitaNo = document.getElementById("no");
     const calendarContainer = document.getElementById("calendarContainer");
@@ -282,29 +336,43 @@
     const confirmationModal = document.getElementById('confirmationModal');
     const closeConfirmationModal = document.getElementById('closeConfirmationModal');
     const actionMenus = document.querySelectorAll('.action-menu');
-    document.getElementById("addProductButton").addEventListener("click", function() {
-        cargarProductos();
+    // document.getElementById("addProductButton").addEventListener("click", function() {
+    //     cargarProductos();
+    //
+    // });
 
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Buscar TODOS los botones con la clase 'addProductButton'
+        document.querySelectorAll(".addProductButton").forEach(button => {
+            button.addEventListener("click", function () {
+                agregarProducto(button);
+            });
+        });
     });
 
+    function agregarProducto(button) {
+        const modal = button.closest(".modal"); // Detecta en qué modal se hizo clic
+        const productList = modal.querySelector(".productList"); // Busca la lista dentro del modal correspondiente
 
-    document.getElementById("addProductButton").addEventListener("click", function () {
-        const productList = document.getElementById("productList");
+        if (!productList) {
+            console.error("No se encontró la lista de productos en el modal.");
+            return;
+        }
+
         const productDiv = document.createElement("div");
         productDiv.classList.add("product-entry");
 
         productDiv.innerHTML = `
-       <select  class="product-list">
+        <select class="product-list">
             <option value="" required>Cargando productos...</option>
         </select>
-        <input  type="number" placeholder="Cantidad" class="product-quantity" min="1" required>
-        <input  type="number" placeholder="Precio" class="product-price" min="0" required value="0">
+        <input type="number" placeholder="Cantidad" class="product-quantity" min="1" required>
+        <input type="number" placeholder="Precio" class="product-price" min="0" required value="0">
         <button type="button" class="remove-product">❌</button>
-
     `;
 
         productList.appendChild(productDiv);
-
         const productPriceInput = productDiv.querySelector(".product-price");
         let quantityInput = productDiv.querySelector(".product-quantity");
         const productSelect = productDiv.querySelector(".product-list");
@@ -312,11 +380,11 @@
         cargarProductos(productSelect);
 
 
-        productSelect.addEventListener("change", function() {
-             productPriceInput.value = productSelect.value;
+        productSelect.addEventListener("change", function () {
+            productPriceInput.value = productSelect.value;
         })
 // Evento para detectar si el producto contiene "cable"
-        productSelect.addEventListener("change", function() {
+        productSelect.addEventListener("change", function () {
             const nameselect = productSelect.options[productSelect.selectedIndex].text
             if (nameselect.toLowerCase().includes("cable", "CABLE", "Cable")) {
                 // Reemplazar el input de cantidad por un select con opciones de metros
@@ -359,7 +427,8 @@
             productDiv.remove();
 
         });
-    });
+
+    }
 
     /////////
     function addProductToList(productId, quantity, price) {
@@ -556,10 +625,10 @@
     });
 
 
-    // Cerrar mensaje de confirmación
-    closeConfirmationModal.addEventListener('click', () => {
-        confirmationModal.classList.add('hidden');
-    });
+    // // Cerrar mensaje de confirmación
+    // closeConfirmationModal.addEventListener('click', () => {
+    //     confirmationModal.classList.add('hidden');
+    // });
 
 
     function cargarProductos(selectElement) {
@@ -581,6 +650,96 @@
             })
             .catch(error => console.error("Error al cargar los productos:", error));
     }
+    //// EVENTOS DE ACTUALIZAR
+    const closeupdateModalButton = document.getElementById("closeupdateQuoteModal");
+    closeupdateModalButton.addEventListener('click', () => {
+        console.log("lo opirmio")
+        modalupdate.classList.add('hidden');
+    });
+
+
+    function loadQuoteData(quoteId) {
+        $.ajax({
+            url: `/quotes/${quoteId}/data`,
+            type: 'GET',
+            success: function(data) {
+                // Llenar los campos del formulario
+                $('#updateQuoteId').val(quoteId);
+                $('#updateClientName').val(data.client_name.client_name);
+                $('#updatePhone').val(data.client_ph);
+                $('#updateEmail').val(data.client_email);
+                $('#updateAddress').val(data.client_address);
+                $('#updateEstimatedHours').val(data.quote_estimated_time);
+                $('#updateNumAssistants').val(data.quote_helpers);
+                $('#updateAssistantSalary').val(data.quote_helper_payday);
+                $('#updateSupervisorFee').val(data.quote_supervisor_payday);
+                $('#updateOtherCosts').val(data.quote_other_costs);
+
+                // Limpiar y agregar productos
+                $('#updateProductsTable tbody').empty();
+                data.products.forEach(material => {
+                    $('#updateProductsTable tbody').append(`
+                <tr data-id="${material.id}">
+                    <td>${material.prod_name}</td>   <!-- Cambiado -->
+                    <td>${material.quantity}</td>
+                    <td>${material.prod_price_sales}</td>
+                    <td>${material.total_price}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="removeProduct(${material.id})">Eliminar</button></td>
+                </tr>
+            `);
+                });
+
+                // Mostrar el modal (sin Bootstrap)
+                document.getElementById('updateQuoteModal').classList.remove('hidden');
+            },
+            error: function(error) {
+                alert('Error al cargar la cotización.');
+            }
+        });
+
+
+    }
+    function removeProduct(materialId) {
+        var table = document.getElementById("updateProductsTable");
+        var rows = table.getElementsByTagName("tr");
+
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var button = row.querySelector("button");
+
+            // Verifica si el botón existe y si tiene el material correcto
+            if (button && button.getAttribute("onclick").includes(`removeProduct(${materialId})`)) {
+                table.deleteRow(i); // Elimina la fila encontrada
+                break; // Salimos del bucle una vez eliminada la fila
+            }
+        }
+    }
+
+    function updateProductListFromTable() {
+
+        let table = document.getElementById("updateProductsTable");
+        let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
+
+            let productId = cells[0].innerText;
+            let quantity = parseInt(cells[1].innerText);
+            let price = parseFloat(cells[2].innerText);
+
+            productList.push({ id: productId, quantity: quantity, price: price });
+        }
+
+        // Actualizar campo oculto
+        document.getElementById("hiddenProducts").value = JSON.stringify(productList);
+    }
+    document.getElementById("updateQuoteForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Evita el envío inmediato
+
+        updateProductListFromTable(); // Recorrer la tabla y actualizar la lista de productos
+
+        this.submit(); // Envía el formulario
+    });
 </script>
 </body>
 </html>
