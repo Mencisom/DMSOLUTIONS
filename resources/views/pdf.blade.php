@@ -7,9 +7,8 @@
             background-image: url('{{ $logo }}'); /* Imagen de fondo */
             background-position: right top; /* Posición en la parte superior derecha */
             background-repeat: no-repeat; /* No repetir la imagen */
-            padding-top: 80px; /* Espaciado para evitar que el texto toque la imagen */
+            padding-top: 40px; /* Espaciado para evitar que el texto toque la imagen */
             position: relative;
-
         }
         h1 {
             color: #333;
@@ -20,22 +19,9 @@
         tr{
             padding: 15px; border-bottom: 1px solid #ddd;
         }
-        /* Agregar información debajo del logo */
-        .logo-info {
-            position: absolute;
-            top: 100px; /* Ajusta según sea necesario */
-            right: 20px; /* Margen derecho */
-            background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
-            padding-top: 10px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
     </style>
 </head>
 <body>
-<div class="logo-info">
-    <p>Información Adicional</p>
-</div>
 <h1>{{ $title }}</h1>
 @foreach($quote as $registro)
     <p>Fecha de expiración: {{$registro->quote_expiration_date}}</p>
@@ -54,6 +40,7 @@
     <tr style="padding: 15px; border-bottom: 1px solid #ddd;">
         <th>Item</th>
         <th>Descripción</th>
+        <th>Imagen</th>
         <th>Cantidad</th>
         <th>Precio Unitario</th>
         <th>Valor Parcial</th>
@@ -68,6 +55,7 @@
         <tr style="padding: 15px; border-bottom: 1px solid #ddd;">
             <td>{{$contador}}</td>
             <td>{{$detalle -> prod_name}}</td>
+            <td><img style="box-sizing: border-box" src="{{$detalle -> prod_image}}" alt=""></td>
             <td>{{$detalle -> quantity}}</td>
             <td>$ {{ number_format($detalle -> unit_price)}}</td>
             <td>$ {{number_format($detalle->quantity * $detalle-> unit_price)}}</td>
@@ -79,6 +67,7 @@
         {{$subtotal += ($quote[0]->quote_helper_payday/8)*$quote[0]->quote_estimated_time}}
         <td>{{$contador}}</td>
         <td>Auxiliares</td>
+        <td>N/A</td>
         <td>{{$quote[0]->quote_helpers}}</td>
         <td>$ {{number_format($quote[0]->quote_helper_payday) }}</td>
         <td>$ {{number_format(($quote[0]->quote_helper_payday/8)*$quote[0]->quote_estimated_time)}}</td>
@@ -89,6 +78,7 @@
         {{$subtotal += ($quote[0]->quote_supervisor_payday/8)*$quote[0]->quote_estimated_time}}
         <td>{{$contador}}</td>
         <td>Supervisor de obra</td>
+        <td>N/A</td>
         <td>1</td>
         <td>$ {{number_format($quote[0]->quote_supervisor_payday) }}</td>
         <td>$ {{number_format(($quote[0]->quote_supervisor_payday/8)*$quote[0]->quote_estimated_time)}}</td>
@@ -101,6 +91,7 @@
         {{$subtotal += $quote[0]->quote_other_costs}}
         <td>{{$contador}}</td>
         <td>Otros Costos</td>
+        <td>N/A</td>
         <td>1</td>
         <td>$ {{number_format($quote[0]->quote_other_costs) }}</td>
         <td>$ {{number_format($quote[0]->quote_other_costs)}}</td>

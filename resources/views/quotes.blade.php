@@ -534,7 +534,6 @@
                 fetch(`projects/${project}`)
                     .then(response => {
                         if (!response.ok){
-                            console.log("Sexo anal? ", fila.cells[5].textContent.replace(/,/g, ''))
                             document.getElementById("proj-deposit").max = fila.cells[5].textContent.replace(/,/g, '');
                             openModalProject.classList.remove("hidden");
                         }
