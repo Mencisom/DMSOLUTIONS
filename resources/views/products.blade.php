@@ -20,6 +20,11 @@
                 <input type="text" placeholder="Buscar productos...">
                 <button class="filter-button"><i class="fas fa-filter"></i> Filtros</button>
                 <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>
+                <button class="new-button" id="download" action=""></i> <a href="{{ route('descargarPlantilla') }}" class="btn btn-primary">Descargar Plantilla</a></button>
+                <button class="new-button" id="openModalUpdadteButton">
+                <i class="fas fa-plus">Actualizar Productos</i>
+                </button>
+
             </div>
         </header>
         <div class="table-container">
@@ -67,6 +72,19 @@
     </main>
 </div>
 
+<div class="modal hidden" id="uploadPoductsModal">
+    <div class="modal-content">
+        <label>Por favor  anexe el formato actualizado con los productos que desea actualizar</label>
+        <form action="{{ route('prod-upload') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="archivo" class="form-control mb-2" required>
+            <button type="submit" class="btn btn-success">Subir Archivo</button>
+            <button type="button" id="closeUploadProductsModal" class="modal-button">Cerrar</button>
+        </form>
+
+    </div>
+</div>
+
 <!-- Modal para agregar producto -->
 <div class="modal hidden" id="productModal">
     <div class="modal-content">
@@ -103,11 +121,22 @@
 </div>
 
 <script>
+    const openModaUpdatelButton = document.getElementById('openModalUpdadteButton');
+
     document.addEventListener("DOMContentLoaded", () => {
         const modal = document.getElementById("productModal");
+        const uploadmodal = document.getElementById("uploadPoductsModal");
+        const closeuploadmodal = document.getElementById("closeUploadProductsModal");
         const openModalButton = document.getElementById("openModalButton");
         const closeFormButton = document.getElementById("closeFormButton");
+        const openModaUpdatelButton = document.getElementById('openModalUpdadteButton');
 
+        openModaUpdatelButton.addEventListener("click", () => {
+            uploadmodal.classList.remove("hidden");
+        });
+        closeuploadmodal.addEventListener("click", () => {
+            uploadmodal.classList.add("hidden");
+        });
         // Abre el modal al hacer clic en el botón "New"
         openModalButton.addEventListener("click", () => {
             modal.classList.remove("hidden");
