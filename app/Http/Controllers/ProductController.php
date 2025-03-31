@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PlantillaProductosExport;
+use App\Imports\ProductsImport;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 
 class ProductController
@@ -38,5 +42,37 @@ public function consult()
         ], 500);
     }
 }
+
+    public function descargarPlantilla()
+    {
+        return Excel::download(new PlantillaProductosExport, 'plantilla_productos.xlsx');
+    }
+
+    public function upload(Request $request)
+    { // Validar que el archivo es un Excel
+        $request->validate([
+            'archivo' => 'required|mimes:xlsx,csv',
+        ]);
+
+        try {
+            // Procesar la importación del archivo
+            $import = new ProductsImport();
+            Excel::import($import, $request->file('archivo'));
+
+            // Obtener los productos no insertados (duplicados)
+            $productosNoInsertados = $import->getErrores();
+
+            return response()->json([
+                'mensaje' => 'Importación completada.',
+                'productos_no_insertados' => $productosNoInsertados,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'mensaje' => 'Error al importar el archivo.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
 }

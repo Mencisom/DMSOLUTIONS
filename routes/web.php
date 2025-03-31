@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::view('/welcome','welcome')->name('home');
 Route::get('/browse',[ProjectController::class,'index'])->name('browse');
 
-Route::get('/products',[ProductController::class,'index'])->name('products');
+
 
 Route::get('/providers',[ProviderController::class,'index'])->name('providers');
 
@@ -57,3 +57,8 @@ route::get('/status',[StatusController::Class,'index'])->name('status');
 Route::view('/dashboard','dashboard')->name('dashboard');
 Route::get('/dashboard/status',[DashboardController::Class,'proj_status'])->name('proj-status');
 Route::get('/dashboard/clients',[DashboardController::Class,'proj_clients'])->name('proj-clients');
+
+//products
+Route::get('/products',[ProductController::class,'index'])->name('products');
+Route::get('/products/descargarplantilla', [ProductController::class, 'descargarPlantilla'])->name('descargarPlantilla');
+Route::post('/products/upload', [ProductController::class, 'upload'])->name('prod-upload');
