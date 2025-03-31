@@ -16,4 +16,9 @@ class DashboardController
         return $proj_clients;
     }
 
+    public function proj_month()
+    {
+        $proj_month = DB::table('projects_by_month')->get();
+        return $proj_month;
+    }
 }

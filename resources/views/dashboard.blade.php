@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse - DM Solutions</title>
+    <title>Dashboard - DM Solutions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="{{asset('css/dashboard.css')}}">
@@ -51,9 +51,9 @@
             </div>
             <!-- Gráfico 3: Proyectos por Fecha -->
             <div class="chart-container">
-                <h2>Proyectos por Fecha</h2>
+                <h2>Proyectos por Mes</h2>
                 <br>
-                <canvas id="projectStatusChart3"></canvas>
+                <canvas style="margin: 10%" id="projectStatusChart3"></canvas>
             </div>
             <!-- Gráfico 4: Proyectos por Anticipo -->
             <div class="chart-container">
@@ -61,8 +61,6 @@
                 <br>
                 <canvas id="projectStatusChart4"></canvas>
             </div>
-
-
         </div>
     </div>
 </div>
@@ -72,40 +70,73 @@
     let value_status = []
     let keys_client = []
     let value_client = []
+    let keys_month = []
+    let value_month = []
     // Función para crear gráfico de torta
-    function createPieChart(ctx, labels, data, backgroundColor) {
+    function createBarChart(ctx, labels, data) {
+        const maxValue = Math.max(...Object.values(data)) + 3;
+        console.log(maxValue,"Soy el maximoooo")
             return new Chart(ctx, {
-                type: 'pie',
+                type: 'bar',  // Tipo de gráfico
                 data: {
-                    labels: labels,
+                    labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'], // Etiquetas en el eje X
                     datasets: [{
-                        data: data,
-                        backgroundColor: backgroundColor
+                        label: 'Proyectos por mes',
+                        data: data,  // Datos
+                        backgroundColor: 'rgba(36, 191, 164, 0.6)',  // Color de barras
+                        borderColor: 'rgba(54, 162, 235, 1)',  // Borde de barras
+                        borderWidth: 1
                     }]
                 },
                 options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'right'
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: maxValue,
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0
+                            }
                         }
                     }
                 }
             });
         }
 
-        const projectData2 = {
-            "Cliente A": 6,
-            "Cliente B": 12,
-            "Cliente C": 5,
-            "Cliente D": 7
-        };
+    function createPieChart(ctx, labels, data, backgroundColor) {
+        return new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColor
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    }
 
         const projectData3 = {
-            "Enero": 3,
-            "Febrero": 5,
-            "Marzo": 7,
-            "Abril": 4
+            "Enero":0,
+            "Febrero": 0,
+            "Marzo":0,
+            "Abril":0,
+            "Mayo":0,
+            "Junio":0,
+            "Julio":0,
+            "Agosto":0,
+            "Septiembre":0,
+            "Octubre":0,
+            "Noviembre":0,
+            "Diciembre":0
         };
 
         const projectData4 = {
@@ -113,7 +144,7 @@
             "Medio": 10,
             "Alto": 7
         };
-     window.onload = function() {
+    window.onload = function() {
          //Proyectos por estado
         fetch("/dashboard/status")
             .then(response => response.json())
@@ -148,12 +179,23 @@
                 );
             })
 
-            createPieChart(
-                document.getElementById('projectStatusChart3').getContext('2d'),
-                Object.keys(projectData3),
-                Object.values(projectData3),
-                ['rgba(153, 102, 255, 0.6)', 'rgba(255, 159, 64, 0.6)', 'rgba(36, 191, 164, 0.6)', 'rgba(255, 99, 132, 0.6)']
-            );
+        fetch("/dashboard/month")
+            .then(response => response.json())
+            .then(data => {
+                keys_month = data.map(item => item.month);
+                console.log ("labels Month",keys_month);
+                value_month = data.map(item => item.cantidad);
+                console.log ("Values Month",value_month);
+                const keys = Object.keys(projectData3);
+                data.forEach(r => {
+                    projectData3[keys[r.month-1]]=r.cantidad;
+                })
+                createBarChart(
+                    document.getElementById('projectStatusChart3').getContext('2d'),
+                    Object.keys(projectData3),
+                    Object.values(projectData3),
+                );
+            })
 
             createPieChart(
                 document.getElementById('projectStatusChart4').getContext('2d'),

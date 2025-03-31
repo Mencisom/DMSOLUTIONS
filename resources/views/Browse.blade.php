@@ -60,8 +60,12 @@
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
-                                        <button class="action-btn">Eliminar</button>
                                         <button class="action-btn edit-project">Actualizar</button>
+                                        <form action="{{route('project-delete',$project)}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="action-btn">Eliminar</button>
+                                        </form>
                                     </div>
                                 </div>
                             </td>

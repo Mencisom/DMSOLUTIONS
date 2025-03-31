@@ -48,6 +48,7 @@ Route::get('projects/{project}',[ProjectController::class,'consult'])->name('pro
 Route::get('projects/detail/{projectDetail}',[ProjectController::class,'consultDetail'])->name('projects-detail');
 Route::post('projects/create',[ProjectController::class,'store'])->name('project-save');
 Route::patch('projects/update',[ProjectController::class,'update'])->name('project-update');
+Route::delete('projects/delete/{project}',[ProjectController::class,'destroy'])->name('project-delete');
 
 //status
 route::get('/status',[StatusController::Class,'index'])->name('status');
@@ -57,3 +58,4 @@ route::get('/status',[StatusController::Class,'index'])->name('status');
 Route::view('/dashboard','dashboard')->name('dashboard');
 Route::get('/dashboard/status',[DashboardController::Class,'proj_status'])->name('proj-status');
 Route::get('/dashboard/clients',[DashboardController::Class,'proj_clients'])->name('proj-clients');
+Route::get('/dashboard/month',[DashboardController::Class,'proj_month'])->name('proj-month');

@@ -99,6 +99,15 @@ class ProjectController
         }catch (Exception $e){
             return redirect()->back()->with('status',$e->getMessage());
         }
+    }
 
+    public function destroy(Request $request){
+        $project = Project::find($request->id);
+        try{
+            $project->delete();
+            return route('browse');
+        }catch (Exception $e){
+            return to_route('browse')->with('status','Error al eliminar el proyecto');
+        }
     }
 }
