@@ -624,6 +624,10 @@
         openModalProject.classList.add('hidden');
     });
 
+    closeProjectModalButton.addEventListener('click', () => {
+        openModalProject.classList.add('hidden');
+    });
+
 
     // // Cerrar mensaje de confirmación
     // closeConfirmationModal.addEventListener('click', () => {

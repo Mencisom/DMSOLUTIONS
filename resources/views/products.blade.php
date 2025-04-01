@@ -52,8 +52,8 @@
                             @else
                                 <td>Inactivo</td>
                             @endif
-                            <td>{{$product->prod_price_sales}}</td>
-                            <td><img src="{{asset("Images/martillo.jpg")}}" alt=""></td>
+                            <td>{{number_format($product->prod_price_sales)}}</td>
+                            <td><img style="max-width: 85px;" src="{{asset("Images/martillo.jpg")}}" alt=""></td>
                             <td>
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
