@@ -16,15 +16,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/welcome','welcome')->name('home');
 Route::get('/browse',[ProjectController::class,'index'])->name('browse');
-
-
-
 Route::get('/providers',[ProviderController::class,'index'])->name('providers');
 
 //login
 Route::view('/','login')->name('login');
 Route::post('/', [UserController::class, 'login'])->name('login_validation');
 Route::get('/quote/addproduct',[ProductController::class,'consult'])->name('quoteproducts');
+
 //detalle cotización
 Route::get('/quote/{id}',[QueueProductsController::class,'index'])->name('quote-detail');
 Route::get('/quote/detailed/{id}',[QueueProductsController::class,'consult'])->name('quote-detail-work');
@@ -48,7 +46,7 @@ Route::get('projects/{project}',[ProjectController::class,'consult'])->name('pro
 Route::get('projects/detail/{projectDetail}',[ProjectController::class,'consultDetail'])->name('projects-detail');
 Route::post('projects/create',[ProjectController::class,'store'])->name('project-save');
 Route::patch('projects/update',[ProjectController::class,'update'])->name('project-update');
-Route::delete('projects/delete/{project}',[ProjectController::class,'destroy'])->name('project-delete');
+Route::delete('projects/delete/{id}',[ProjectController::class,'destroy'])->name('project-delete');
 
 //status
 route::get('/status',[StatusController::Class,'index'])->name('status');
@@ -64,3 +62,10 @@ Route::get('/dashboard/month',[DashboardController::Class,'proj_month'])->name('
 Route::get('/products',[ProductController::class,'index'])->name('products');
 Route::get('/products/descargarplantilla', [ProductController::class, 'descargarPlantilla'])->name('descargarPlantilla');
 Route::post('/products/upload', [ProductController::class, 'upload'])->name('prod-upload');
+
+//administration
+
+Route::get('/administration',[UserController::class, 'index'])->name('administration');
+Route::post('user/add',[UserController::class, 'addUser'])->name('user-save');
+Route::delete('user/delete/{id}',[UserController::class, 'destroy'])->name('user-delete');
+Route::get('/role',[UserController::class, 'consultRole'])->name('role');
