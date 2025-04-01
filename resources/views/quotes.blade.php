@@ -598,7 +598,6 @@
                 event.stopPropagation();
                 let fila = boton.closest('tr');
                 let project = fila.cells[0].textContent;
-                document.getElementById("hiddenQuoteId").value = project;
                 console.log(project);
                 fetch(`projects/${project}`)
                     .then(response => {
