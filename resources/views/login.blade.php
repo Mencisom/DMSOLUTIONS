@@ -39,7 +39,6 @@
             alert("Usuario no encontrado")
             window.location.href = "{{route("login")}}";
         @else
-            alert("Bienvenido {{$user}}");
             window.location.href = "{{route("home")}}";
         @endif
     @endisset

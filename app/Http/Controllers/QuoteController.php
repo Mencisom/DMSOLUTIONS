@@ -248,7 +248,6 @@ class QuoteController
         }
     }
 
-
     public function export(Request $request){
 
         $quote = DB::table('quote_client')->where('id',$request->quote) ->get();
@@ -267,5 +266,16 @@ class QuoteController
        // return $pdf->download("Cotización {$quote[0]->client_name}.pdf");
         return $pdf->stream("Cotización {$quote[0]->client_name}.pdf");
 
+    }
+
+    public function destroy(Request $request, Quote $quote)
+    {
+        $quote = Quote::find($request->id);
+        try {
+            $quote->delete();
+        }catch(\Exception $e){
+            return back()->with('error', 'Error inesperado: ' . $e->getMessage());
+        }
+        return to_route('quote');
     }
 }

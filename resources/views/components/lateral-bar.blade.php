@@ -49,8 +49,14 @@
             </li>
             <li class="menu-item">
                 <a href="{{route('administration')}}">
-                    <i class="fas fa-smile menu-icon"></i>
+                    <i class="fas fa-pencil menu-icon"></i>
                     <span class="menu-text">Administración</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{{route('reminders')}}">
+                    <i class="fas fa-book menu-icon"></i>
+                    <span class="menu-text">Recordatorios</span>
                 </a>
             </li>
         </ul>

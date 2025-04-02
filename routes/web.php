@@ -33,6 +33,7 @@ Route::post('/quote',[QuoteController::class,'store'])->name('quote-save');
 Route::get('/quotes/{id}/data', [QuoteController::class, 'edit'])->name('quotes-edit');
 Route::get('/quote/export/{quote}',[QuoteController::class,'export'])->name('quote-export');
 Route::patch('/quote/update',[QuoteController::class,'update'])->name('quote-update');
+Route::delete('/quote/delete/{id}',[QuoteController::class,'destroy'])->name('quote-delete');
 //Cliente
 
 Route::get('/clients',[ClientController::class,'index'])->name('clients');
@@ -69,3 +70,9 @@ Route::get('/administration',[UserController::class, 'index'])->name('administra
 Route::post('user/add',[UserController::class, 'addUser'])->name('user-save');
 Route::delete('user/delete/{id}',[UserController::class, 'destroy'])->name('user-delete');
 Route::get('/role',[UserController::class, 'consultRole'])->name('role');
+Route::get('user/detail/{userDetail}',[UserController::class, 'consultUserDetail'])->name('user-detail');
+Route::patch('user/update',[UserController::class, 'updateUser'])->name('user-update');
+
+//reminders
+
+Route::view('/reminders','reminders')->name('reminders');

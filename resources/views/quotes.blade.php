@@ -62,12 +62,16 @@
                                         <button class="btn btn-primary btn-sm" onclick="loadQuoteData({{ $quote->id }})">
                                             Actualizar
                                         </button>
-                                        <button class="action-btn">Eliminar</button>
                                         <button class="action-btn view-quote-detail" id="detail-quote">Ver Detalle</button>
                                         <button class="action-btn become-project">pasar a proyecto</button>
                                         <a href="{{route('quote-export',$quote->id)}}">
                                             <button class="action-btn">Exportar</button>
                                         </a>
+                                        <form action="{{route('quote-delete',$quote -> id)}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="action-btn">Eliminar</button>
+                                        </form>
                                     </div>
                                 </div>
                             </td>

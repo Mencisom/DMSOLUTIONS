@@ -65,4 +65,28 @@ class UserController
             return view('login', ['user' => $user]);
         }
     }
+
+    public function consultUserDetail(Request $request){
+        $user = DB::table('users')->where('id',$request->userDetail)->get()->first();
+        return $user;
+    }
+
+    public function updateUser(Request $request, User $user){
+        $user = User::find($request->hiddenUserId);
+        $user -> user_first_name = $request->input('updateUserNames');
+        $user -> user_last_name = $request->input('updateUserLastNames');
+        $user -> user_email = $request->input('updateUserEmail');;
+        $user -> user_password = $request->input('updateUserPassword');
+        $user -> user_role = $request->input('menuActualizarRol');
+        $user -> user_status = 1;
+
+        try{
+            $user -> save();
+            return to_route('administration');
+        }catch (Exception $e){
+            $message = $e->getMessage();
+            to_route('administration')->with('error', $message);
+        }
+    }
+
 }

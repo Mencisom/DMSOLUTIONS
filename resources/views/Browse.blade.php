@@ -202,7 +202,6 @@
                             options.appendChild(option);
                         });
                     });
-
                 EditModalProject.classList.remove("hidden");
             });
         });
