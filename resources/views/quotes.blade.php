@@ -251,17 +251,6 @@
             <label for="otherCosts">Otros Costos</label>
             <input type="number" id="otherCosts" name="otherCosts" placeholder="Otros costos" min="0">
 
-           {{-- <label>Visita Técnica:</label>
-            <div class="radio-group">
-                <input type="radio" id="yes" name="visit" value="Si">
-                <label for="yes">Si</label>
-                <input type="radio" id="no" name="visit" value="No" checked>
-                <label for="no">No</label>
-            </div>--}}
-
-            {{--<label for="calendarInput">Fecha y Hora</label>
-            <input name="calendar" type="text" id="calendarInput" placeholder="Selecciona fecha y hora">
---}}
             <h3>Productos</h3>
             <button class="addProductButton">Agregar Producto</button>
             <div class="productList"></div>
@@ -288,7 +277,7 @@
         <h1>PROYECTO NUEVO: </h1> <br>
         <form id="ProjectForm" method="POST" action="{{route('project-save')}}">
             @csrf
-            <input type="hidden" id="quoteId" name="quoteId">
+            <input type="hidden" id="hiddenQuoteId" name="hiddenQuoteId">
             <label>Visita Técnica:</label>
             <div class="radio-group">
                 <input type="radio" id="yes" name="visit" value="Si">
@@ -336,10 +325,6 @@
     const confirmationModal = document.getElementById('confirmationModal');
     const closeConfirmationModal = document.getElementById('closeConfirmationModal');
     const actionMenus = document.querySelectorAll('.action-menu');
-    // document.getElementById("addProductButton").addEventListener("click", function() {
-    //     cargarProductos();
-    //
-    // });
 
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -432,6 +417,11 @@
 
     /////////
     function addProductToList(productId, quantity, price) {
+        if (window.getComputedStyle(modal).display === 'none') {
+            console.log('El modal está oculto');
+        } else {
+            console.log('El modal está visible');
+        }
         productList.push({ id: productId, quantity: quantity, price: price });
         document.getElementById("hiddenProducts").value = JSON.stringify(productList);
     }
@@ -598,11 +588,14 @@
                 event.stopPropagation();
                 let fila = boton.closest('tr');
                 let project = fila.cells[0].textContent;
+
+                openModalProject.classList.remove("hidden");
                 console.log(project);
                 fetch(`projects/${project}`)
                     .then(response => {
                         if (!response.ok){
                             document.getElementById("proj-deposit").max = fila.cells[5].textContent.replace(/,/g, '');
+                            document.getElementById("hiddenQuoteId").value = project;
                             openModalProject.classList.remove("hidden");
                         }
                         return response.json();
@@ -620,6 +613,7 @@
 
     //Cerrar modal proyecto
     closeProjectModalButton.addEventListener('click', () => {
+
         openModalProject.classList.add('hidden');
     });
 
@@ -691,7 +685,6 @@
                 </tr>
             `);
                 });
-
                 // Mostrar el modal (sin Bootstrap)
                 document.getElementById('updateQuoteModal').classList.remove('hidden');
             },

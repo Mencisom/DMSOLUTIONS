@@ -105,7 +105,7 @@ class ProjectController
         $project = Project::find($request->id);
         try{
             $project->delete();
-            return route('browse');
+            return to_route('browse');
         }catch (Exception $e){
             return to_route('browse')->with('status','Error al eliminar el proyecto');
         }

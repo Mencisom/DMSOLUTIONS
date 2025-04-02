@@ -53,7 +53,7 @@
                                 <td>Inactivo</td>
                             @endif
                             <td>{{number_format($product->prod_price_sales)}}</td>
-                            <td><img style="max-width: 85px;" src="{{asset("Images/martillo.jpg")}}" alt=""></td>
+                            <td><img style="max-width: 85px;" src="{{asset($product -> prod_image)}}" alt=""></td>
                             <td>
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
@@ -81,7 +81,6 @@
             <button type="submit" class="btn btn-success">Subir Archivo</button>
             <button type="button" id="closeUploadProductsModal" class="modal-button">Cerrar</button>
         </form>
-
     </div>
 </div>
 
