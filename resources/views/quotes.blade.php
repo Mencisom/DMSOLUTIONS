@@ -264,7 +264,7 @@
                     alert("{{ session('success') }}");
                 </script>
             @endif
-            <input type="hidden" name="products" id="hiddenProducts">
+            <input type="hidden" name="products" id="hiddenProducts1">
             <button type="submit" class="modal-button">Guardar Cotización</button>
             <button type="button" id="closeNewQuoteModal" class="modal-button">Cerrar</button>
         </form>
@@ -366,6 +366,7 @@
 
 
         productSelect.addEventListener("change", function () {
+            console.log("LA MONDA SE LLAMA ",productSelect.options[productSelect.selectedIndex].text)
             productPriceInput.value = productSelect.value;
         })
 // Evento para detectar si el producto contiene "cable"
@@ -400,7 +401,9 @@
             }
 
             quantityInput.addEventListener("input", function () {
-                addProductToList(productSelect.options[productSelect.selectedIndex].text, quantityInput.value, productPriceInput.value);
+
+               addProductToList(productSelect.options[productSelect.selectedIndex].text, quantityInput.value, productPriceInput.value);
+
             });
 
 
@@ -416,19 +419,33 @@
     }
 
     /////////
-    function addProductToList(productId, quantity, price) {
+    function addProductToList(productId, quantity, price, hidden) {
         if (window.getComputedStyle(modal).display === 'none') {
             console.log('El modal está oculto');
         } else {
             console.log('El modal está visible');
         }
         productList.push({ id: productId, quantity: quantity, price: price });
-        document.getElementById("hiddenProducts").value = JSON.stringify(productList);
+
+        if (window.getComputedStyle(modal).display === 'none') {
+            document.getElementById("hiddenProducts").value = JSON.stringify(productList);
+        } else {
+            document.getElementById("hiddenProducts1").value = JSON.stringify(productList);
+        }
+
+
     }
     ///////////////////////////
-    function removeProductFromList(index) {
+    function removeProductFromList(index,hidden) {
         productList.splice(index, 1);
-        document.getElementById("hiddenProducts").value = JSON.stringify(productList);
+        console.log('LISTA REMOVIDA', productList);
+        if (window.getComputedStyle(modal).display === 'none') {
+            document.getElementById("hiddenProducts").value = JSON.stringify(productList);
+        } else {
+            document.getElementById("hiddenProducts1").value = JSON.stringify(productList);
+        }
+
+
     }
 
     ////////////
