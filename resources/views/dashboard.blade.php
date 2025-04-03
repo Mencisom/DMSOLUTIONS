@@ -73,7 +73,7 @@
     let keys_month = []
     let value_month = []
     // Función para crear gráfico de torta
-    function createBarChart(ctx, labels, data) {
+    function createBarChart(ctx, labels, data,label) {
         const maxValue = Math.max(...Object.values(data)) + 3;
         console.log(maxValue,"Soy el maximoooo")
             return new Chart(ctx, {
@@ -81,7 +81,7 @@
                 data: {
                     labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'], // Etiquetas en el eje X
                     datasets: [{
-                        label: 'Proyectos por mes',
+                        label: label,
                         data: data,  // Datos
                         backgroundColor: 'rgba(36, 191, 164, 0.6)',  // Color de barras
                         borderColor: 'rgba(54, 162, 235, 1)',  // Borde de barras
@@ -206,6 +206,7 @@
                     document.getElementById('projectStatusChart3').getContext('2d'),
                     Object.keys(projectData3),
                     Object.values(projectData3),
+                    "Proyectos por mes"
                 );
             })
 
@@ -228,6 +229,7 @@
                     document.getElementById('projectStatusChart4').getContext('2d'),
                     Object.keys(projectData4),
                     Object.values(projectData4),
+                    "Cotizaciones sin proyecto por mes"
                 );
             })
         }
