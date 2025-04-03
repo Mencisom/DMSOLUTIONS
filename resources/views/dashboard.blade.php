@@ -27,7 +27,7 @@
                 <thead>
                 <tr>
                     <th>TOTAL DE PROYECTOS: </th>
-                    <th>3</th>
+                    <th id="totalProjects"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -57,9 +57,9 @@
             </div>
             <!-- Gráfico 4: Proyectos por Anticipo -->
             <div class="chart-container">
-                <h2>Proyectos por Anticipo</h2>
+                <h2>Cotizaciones sin proyecto</h2>
                 <br>
-                <canvas id="projectStatusChart4"></canvas>
+                <canvas style="margin: 10%" id="projectStatusChart4"></canvas>
             </div>
         </div>
     </div>
@@ -139,11 +139,20 @@
             "Diciembre":0
         };
 
-        const projectData4 = {
-            "Bajo": 5,
-            "Medio": 10,
-            "Alto": 7
-        };
+    const projectData4 = {
+        "Enero":0,
+        "Febrero": 0,
+        "Marzo":0,
+        "Abril":0,
+        "Mayo":0,
+        "Junio":0,
+        "Julio":0,
+        "Agosto":0,
+        "Septiembre":0,
+        "Octubre":0,
+        "Noviembre":0,
+        "Diciembre":0
+    };
     window.onload = function() {
          //Proyectos por estado
         fetch("/dashboard/status")
@@ -151,6 +160,8 @@
             .then(data => {
                 console.log(data)
                 keys_status = data.map(item => item.status_name);
+                console.log("CANTIDAAAAAAAAAAAD: ", keys_status.length)
+                document.getElementById("totalProjects").textContent = keys_status.length
                 console.log ("labels",keys_status);
                 value_status = data.map(item => item.cantidad);
                 console.log ("Values",value_status);
@@ -179,6 +190,7 @@
                 );
             })
 
+        //proyectos por mes
         fetch("/dashboard/month")
             .then(response => response.json())
             .then(data => {
@@ -197,12 +209,27 @@
                 );
             })
 
-            createPieChart(
-                document.getElementById('projectStatusChart4').getContext('2d'),
-                Object.keys(projectData4),
-                Object.values(projectData4),
-                ['rgba(255, 99, 132, 0.6)', 'rgba(36, 191, 164, 0.6)', 'rgba(153, 102, 255, 0.6)']
-            );
+        //cotización sin proyectos por mes
+
+        fetch("/dashboard/quotes")
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                keys_month = data.map(item => item.mes);
+                console.log ("labels Month quotes",keys_month);
+                value_month = data.map(item => item.cantidad);
+                console.log ("Values Month quotes",value_month);
+                const keys = Object.keys(projectData4);
+                data.forEach(r => {
+                    projectData4[keys[r.mes-1]]=r.cantidad;
+                })
+                console.log("SEXO ANAL ",projectData4)
+                createBarChart(
+                    document.getElementById('projectStatusChart4').getContext('2d'),
+                    Object.keys(projectData4),
+                    Object.values(projectData4),
+                );
+            })
         }
     </script>
 </body>

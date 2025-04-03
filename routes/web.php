@@ -59,6 +59,7 @@ Route::view('/dashboard','dashboard')->name('dashboard');
 Route::get('/dashboard/status',[DashboardController::Class,'proj_status'])->name('proj-status');
 Route::get('/dashboard/clients',[DashboardController::Class,'proj_clients'])->name('proj-clients');
 Route::get('/dashboard/month',[DashboardController::Class,'proj_month'])->name('proj-month');
+Route::get('/dashboard/quotes',[DashboardController::Class,'quotes_with_no_projects'])->name('proj-quotes');
 
 //products
 Route::get('/products',[ProductController::class,'index'])->name('products');
