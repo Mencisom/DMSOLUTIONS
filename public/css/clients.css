@@ -233,11 +233,9 @@ html, body {
 
 .modal-content {
     background: #fff;
-    padding: 15px;
+    padding: 50px;
     border-radius: 8px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 60%;
+    width: 100%;
     overflow-y: auto;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
@@ -282,7 +280,7 @@ html, body {
 }
 
 .close-form-button {
-    background: #dc3545; 
+    background: #dc3545;
     color: white;
     border: none;
     padding: 10px;
@@ -294,7 +292,7 @@ html, body {
 }
 
 .close-form-button:hover {
-    background: #c82333; 
+    background: #c82333;
 }
 
 button {

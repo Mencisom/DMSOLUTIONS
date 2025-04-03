@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('reminders', function (Blueprint $table) {
             $table->id();
+            $table->integer('reminder_project_id')->nullable();
+            $table->integer('reminder_quote_id')->nullable();
+            $table->string('title');
+            $table->string('description');
+            $table->dateTime('reminder_date');
             $table->timestamps();
         });
     }

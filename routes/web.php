@@ -7,6 +7,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\QueueProductsController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\UserController;
 use App\Models\Project;
@@ -75,4 +76,5 @@ Route::patch('user/update',[UserController::class, 'updateUser'])->name('user-up
 
 //reminders
 
-Route::view('/reminders','reminders')->name('reminders');
+Route::get('/reminders',[ReminderController::class, 'index'])->name('reminders');
+Route::delete('reminders/delete/{id}',[ReminderController::class,'destroy'])->name('reminder-delete');

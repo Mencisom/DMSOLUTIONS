@@ -6,6 +6,8 @@
     <title>Browse - DM Solutions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{asset('css/browse.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 @if(session('status'))
     <script>
@@ -90,7 +92,7 @@
 
             <input type="hidden" name="hiddenProjectId" id="hiddenProjectId">
             <label>Visita Técnica: <h style="color: red">*</h></label>
-            <input name="calendar" type="date" id="visit-calendar" placeholder="Selecciona fecha y hora">
+            <input type="text" name="datetimeInput" id="datetimeInput" value="" placeholder="">
 
             <label>Nombre del proyecto: <h style="color: red">*</h></label>
             <input name="projName" type="text" id="proj-name" required>
@@ -145,7 +147,12 @@
     const EditModalProject = document.getElementById("editProjectModal"); // Selecciona el modal
     const closeEditProjectModal = document.getElementById('closeEditProjectModal'); // Botón de cerrar el modal
     const options = document.getElementById("menuStatus");
+    let calendarInstance;
 
+    if(calendarInstance){
+        calendarInstance.destroy();
+        calendarInstance = null;
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         const botonesEditar = document.querySelectorAll('.edit-project');
@@ -156,28 +163,38 @@
                 event.stopPropagation();
                 let fila = boton.closest('tr');
                 let projectDetail = fila.cells[0].textContent;
-                console.log(projectDetail);
-                console.log(projectDetail);
                 fetch(`projects/detail/${projectDetail}`)
                     .then(response => response.json())
                     .then(data => {
                         status_id = data.data.status_id;
-                        console.log("Status id ",status_id);
                         console.log(data);
                         document.getElementById("hiddenProjectId").value = data.data.id;
                         document.getElementById("proj-name").value = data.data.proj_name;
-                        document.getElementById("proj-start").value = parsDate(data.data.proj_start_date);
-                        document.getElementById("proj-end").value = parsDate(data.data.proj_end_date);
+                        document.getElementById("proj-start").value = data.data.proj_start_date;
+                        document.getElementById("proj-end").value = data.data.proj_end_date;
                         document.getElementById("proj-deposit").value = data.data.proj_deposit;
-                        document.getElementById("proj-warranty").value = parsDate(data.data.proj_warranty);
+                        document.getElementById("proj-warranty").value = data.data.proj_warranty;
                         document.getElementById("proj-deposit").max = fila.cells[2].textContent.replace(/,/g, '');
                         let visita = data.data.proj_visit;
 
-                        if (visita != null){
-                            document.getElementById("visit-calendar").value = parsDate(data.data.proj_warranty);
+                        document.getElementById("datetimeInput").value = null;
+                        if (visita == null){
+                            calendarInstance = flatpickr("#datetimeInput", {
+                                enableTime: true,         // Permite seleccionar hora
+                                dateFormat: "Y-m-d H:i",  // Formato personalizado (YYYY-MM-DD HH:MM)
+                                time_24hr: true,
+                                defaultDate: null// Formato de 24 horas
+                            });
+
                         }else{
-                            document.getElementById("visit-calendar").value = "";
+                            calendarInstance = flatpickr("#datetimeInput", {
+                                enableTime: true,         // Permite seleccionar hora
+                                dateFormat: "Y-m-d H:i",  // Formato personalizado (YYYY-MM-DD HH:MM)
+                                time_24hr: true,
+                                defaultDate: data.data.proj_visit || null  // Fecha y hora actual como valor por defecto// Formato de 24 horas
+                            });
                         }
+
                     })
                     .catch(error => {
                         console.error('Error:', error.message);
@@ -211,17 +228,6 @@
         EditModalProject.classList.add("hidden");
     })
 
-    function parsDate(date){
-        date = new Date();
-
-        // Obtener las partes de la fecha
-        const day = String(date.getDate()).padStart(2, '0');  // Día con 2 dígitos
-        const month = String(date.getMonth() + 1).padStart(2, '0');  // Mes con 2 dígitos (se suma 1 porque los meses empiezan desde 0)
-        const year = date.getFullYear();  // Año de 4 dígitos
-
-        // Formato DD-MM-YYYY
-        return `${year}-${month}-${day}`;
-    }
 
 </script>
 </body>
