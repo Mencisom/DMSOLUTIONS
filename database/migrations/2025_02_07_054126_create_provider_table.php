@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('provider_name');
             $table->string('provider_number')->nullable();
             $table->string('provider_email')->nullable();
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }

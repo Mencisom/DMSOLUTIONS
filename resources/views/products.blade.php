@@ -58,11 +58,17 @@
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
-                                        <form action="{{ route('product-delete',['id' => $product->id])}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="action-btn">Eliminar</button>
-                                        </form>
+                                        @php
+                                            $user = session('user_id') ? DB::table('users')->where('id', session('user_id'))->first() : null;
+                                        @endphp
+
+                                        @if ($user && $user->user_role == '1')
+                                            <form action="{{ route('product-delete',['id' => $product->id])}}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="action-btn">Eliminar</button>
+                                            </form>
+                                        @endif
                                         <button class="action-btn view-update-provider" id="updateSingleModal" >Actualizar</button>
                                     </div>
                                 </div>

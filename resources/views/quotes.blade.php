@@ -62,11 +62,17 @@
                                         <button class="btn btn-primary btn-sm" onclick="loadQuoteData({{ $quote->id }})">
                                             Actualizar
                                         </button>
-                                        <form action="{{ route('quote-delete',['id' => $quote->id])}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="action-btn">Eliminar</button>
-                                        </form>
+                                        @php
+                                            $user = session('user_id') ? DB::table('users')->where('id', session('user_id'))->first() : null;
+                                        @endphp
+
+                                        @if ($user && $user->user_role == '1')
+                                            <form action="{{ route('quote-delete',['id' => $quote->id])}}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="action-btn">Eliminar</button>
+                                            </form>
+                                        @endif
                                         <button class="action-btn view-quote-detail" id="detail-quote">Ver Detalle</button>
                                         <button class="action-btn become-project">pasar a proyecto</button>
                                         <a href="{{route('quote-export',$quote->id)}}">
