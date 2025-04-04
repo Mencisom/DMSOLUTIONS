@@ -74,6 +74,7 @@ Route::delete('user/delete/{id}',[UserController::class, 'destroy'])->name('user
 Route::get('/role',[UserController::class, 'consultRole'])->name('role');
 Route::get('user/detail/{userDetail}',[UserController::class, 'consultUserDetail'])->name('user-detail');
 Route::patch('user/update',[UserController::class, 'updateUser'])->name('user-update');
+Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 //reminders
 

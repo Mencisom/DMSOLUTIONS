@@ -54,11 +54,16 @@
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
                                         <button class="action-btn view-update-client" id="open-update-btn">Actualizar</button>
-                                        <form action="{{route('client-delete',$client)}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="action-btn">Eliminar</button>
-                                        </form>
+                                        @php
+                                            $user = session('user_id') ? DB::table('users')->where('id', session('user_id'))->first() : null;
+                                        @endphp
+                                        @if ($user && $user->user_role == '1')
+                                            <form action="{{route('client-delete',$client)}}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="action-btn">Eliminar</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -93,9 +98,9 @@
             <label for="clientAddress">Dirección:</label>
             <input type="text" name="clientAddress" id="clientAddress" value="{{old('clientAddress')}}" required>
 
-            <button type="submit">Guardar Cliente</button>
+            <button type="submit" class="modal-button">Guardar Cliente</button>
 
-            <button type="button" id="closeFormButton" class="close-form-button">Cerrar</button>
+            <button type="button" id="closeFormButton" class="modal-button">Cerrar</button>
 
         </form>
     </div>
@@ -123,9 +128,9 @@
             <label for="clientAddress">Dirección:</label>
             <input type="text" name="clientAddress" id="update-clientAddress" value="{{old('clientAddress')}}" required>
 
-            <button type="submit" id="updateButton">Actualizar Cliente</button>
+            <button type="submit" id="updateButton" class="modal-button">Actualizar Cliente</button>
 
-            <button type="button" id="closeUpdateButton" class="close-form-button">Cerrar</button>
+            <button type="button" id="closeUpdateButton" class="modal-button">Cerrar</button>
 
         </form>
     </div>

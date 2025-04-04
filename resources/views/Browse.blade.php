@@ -63,11 +63,17 @@
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
                                         <button class="action-btn edit-project">Actualizar</button>
-                                        <form action="{{route('project-delete',$project->id)}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="action-btn">Eliminar</button>
-                                        </form>
+                                        @php
+                                            $user = session('user_id') ? DB::table('users')->where('id', session('user_id'))->first() : null;
+                                        @endphp
+
+                                        @if ($user && $user->user_role == '1')
+                                            <form action="{{route('project-delete',$project->id)}}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="action-btn">Eliminar</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
                             </td>

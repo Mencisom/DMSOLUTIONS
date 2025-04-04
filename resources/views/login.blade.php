@@ -8,7 +8,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-
+@if(session('status'))
+    <script>
+        alert("{{session('status')}}")
+    </script>
+@endif
 <div class="form">
 
     <div class="tab-content">

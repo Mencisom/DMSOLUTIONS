@@ -47,12 +47,18 @@
                     <span class="menu-text">Dashboard</span>
                 </a>
             </li>
-            <li class="menu-item">
-                <a href="{{route('administration')}}">
-                    <i class="fas fa-pencil menu-icon"></i>
-                    <span class="menu-text">Administración</span>
-                </a>
-            </li>
+            @php
+                $user = session('user_id') ? DB::table('users')->where('id', session('user_id'))->first() : null;
+            @endphp
+
+            @if ($user && $user->user_role == '1')
+                <li class="menu-item">
+                    <a href="{{ route('administration') }}">
+                        <i class="fas fa-pencil menu-icon"></i>
+                        <span class="menu-text">Administración</span>
+                    </a>
+                </li>
+            @endif
             <li class="menu-item">
                 <a href="{{route('reminders')}}">
                     <i class="fas fa-book menu-icon"></i>
@@ -62,12 +68,19 @@
         </ul>
     </nav>
     <div class="logout-section">
-        <a href="{{route('login')}}">
+        <a href="{{route('logout')}}">
             <button class="logout-button" id="logout-button">
                 <i class="fas fa-sign-out-alt logout-icon"></i>
                 <span class="logout-text">Cerrar sesión</span>
             </button>
         </a>
     </div>
-
 </aside>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(!session('user_id'))
+            window.location.href = "{{route("login")}}";
+        @endif
+    })
+</script>

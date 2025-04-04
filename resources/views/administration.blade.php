@@ -97,9 +97,9 @@
             <select id="menuRol" name="menuRol">
 
             </select>
-            <button type="submit">Guardar usuario</button>
+            <button type="submit" class="modal-button">Guardar usuario</button>
 
-            <button type="button" id="closeFormButton" class="close-form-button">Cerrar</button>
+            <button type="button" id="closeFormButton" class="modal-button">Cerrar</button>
         </form>
     </div>
 </div>
@@ -127,9 +127,9 @@
             <select id="menuActualizarRol" name="menuActualizarRol">
 
             </select>
-            <button type="submit">Guardar usuario</button>
+            <button type="submit" class="modal-button">Guardar usuario</button>
 
-            <button type="button" id="closeUpdateFormButton" class="close-form-button">Cerrar</button>
+            <button type="button" id="closeUpdateFormButton" class="modal-button">Cerrar</button>
         </form>
     </div>
 </div>
