@@ -19,7 +19,7 @@
             <div class="search-bar">
                 <input type="text" placeholder="Buscar productos...">
                 <button class="filter-button"><i class="fas fa-filter"></i> Filtros</button>
-                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>
+{{--                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>--}}
                 <button class="new-button" id="download" action=""></i> <a href="{{ route('descargarPlantilla') }}" class="btn btn-primary">Descargar Plantilla</a></button>
                 <button class="new-button" id="openModalUpdadteButton">
                 <i class="fas fa-plus">Actualizar Productos</i>
@@ -58,8 +58,12 @@
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
-                                        <button class="action-btn">Eliminar</button>
-                                        <button class="action-btn">Actualizar</button>
+                                        <form action="{{ route('product-delete',['id' => $product->id])}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="action-btn">Eliminar</button>
+                                        </form>
+                                        <button class="action-btn view-update-provider" id="updateSingleModal" >Actualizar</button>
                                     </div>
                                 </div>
                             </td>
@@ -87,47 +91,37 @@
 <!-- Modal para agregar producto -->
 <div class="modal hidden" id="productModal">
     <div class="modal-content">
-        <h2>Agregar Producto</h2>
-        <form id="productForm">
+        <h2>Actualizar Producto</h2>
+        <form id="productForm" method="post" action="{{ route('product-single-upload') }}">
+            @csrf
+            @method('PATCH')
+
             <label for="productName">Nombre:</label>
-            <input type="text" id="productName" required>
+            <input type="text" id="productName" name="productName" value="{{ old('productName') }}" required>
+
+            <input type="hidden" name="hiddenProjectId" id="hiddenProjectId">
 
             <label for="productDescription">Descripción:</label>
-            <textarea id="productDescription" required></textarea>
-
-            <label for="productId">ID:</label>
-            <input type="text" id="productId" required>
-
-            <label for="productStatus">Estado:</label>
-            <select id="productStatus">
-                <option value="Disponible">Disponible</option>
-                <option value="Agotado">Agotado</option>
-            </select>
-
-            <label for="productRoute">Ruta:</label>
-            <input type="text" id="productRoute" required>
+            <textarea id="productDescription" name="productDescription" required>{{ old('productDescription') }}</textarea>
 
             <label for="productPrice">Precio:</label>
-            <input type="number" id="productPrice" required>
-
-            <label for="productImage">Subir Imagen:</label>
-            <input type="file" id="productImage" accept="image/*" required>
+            <input type="number" id="productPrice" name="productPrice" required>
 
             <button type="submit">Guardar Producto</button>
-            <button type="button" id="closeFormButton" class="close-form-button">Cerrar</button>
+            <button type="button" id="closeFormButton1" class="close-form-button">Cerrar</button>
         </form>
     </div>
 </div>
 
 <script>
     const openModaUpdatelButton = document.getElementById('openModalUpdadteButton');
-
+    const modal = document.getElementById("productModal");
     document.addEventListener("DOMContentLoaded", () => {
-        const modal = document.getElementById("productModal");
+
         const uploadmodal = document.getElementById("uploadPoductsModal");
         const closeuploadmodal = document.getElementById("closeUploadProductsModal");
-        const openModalButton = document.getElementById("openModalButton");
-        const closeFormButton = document.getElementById("closeFormButton");
+        const openModalButton = document.getElementById("updateSingleModal");
+        const closeFormButton = document.getElementById("closeFormButton1");
         const openModaUpdatelButton = document.getElementById('openModalUpdadteButton');
 
         openModaUpdatelButton.addEventListener("click", () => {
@@ -177,24 +171,38 @@
         });
     });
 
-    document.getElementById('productForm').addEventListener('submit', (event) => {
-        event.preventDefault();
+    // document.getElementById('productForm').addEventListener('submit', (event) => {
+    //     event.preventDefault();
+    //
+    //     const name = document.getElementById('productName').value;
+    //     const description = document.getElementById('productDescription').value;
+    //     const price = document.getElementById('productPrice').value;
+    //
+    //     if (name && description && price) {
+    //         alert('Producto guardado con éxito');
+    //         document.getElementById('productModal').classList.add('hidden');
+    //         document.getElementById('productForm').reset();
+    //     } else {
+    //         alert('Por favor completa todos los campos.');
+    //     }
+    // });
+    const botonesDetalle = document.querySelectorAll('.view-update-provider');
+    botonesDetalle.forEach(function(boton) {
+        boton.addEventListener('click', function(event) {
+            // Evitar que el clic en el botón se propague
+            event.stopPropagation();
 
-        const name = document.getElementById('productName').value;
-        const description = document.getElementById('productDescription').value;
-        const id = document.getElementById('productId').value;
-        const status = document.getElementById('productStatus').value;
-        const route = document.getElementById('productRoute').value;
-        const price = document.getElementById('productPrice').value;
-        const image = document.getElementById('productImage').files[0];
+            // Obtener la fila correspondiente al botón clickeado
+            let fila = boton.closest('tr');
 
-        if (name && description && id && status && route && price && image) {
-            alert('Producto guardado con éxito');
-            document.getElementById('productModal').classList.add('hidden');
-            document.getElementById('productForm').reset();
-        } else {
-            alert('Por favor completa todos los campos.');
-        }
+            // Acceder a los datos de la fila (ID, Fecha de expiración, Nombre, Teléfono, etc.)
+            document.getElementById("productName").setAttribute("value",fila.cells[0].textContent);
+
+            document.getElementById("productDescription").textContent=fila.cells[1].textContent;
+            document.getElementById("hiddenProjectId").value = fila.cells[2].textContent.replace(/,/g, '');
+            document.getElementById('productPrice').value = fila.cells[4].textContent.replace(/,/g, '');
+            modal.classList.remove("hidden");
+        });
     });
 </script>
 </body>

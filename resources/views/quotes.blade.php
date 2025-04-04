@@ -62,16 +62,16 @@
                                         <button class="btn btn-primary btn-sm" onclick="loadQuoteData({{ $quote->id }})">
                                             Actualizar
                                         </button>
+                                        <form action="{{ route('quote-delete',['id' => $quote->id])}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="action-btn">Eliminar</button>
+                                        </form>
                                         <button class="action-btn view-quote-detail" id="detail-quote">Ver Detalle</button>
                                         <button class="action-btn become-project">pasar a proyecto</button>
                                         <a href="{{route('quote-export',$quote->id)}}">
                                             <button class="action-btn">Exportar</button>
                                         </a>
-                                        <form action="{{route('quote-delete',$quote -> id)}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="action-btn">Eliminar</button>
-                                        </form>
                                     </div>
                                 </div>
                             </td>
@@ -275,7 +275,7 @@
     </div>
 </div>
 
-<!--Convertir a proyecto-->
+<!--Convertir a Cotización-->
 <div class="modal hidden" id="becomeProjectModal">
     <div class="modal-content">
         <h1>PROYECTO NUEVO: </h1> <br>
@@ -357,7 +357,7 @@
             <option value="" required>Cargando productos...</option>
         </select>
         <input type="number" placeholder="Cantidad" class="product-quantity" min="1" required>
-        <input type="number" placeholder="Precio" class="product-price" min="0" required value="0">
+        <input type="number" placeholder="Precio" class="product-price" min="0" step="any" required value="0">
         <button type="button" class="remove-product">❌</button>
     `;
 
@@ -370,8 +370,9 @@
 
 
         productSelect.addEventListener("change", function () {
+            const selectedData = JSON.parse(productSelect.value);
             console.log("LA MONDA SE LLAMA ",productSelect.options[productSelect.selectedIndex].text)
-            productPriceInput.value = productSelect.value;
+            productPriceInput.value = selectedData.price;
         })
 // Evento para detectar si el producto contiene "cable"
         productSelect.addEventListener("change", function () {
@@ -405,8 +406,12 @@
             }
 
             quantityInput.addEventListener("input", function () {
-
-               addProductToList(productSelect.options[productSelect.selectedIndex].text, quantityInput.value, productPriceInput.value);
+                const selectedData = JSON.parse(productSelect.value);
+                console.log("Producto seleccionado:", selectedData)
+               addProductToList(productSelect.options[productSelect.selectedIndex].text,
+                   quantityInput.value,
+                   JSON.parse(productSelect.value).price,
+                   JSON.parse(productSelect.value).provider_id);
 
             });
 
@@ -423,13 +428,13 @@
     }
 
     /////////
-    function addProductToList(productId, quantity, price, hidden) {
+    function addProductToList(productId, quantity, price, provider) {
         if (window.getComputedStyle(modal).display === 'none') {
             console.log('El modal está oculto');
         } else {
             console.log('El modal está visible');
         }
-        productList.push({ id: productId, quantity: quantity, price: price });
+        productList.push({ id: productId, quantity: quantity, price: price, provider: provider });
 
         if (window.getComputedStyle(modal).display === 'none') {
             document.getElementById("hiddenProducts").value = JSON.stringify(productList);
@@ -658,8 +663,11 @@
 
                     data.data.forEach(producto => {
                         const option = document.createElement("option");
-                        option.value = producto.prod_price_sales;
-                        option.textContent = producto.prod_name;
+                        option.value = JSON.stringify({
+                            price: producto.prod_price_sales,
+                            provider_id: producto.provider_id
+                        });
+                        option.textContent = `${producto.prod_name}`;
                         selectElement.appendChild(option);
                     });
                 } else {
@@ -668,6 +676,7 @@
             })
             .catch(error => console.error("Error al cargar los productos:", error));
     }
+
     //// EVENTOS DE ACTUALIZAR
     const closeupdateModalButton = document.getElementById("closeupdateQuoteModal");
     closeupdateModalButton.addEventListener('click', () => {
@@ -697,7 +706,7 @@
                 $('#updateProductsTable tbody').empty();
                 data.products.forEach(material => {
                     $('#updateProductsTable tbody').append(`
-                <tr data-id="${material.id}">
+                <tr data-id="${material.id}" data-provider="${material.provider_id}">
                     <td>${material.prod_name}</td>   <!-- Cambiado -->
                     <td>${material.quantity}</td>
                     <td>${material.prod_price_sales}</td>
@@ -741,10 +750,11 @@
             let cells = rows[i].getElementsByTagName("td");
 
             let productId = cells[0].innerText;
+            let providerId = rows[i].getAttribute("data-provider");
             let quantity = parseInt(cells[1].innerText);
             let price = parseFloat(cells[2].innerText);
 
-            productList.push({ id: productId, quantity: quantity, price: price });
+            productList.push({ id: productId, quantity: quantity, price: price, provider:providerId});
         }
 
         // Actualizar campo oculto
@@ -754,7 +764,7 @@
         event.preventDefault(); // Evita el envío inmediato
 
         updateProductListFromTable(); // Recorrer la tabla y actualizar la lista de productos
-
+        console.log("Datos enviados:", document.getElementById("hiddenProducts").value);
         this.submit(); // Envía el formulario
     });
 </script>

@@ -111,9 +111,13 @@ class QuoteController
 
             foreach ($products as $p) {
                 $materialName = $p['id'];
+                $materialprice= $p['price'];
+                $materialprovider = $p['provider'];
 
                 $material = DB::table('products')
                     ->where('prod_name', $materialName)
+                    ->where('provider_id', $materialprovider)
+                    ->where('prod_price_sales', $materialprice)
                     ->first();
 
                 if (!$material) {
@@ -188,9 +192,13 @@ class QuoteController
 
             foreach ($newProducts as $p) {
                 $materialName = $p['id'];
+                $materialprice= $p['price'];
+                $materialprovider = $p['provider'];
 
                 $material = DB::table('products')
                     ->where('prod_name', $materialName)
+                    ->where('provider_id', $materialprovider)
+                    ->where('prod_price_sales', $materialprice)
                     ->first();
 
                 if (!$material) {
@@ -267,15 +275,30 @@ class QuoteController
         return $pdf->stream("Cotización {$quote[0]->client_name}.pdf");
 
     }
-
-    public function destroy(Request $request, Quote $quote)
+    public function destroy($id)
     {
-        $quote = Quote::find($request->id);
-        try {
-            $quote->delete();
-        }catch(\Exception $e){
-            return back()->with('error', 'Error inesperado: ' . $e->getMessage());
+// Buscar la cotización
+        $quote = Quote::find($id);
+
+        // Verificar si la cotización existe
+        if (!$quote) {
+            return redirect()->route('quote')->with('status', 'Cotización no encontrada.');
         }
-        return to_route('quote');
+
+        if ($quote->project) {
+            return redirect()->route('quote')->with('status', 'No se puede eliminar la cotización porque tiene un proyecto asociado.');
+        }
+
+        try {
+            // Eliminar registros
+            DB::table('quote_materials')->where('quote_id', $quote->id)->delete();
+
+            $quote->delete();
+
+            return redirect()->route('quote')->with('status', 'Cotización eliminada correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('quote')->with('error', 'Error al eliminar la cotización: ' . $e->getMessage());
+        }
     }
+
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\PlantillaProductosExport;
 use App\Imports\ProductsImport;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,8 @@ class ProductController
 {
     public function index()
     {
-        $products = DB::table('products')->get();
+        $products = DB::table('products')
+            ->where('prod_status',1)->get();
         return view('products', ['products' => $products]);
     }
 
@@ -22,10 +24,28 @@ class ProductController
         return $product;
     }
 
+    public function destroy($id)
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()->route('products')->with('status', 'Producto no encontrado.');
+        }
+        try {
+            // Inhabilitar proveedor
+            $product->update(['prod_status' => 0]);
+            // Verificar si los productos se actualizaron
+            return redirect()->route('products')
+                ->with('status', 'Producto inhabilitado. Productos también han sido inhabilitados.');
+        } catch (\Exception $e) {
+            return redirect()->route('products')
+                ->with('error', 'Error al inhabilitar el producto: ' . $e->getMessage());
+        }
+    }
     public function consult()
     {
         try {
-            $products = DB::table('products')->select('prod_name', 'prod_price_sales')->get();
+            $products = DB::table('products')->select('prod_name', 'prod_price_sales', 'provider_id')->get();
             if ($products->isEmpty()) {
                 return response()->json([
                     'success' => false,
@@ -51,31 +71,7 @@ class ProductController
         return Excel::download(new PlantillaProductosExport, 'plantilla_productos.xlsx');
     }
 
-//    public function upload(Request $request)
-//    { // Validar que el archivo es un Excel
-//        $request->validate([
-//            'archivo' => 'required|mimes:xlsx,csv',
-//        ]);
-//
-//        try {
-//            // Procesar la importación del archivo
-//            $import = new ProductsImport();
-//            Excel::import($import, $request->file('archivo'));
-//
-//            // Obtener los productos no insertados (duplicados)
-//            $productosNoInsertados = $import->getErrores();
-//
-//            return response()->json([
-//                'mensaje' => 'Importación completada.',
-//                'productos_no_insertados' => $productosNoInsertados,
-//            ]);
-//        } catch (\Exception $e) {
-//            return response()->json([
-//                'mensaje' => 'Error al importar el archivo.',
-//                'error' => $e->getMessage(),
-//            ], 500);
-//        }
-//    }
+
     public function upload(Request $request)
     {
         // Validar que el archivo es un Excel
@@ -115,17 +111,46 @@ class ProductController
             // Obtener productos no insertados
             $productosNoInsertados = $import->getErrores();
 
-            return response()->json([
-                'mensaje' => 'Importación completada.',
-                'productos_no_insertados' => $productosNoInsertados,
-            ]);
+
+            $message = 'Importación completada. Productos no insertados: ' . implode(', ', $productosNoInsertados);
+
         } catch (\Exception $e) {
-            return response()->json([
-                'mensaje' => 'Error al importar el archivo.',
-                'error' => $e->getMessage(),
-            ], 500);
+            $message = $e->getCode();
         }
+        return to_route('products')->with('status', $message);
     }
+    public function singleUpload(Request $request)
+    {
+        // Verificar si los datos se están enviando correctamente
+
+
+        // Buscar el producto por el ID proporcionado
+        $product = Product::find($request->get('hiddenProjectId'));
+
+        // Verificar si el producto existe
+        if (!$product) {
+            return to_route('products')->with('status', 'Error: Producto no encontrado.');
+        }
+
+        try {
+
+            // Actualizar los datos del producto
+            $product->update([
+                'prod_name' => $request->get('productName'),
+                'prod_des' => $request->get('productDescription'),
+//                'prod_price_purchase' => $request->get('productPrice'),
+                'prod_price_sales'=> $request->get('productPrice'),
+                'prod_status' => 1,
+            ]);
+
+            $message = 'Producto actualizado correctamente.';
+        } catch (\Exception $e) {
+            $message = 'Error al actualizar el producto: ' . $e->getMessage();
+        }
+
+        return to_route('products')->with('status', $message);
+    }
+
 
 
 }

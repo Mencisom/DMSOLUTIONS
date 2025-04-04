@@ -17,7 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/welcome','welcome')->name('home');
 Route::get('/browse',[ProjectController::class,'index'])->name('browse');
+//providers
 Route::get('/providers',[ProviderController::class,'index'])->name('providers');
+Route::post('providers/create',[ProviderController::class,'store'])->name('provider-save');
+Route::delete('/providers/delete/{id}', [ProviderController::class, 'destroy'])->name('provider-delete');
+Route::patch('/providers/update',[ProviderController::class,'update'])->name('provider-update');
 
 //login
 Route::view('/','login')->name('login');
@@ -34,7 +38,7 @@ Route::post('/quote',[QuoteController::class,'store'])->name('quote-save');
 Route::get('/quotes/{id}/data', [QuoteController::class, 'edit'])->name('quotes-edit');
 Route::get('/quote/export/{quote}',[QuoteController::class,'export'])->name('quote-export');
 Route::patch('/quote/update',[QuoteController::class,'update'])->name('quote-update');
-Route::delete('/quote/delete/{id}',[QuoteController::class,'destroy'])->name('quote-delete');
+Route::delete('quote/delete/{id}',[QuoteController::class,'destroy'])->name('quote-delete');
 //Cliente
 
 Route::get('/clients',[ClientController::class,'index'])->name('clients');
@@ -65,7 +69,8 @@ Route::get('/dashboard/quotes',[DashboardController::Class,'quotes_with_no_proje
 Route::get('/products',[ProductController::class,'index'])->name('products');
 Route::get('/products/descargarplantilla', [ProductController::class, 'descargarPlantilla'])->name('descargarPlantilla');
 Route::post('/products/upload', [ProductController::class, 'upload'])->name('prod-upload');
-
+Route::patch('products/single/upload',[ProductController::class,'singleUpload'])->name('product-single-upload');
+Route::delete('products/{id}',[ProductController::class,'destroy'])->name('product-delete');
 //administration
 
 Route::get('/administration',[UserController::class, 'index'])->name('administration');

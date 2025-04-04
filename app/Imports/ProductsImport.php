@@ -38,10 +38,7 @@ class ProductsImport implements ToModel//, WithDrawings
             return null;
         }
 
-        if (Product::where('prod_reference', $referencia)->exists()) {
-            $this->errores[] = "El producto con referencia '$referencia' ya existe.";
-            return null;
-        }
+
 
         // Conversión de moneda si no es COP
         if ($moneda !== 'COP') {
@@ -59,29 +56,44 @@ class ProductsImport implements ToModel//, WithDrawings
             }
         }
 
+
+        $productoExistente = Product::where('prod_reference', $referencia)
+            ->where('provider_id', $proveedor_id)
+            ->first();
+
+        if ($productoExistente) {
+            // Si el producto ya existe con la misma referencia y proveedor, lo actualizamos
+            $productoExistente->update([
+                'prod_name' => $nombre,
+                'prod_des' => $descripcion,
+                'prod_price_purchase' => $precio,
+                'prod_price_sales' => $precio * 1.2,
+                'prod_status' => '1',
+            ]);
+            $productoFinal = $productoExistente;
+        }else{
+            $productoFinal = Product::create([
+                'prod_name' => $nombre,
+                'prod_reference' => $referencia,
+                'prod_des' => $descripcion,
+                'provider_id' => $proveedor_id,
+                'prod_status' => '1',
+                'prod_price_purchase' => $precio,
+                'prod_price_sales' => $precio * 1.2,
+                'prod_image' => null,
+            ]);
+        }
+
         // Obtener la imagen de la fila actual
-
-
-        $product = new Product([
-            'prod_name' => $nombre,
-            'prod_reference' => $referencia,
-            'prod_des' => $descripcion,
-            'provider_id' => $proveedor_id,
-            'prod_status' => '1',
-            'prod_price_purchase' => $precio,
-            'prod_price_sales' => $precio * 1.2,
-            'prod_image' => null,
-        ]);
-        $product->save();
         //$rowNumber = request()->input('rowNumber', null); // Puedes obtenerlo del request o mapearlo correctamente
         $imagenRuta = $this->imagenes[$referencia] ?? null;
 
         if ($imagenRuta) {
-            $product->prod_image = $imagenRuta;
-            $product->save(); // Actualizamos el producto con la imagen
+            $productoFinal->prod_image = $imagenRuta;
+            $productoFinal->save(); // Actualizamos el producto con la imagen
         }
 
-        return $product;
+        return $productoFinal;
     }
 
     private function obtenerProveedorId($nombreProveedor)
