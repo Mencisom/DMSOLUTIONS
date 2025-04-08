@@ -221,58 +221,6 @@
             }
         });
     });
-
-   /* document.addEventListener('DOMContentLoaded',function (){
-        document.getElementById('updateButton').addEventListener('click',function () {
-            const client = document.getElementById('update-clientIdentification').getAttribute("value");
-            console.log("sexo anal duro",client)
-            try{
-                fetch(`clients/${client}/update`)
-                .then(response => response.json())
-                if (response.ok) {
-                    alert('Cliente actualizado exitosamente');
-                } else {
-                    alert('Hubo un problema con la solicitud');
-                }
-            }
-            catch (error){
-                alert('Error'+error);
-            }
-        })
-    });*/
-
-    /*document.getElementById('clientForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const data = {
-            clientName: document.getElementById('clientName').value,
-            clientPhone: document.getElementById('clientPhone').value,
-            clientEmail: document.getElementById('clientEmail').value,
-            clientIdentification: document.getElementById('clientIdentification').value,
-            clientAddress: document.getElementById('clientAddress').value,
-            token: document.getElementsByName('_token').value
-        }
-        try {
-            const response = await fetch('clients/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Si necesitas incluir un token CSRF en Laravel (para proteger de CSRF), añade este encabezado:
-                    'X-CSRF-TOKEN':data.token
-                },
-                body: JSON.stringify(data)  // Enviar los datos en el cuerpo de la solicitud
-            });
-
-            // Verificar si la respuesta es exitosa
-            if (response.ok) {
-                const result = await response.json();  // Obtener la respuesta como JSON
-                alert('Mensaje desde el servidor:'+result.message);
-            } else {
-                alert('Hubo un problema con la solicitud');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    });*/
 </script>
 </body>
 </html>

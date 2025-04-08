@@ -57,7 +57,7 @@ class ProviderController
             // Guardar cambios
             $provider->save();
 
-            return redirect()->route('providers')->with('status', 'Proveedor actualizado correctamente.');
+            return redirect()->route('providers');
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al actualizar el proveedor: ' . $e->getMessage());

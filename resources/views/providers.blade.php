@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="{{asset('css/providers.css')}}">
 </head>
 <body>
+@if(session('status'))
+    <script>
+        alert("{{session('status')}}")
+    </script>
+@endif
 <div class="container">
     <!-- Barra lateral -->
     <x-lateral-bar></x-lateral-bar>
@@ -47,16 +52,11 @@
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>
                                     <div class="action-dropdown hidden">
-                                        @php
-                                            $user = session('user_id') ? DB::table('users')->where('id', session('user_id'))->first() : null;
-                                        @endphp
-                                        @if ($user && $user->user_role == '1')
-                                            <form action="{{ route('provider-delete', ['id' => $provider->id]) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="action-btn">Eliminar</button>
-                                            </form>
-                                        @endif
+                                        <form action="{{ route('provider-delete', ['id' => $provider->id]) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="action-btn">Eliminar</button>
+                                        </form>
                                         <button class="action-btn view-update-provider" id="openModalButtonUpdate">Actualizar</button>
                                     </div>
                                 </div>
@@ -106,16 +106,16 @@
         <form id="porviderForm" method="POST" action="{{ route('provider-update') }}">
             @csrf @method('PATCH')
             <label for="providerName">Nombre:</label>
-            <input type="text" name="providerName" id="updateName" value="{{old('providerName')}}" required>
+            <input type="text" name="providerName" id="updateNameForm" value="{{old('providerName')}}" required>
 
             <label for="providerPhone">Teléfono:</label>
-            <input type="text" name="providerPhone" id="updatePhone" value="{{old('providerPhone')}}" required>
+            <input type="text" name="providerPhone" id="updatePhoneForm" value="{{old('providerPhone')}}" required>
 
             <label for="providerEmail">Email:</label>
-            <input type="email" name="providerEmail" id="updateEmail" value="{{old('providerEmail')}}" required>
+            <input type="email" name="providerEmail" id="updateEmailForm" value="{{old('providerEmail')}}" required>
 
             <label for="ProviderIdentification">Identificación:</label>
-            <input type="text" name="ProviderIdentification" id="updateIdentification" value="{{old('ProviderIdentification')}}" required>
+            <input type="text" name="ProviderIdentification" id="updateIdentificationForm" value="{{old('ProviderIdentification')}}" required>
 
 
             <button type="submit" id="updateButton">Actualizar Proveedor</button>
@@ -127,11 +127,9 @@
 </div>
 
 <script>
-    const updateModal = document.getElementById("provaiderUpdate");
+
     document.addEventListener("DOMContentLoaded", () => {
         const modal = document.getElementById("providerModal");
-        const updateModalButton = document.getElementById("openModalButtonUpdate");
-        const deleteModalButton = document.getElementById("closeUpdateButton");
         const openModalButton = document.getElementById("openModalButton");
         const closeFormButton = document.getElementById("closeFormButton");
 
@@ -140,15 +138,8 @@
             modal.classList.remove("hidden");
         });
 
-         updateModalButton.addEventListener("click", () => {
-             updateModal.classList.remove("hidden");
-         });
-
         // Cierra el modal al hacer clic en "Cerrar"
         closeFormButton.addEventListener("click", () => {
-            modal.classList.add("hidden");
-        });
-        deleteModalButton.addEventListener("click", () => {
             modal.classList.add("hidden");
         });
 
@@ -183,25 +174,14 @@
         });
     });
 
-    document.getElementById('providerForm').addEventListener('submit', (event) => {
-        event.preventDefault();
 
-        const name = document.getElementById('providerName').value;
-        const id = document.getElementById('providerId').value;
-        const phone = document.getElementById('providerPhone').value;
-        const email = document.getElementById('providerEmail').value;
 
-        if (name && id && phone && email) {
-            alert('Provider saved successfully');
-            document.getElementById('providerModal').classList.add('hidden');
-            document.getElementById('providerForm').reset();
-        } else {
-            alert('Please complete all fields.');
-        }
-    });
+
+    const updateModal = document.getElementById("provaiderUpdate");
     const botonesDetalle = document.querySelectorAll('.view-update-provider');
     botonesDetalle.forEach(function(boton) {
         boton.addEventListener('click', function(event) {
+
             // Evitar que el clic en el botón se propague
             event.stopPropagation();
 
@@ -209,14 +189,20 @@
             let fila = boton.closest('tr');
 
             // Acceder a los datos de la fila (ID, Fecha de expiración, Nombre, Teléfono, etc.)
-            document.getElementById("updateName").setAttribute("value",fila.cells[2].textContent);
-            document.getElementById("updatePhone").setAttribute("value",fila.cells[3].textContent);
-            document.getElementById("updateEmail").setAttribute("value",fila.cells[4].textContent);
-            document.getElementById("updateIdentification").setAttribute("value",fila.cells[1].textContent);
+            document.getElementById("updateNameForm").setAttribute("value",fila.cells[2].textContent);
+            document.getElementById("updatePhoneForm").setAttribute("value",fila.cells[3].textContent);
+            document.getElementById("updateEmailForm").setAttribute("value",fila.cells[4].textContent);
+            document.getElementById("updateIdentificationForm").setAttribute("value",fila.cells[1].textContent);
             //document.getElementById("update-clientAddress").setAttribute("value",fila.cells[5].textContent);
 
             updateModal.classList.remove("hidden");
+
+
         });
+    });
+    const deleteModalButton = document.getElementById("closeUpdateButton");
+    deleteModalButton.addEventListener("click", () => {
+        updateModal.classList.add("hidden");
     });
 </script>
 </body>
