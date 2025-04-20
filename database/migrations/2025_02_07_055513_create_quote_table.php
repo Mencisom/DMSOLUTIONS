@@ -20,7 +20,9 @@ return new class extends Migration
             $table->double('quote_helper_payday');
             $table->double('quote_supervisor_payday');
             $table->double('quote_work_total');
-            $table->double('quote_other_costs');
+            $table->double('quote_other_costs_total');
+            $table->double('quote_subtotal');
+            $table->double('quote_iva');
             $table->double('quote_total');
             $table->date('quote_expiration_date');
             $table->timestamps();

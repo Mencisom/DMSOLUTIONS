@@ -40,21 +40,21 @@ class ProductsImport implements ToModel//, WithDrawings
 
 
 
-        // Conversión de moneda si no es COP
-        if ($moneda !== 'COP') {
-            try {
-                $response = Http::get("https://api.exchangerate-api.com/v4/latest/$moneda")->json();
-                $tasa = $response['rates']['COP'] ?? null;
-
-                if ($tasa) {
-                    $precio *= $tasa;
-                } else {
-                    $this->errores[] = "No se pudo obtener la tasa de conversión para '$moneda'.";
-                }
-            } catch (\Exception $e) {
-                $this->errores[] = "Error en API de conversión: " . $e->getMessage();
-            }
-        }
+//        // Conversión de moneda si no es COP
+//        if ($moneda !== 'COP') {
+//            try {
+//                $response = Http::get("https://api.exchangerate-api.com/v4/latest/$moneda")->json();
+//                $tasa = $response['rates']['COP'] ?? null;
+//
+//                if ($tasa) {
+//                    $precio *= $tasa;
+//                } else {
+//                    $this->errores[] = "No se pudo obtener la tasa de conversión para '$moneda'.";
+//                }
+//            } catch (\Exception $e) {
+//                $this->errores[] = "Error en API de conversión: " . $e->getMessage();
+//            }
+//        }
 
 
         $productoExistente = Product::where('prod_reference', $referencia)
@@ -81,6 +81,7 @@ class ProductsImport implements ToModel//, WithDrawings
                 'prod_price_purchase' => $precio,
                 'prod_price_sales' => $precio * 1.2,
                 'prod_image' => null,
+                'money_exchange' => $moneda
             ]);
         }
 
@@ -137,16 +138,6 @@ class ProductsImport implements ToModel//, WithDrawings
                 // Ruta accesible públicamente
                 $imageUrl = 'storage/images/' . $imageName;
 
-                // Guardar la relación fila -> imagen en la base de datos
-                // Ejemplo de actualización o inserción en la base de datos, asumiendo que tienes un modelo Product
-//                $producto = Product::find($rowNumber); // Encuentra el producto por el número de fila
-//                if ($producto) {
-//                    $producto->prod_image = $imageUrl; // Actualiza el campo de la ruta de la imagen
-//                    $producto->save(); // Guarda la actualización
-//                }
-
-                // Guardar la relación fila -> imagen
-//                $imagenes[$rowNumber] = $imageUrl;
                 $imagenes[$referencia] = $imageUrl;
             }
         }

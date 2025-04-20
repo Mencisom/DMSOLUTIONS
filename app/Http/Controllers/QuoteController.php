@@ -20,7 +20,7 @@ class QuoteController
     public function edit($id)
     {
 
-        $quote = Quote::with('client','products')->find($id);
+        $quote = Quote::with('client','products','costs')->find($id);
 
         if (!$quote) {
             return response()->json(['error' => 'Cotización no encontrada'], 404);
@@ -53,6 +53,13 @@ class QuoteController
                     'total_price' => $product->pivot->total_price ?? 0,
                 ];
             }),
+            'extra_costs' => $quote->costs->map(function ($cost) {
+                return [
+                    'id' => $cost->id,
+                    'name' => $cost->name,
+                    'unit_price' => $cost->unit_price,
+                ];
+            }),
         ]);
     }
 
@@ -76,7 +83,20 @@ class QuoteController
                     ->where('client_identification', $request->input('clientId'))
                     ->first();
             }
+            // Inicializamos el total de costos adicionales
+            $otherCostsTotal = 0;
 
+            // Leer y procesar los costos adicionales
+            $extraCostsJson = $request->input('expenses');
+            $extraCosts = json_decode($extraCostsJson, true);
+
+            if (!empty($extraCosts) && is_array($extraCosts)) {
+                foreach ($extraCosts as $cost) {
+                    if (isset($cost['name'], $cost['price'])) {
+                        $otherCostsTotal += floatval($cost['price']);
+                    }
+                }
+            }
             // Crear cotización
             $quote = new Quote();
             $quote->quote_client_id = $client->id;
@@ -84,7 +104,7 @@ class QuoteController
             $quote->quote_helpers = $request->input('numAssistants');
             $quote->quote_helper_payday = $request->input('assistantSalary');
             $quote->quote_supervisor_payday = $request->input('supervisorFee');
-            $quote->quote_other_costs = $request->input('otherCosts');
+            $quote->quote_other_costs_total = $otherCostsTotal;
 
             // Calcular costos de trabajo
             $quote->quote_work_total =
@@ -95,7 +115,20 @@ class QuoteController
             $quote->quote_subtotal = 0;
             $quote->quote_expiration_date = "2026-02-17";
             $quote->save();
-
+            // Guardar costos adicionales si existen
+            if (!empty($extraCosts) && is_array($extraCosts)) {
+                foreach ($extraCosts as $cost) {
+                    if (isset($cost['name'], $cost['price'])) {
+                        DB::table('extra_costs')->insert([
+                            'quote_id' => $quote->id,
+                            'name' => $cost['name'],
+                            'unit_price' => floatval($cost['price']),
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                }
+            }
             // Manejo de productos
             $productsJson = $request->input('products');
             $products = json_decode($productsJson, true);
@@ -106,7 +139,7 @@ class QuoteController
             }
 
             $quote->quote_material_total = $materialTotal;
-            $quote->quote_subtotal = $quote->quote_work_total + $quote->quote_other_costs + $quote->quote_material_total;
+            $quote->quote_subtotal = $quote->quote_work_total + $quote->quote_other_costs_total + $quote->quote_material_total;
             $quote->save();
 
             foreach ($products as $p) {
@@ -153,7 +186,9 @@ class QuoteController
     }
     public function update(Request $request)
     {
+
         try {
+            //dd($request->all());
             $quote = Quote::find($request->input('quoteId'));
 
             if (!$quote) {
@@ -165,7 +200,45 @@ class QuoteController
             $quote->quote_helpers = $request->input('numAssistants');
             $quote->quote_helper_payday = $request->input('assistantSalary');
             $quote->quote_supervisor_payday = $request->input('supervisorFee');
-            $quote->quote_other_costs = $request->input('otherCosts');
+//            $quote->quote_other_costs = $request->input('otherCosts');
+            // Inicializamos el total de costos adicionales
+            $currentCosts = $quote->costs->keyBy('id');
+            $extraCosts = json_decode($request->input('expenses'), true);
+            $otherCostsTotal = 0;
+            $newCostIds = [];
+
+            if (!empty($extraCosts) && is_array($extraCosts)) {
+                foreach ($extraCosts as $cost) {
+                    $name = $cost['name'] ?? $cost['description'] ?? null;
+                    $price = $cost['unit_price'] ?? $cost['price'] ?? null;
+
+                    if ($name && is_numeric($price)) {
+                        $price = floatval($price);
+                        $costId = $cost['id'] ?? null;
+
+                        if ($costId && isset($currentCosts[$costId])) {
+                            $currentCosts[$costId]->update([
+                                'name' => $name,
+                                'unit_price' => $price,
+                            ]);
+                            $newCostIds[] = $costId;
+                        } else {
+                            $newCost = $quote->costs()->create([
+                                'name' => $name,
+                                'unit_price' => $price,
+                            ]);
+                            $newCostIds[] = $newCost->id;
+                        }
+
+                        $otherCostsTotal += $price;
+                    }
+                }
+            }
+
+            // Eliminar costos no incluidos
+            $quote->costs()->whereNotIn('id', $newCostIds)->delete();
+
+            $quote->quote_other_costs_total = $otherCostsTotal;
 
 
             $quote->quote_work_total =
@@ -246,7 +319,7 @@ class QuoteController
 
 
             $quote->quote_material_total = $materialTotal;
-            $quote->quote_subtotal = $quote->quote_work_total + $quote->quote_other_costs + $quote->quote_material_total;
+            $quote->quote_subtotal = $quote->quote_work_total + $quote->quote_other_costs_total + $quote->quote_material_total;
             $quote->save();
 
             return redirect()->back()->with('success', 'Cotización actualizada correctamente.');
@@ -291,6 +364,7 @@ class QuoteController
 
         try {
             // Eliminar registros
+            DB::table('extra_costs')->where('quote_id', $quote->id)->delete();
             DB::table('quote_materials')->where('quote_id', $quote->id)->delete();
 
             $quote->delete();

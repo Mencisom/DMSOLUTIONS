@@ -8,14 +8,27 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use App\Helpers\CurrencyHelper;
 class ProductController
 {
+
+
+
     public function index()
     {
         $products = DB::table('products')
-            ->where('prod_status',1)->get();
-        return view('products', ['products' => $products]);
+            ->where('prod_status', 1)
+            ->get();
+
+        foreach ($products as $product) {
+            $tasa = CurrencyHelper::obtenerTasaCambio($product->money_exchange, 'COP');
+            $precioOriginal = $product->prod_price_purchase;
+            $precioConvertido = $precioOriginal * $tasa;
+
+            $product->precio_convertido = $precioConvertido;
+        }
+
+        return view('products', compact('products'));
     }
 
     public function show()

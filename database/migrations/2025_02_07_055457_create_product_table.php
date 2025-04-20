@@ -22,6 +22,7 @@ return new class extends Migration
             $table->double('prod_price_sales');
             $table->string('prod_image')->nullable();
             $table->integer('status')->default(1);
+            $table->string('money_exchange');
             $table->timestamps();
         });
     }

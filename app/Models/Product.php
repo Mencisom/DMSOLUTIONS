@@ -18,7 +18,8 @@ class Product extends Model
         'prod_status',
         'prod_price_purchase',
         'prod_price_sales',
-        'prod_image'
+        'prod_image',
+        'money_exchange'
     ];
 
     use HasFactory;

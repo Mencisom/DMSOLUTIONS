@@ -115,8 +115,6 @@
             <label>Pago Supervisor:</label>
             <input type="number" id="updateSupervisorFee" name="supervisorFee" required>
 
-            <label>Otros Costos:</label>
-            <input type="number" id="updateOtherCosts" name="otherCosts" required>
 
             <!-- Products Table (Non-Editable) -->
             <h3>Productos en la Cotización</h3>
@@ -134,11 +132,24 @@
                 <!-- Product rows will be dynamically inserted here -->
                 </tbody>
             </table>
-
-            <!-- Add New Product Button -->
             <button class="addProductButton">Agregar Producto</button>
             <div class="productList"></div>
+            <table id="updateexpensesTable">
+                <thead>
+                <tr>
+                    <th>Gasto</th>
+                    <th>Precio</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <!-- expenses rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <button class="addExpensesButton">Agregar Costo</button>
+            <div class="ExpensesBList"></div>
             <input type="hidden" name="products" id="hiddenProducts">
+            <input type="hidden" name="expenses" id="hiddenexpenses">
             <button type="submit" class="modal-button">Guardar Cotización</button>
             <button type="button" id="closeupdateQuoteModal" class="modal-button">Cerrar</button>
         </form>
@@ -259,9 +270,6 @@
             <input type="number" id="supervisorFee" name="supervisorFee" placeholder="Valor Supervisor" min="0">
 
             <label for="otherCosts">Otros Costos</label>
-            <input type="number" id="otherCosts" name="otherCosts" placeholder="Otros costos" min="0">
-
-            <h3>Productos</h3>
             <button class="addProductButton">Agregar Producto</button>
             <div class="productList"></div>
             @if(session('error'))
@@ -274,7 +282,21 @@
                     alert("{{ session('success') }}");
                 </script>
             @endif
+            <h3>otros costos</h3>
+            <button class="addExpensesButton">Agregar Costo</button>
+            <div class="ExpensesBList"></div>
+            @if(session('error'))
+                <script>
+                    alert("{{ session('error') }}");
+                </script>
+            @endif
+            @if(session('success'))
+                <script>
+                    alert("{{ session('success') }}");
+                </script>
+            @endif
             <input type="hidden" name="products" id="hiddenProducts1">
+            <input type="hidden" name="expenses" id="hiddenexpenses1">
             <button type="submit" class="modal-button">Guardar Cotización</button>
             <button type="button" id="closeNewQuoteModal" class="modal-button">Cerrar</button>
         </form>
@@ -321,7 +343,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    // let updatedCosts = [];
     let productList = [];
+    let otherCosts = [];
     const openModalButton = document.getElementById('openModalButton');
     const closeModalButton = document.getElementById('closeNewQuoteModal');
     const modal = document.getElementById('newCotizationModal');
@@ -344,6 +368,154 @@
                 agregarProducto(button);
             });
         });
+
+
+        document.querySelectorAll(".addExpensesButton").forEach(button => {
+            button.addEventListener("click", function () {
+                    agregarCosto(button);
+            });
+        });
+
+        // document.querySelector("#quoteForm").addEventListener("submit", function (e) {
+        //     // Vaciamos la lista
+        //     otherCosts = [];
+        //
+        //     // Recolectamos todos los costos al momento del submit
+        //     document.querySelectorAll(".ExpensesBList .cost-entry").forEach(entry => {
+        //         const description = entry.querySelector(".cost-description").value.trim();
+        //         const priceValue = entry.querySelector(".cost-price").value.trim();
+        //         const price = parseFloat(priceValue);
+        //
+        //         // Validación simple
+        //         if (description.length >= 3 && !isNaN(price) && price >= 100) {
+        //             otherCosts.push({
+        //                 description: description,
+        //                 price: price
+        //             });
+        //         }
+        //     });
+        //
+        //     if (window.getComputedStyle(modal).display === 'none') {
+        //         document.getElementById("hiddenexpenses").value = JSON.stringify(otherCosts);
+        //     } else {
+        //         document.getElementById("hiddenexpenses1").value = JSON.stringify(otherCosts);
+        //     }
+        //
+        //
+        //     console.log("🧾 Costos enviados al backend:", otherCosts);
+        // });
+
+
+    });
+    function procesarCostosYActualizarCampo(formElement) {
+        //otherCosts = [];
+        const modal = formElement.closest(".modal");
+
+        const entries = modal.querySelectorAll(".ExpensesBList .cost-entry");
+        entries.forEach(entry => {
+            const description = entry.querySelector(".cost-description")?.value.trim() || "";
+            const priceValue = entry.querySelector(".cost-price")?.value.trim() || "";
+            const price = parseFloat(priceValue);
+
+            if (description.length >= 3 && !isNaN(price) && price >= 100) {
+                otherCosts.push({
+                    id: null,
+                    name: description,
+                    price: price
+                });
+            }
+        });
+        const campoHidden = modal.querySelector("input[name='expenses']") ||
+            modal.querySelector("#hiddenexpenses") ||
+            modal.querySelector("#hiddenexpenses1");
+
+        if (campoHidden) {
+            campoHidden.value = JSON.stringify(otherCosts);
+            console.log("💾 Costos generados para:", formElement.id, otherCosts);
+        } else {
+            console.warn("⚠️ No se encontró el campo hidden para los gastos");
+        }
+    }
+
+    function agregarCosto(button) {
+        const modal = button.closest(".modal"); // Detecta en qué modal se hizo clic
+        const costsList = modal.querySelector(".ExpensesBList"); // Busca la lista dentro del modal correspondiente
+
+        if (!costsList) {
+            console.error("No se encontró la lista de productos en el modal.");
+            return;
+        }
+
+        const costDiv = document.createElement("div");
+        costDiv.classList.add("cost-entry");
+
+        costDiv.innerHTML = `
+
+        <input type="text" placeholder="Costo" class="cost-description" required>
+        <input type="number" placeholder="Precio" class="cost-price" min="0" step="any" required value="0">
+        <button type="button" class="remove-product">❌</button>
+    `;
+
+        costsList.appendChild(costDiv);
+        const descriptionInput = costDiv.querySelector(".cost-description");
+        const priceInput = costDiv.querySelector(".cost-price");
+        const removeButton = costDiv.querySelector(".remove-product");
+
+        // descriptionInput.addEventListener("input", updateCostsList);
+        // priceInput.addEventListener("input", updateCostsList);
+
+        removeButton.addEventListener("click", function() {
+            let index = Array.from(costsList.children).indexOf(costDiv);
+            //(index);
+            costDiv.remove();
+
+        });
+    }
+    // function updateCostsList() {
+    //     // const otherCosts = [];
+    //     if (window.getComputedStyle(modal).display === 'none') {
+    //         console.log('El modal está oculto');
+    //     } else {
+    //         console.log('El modal está visible');
+    //     }
+    //     document.querySelectorAll(".ExpensesBList .cost-entry").forEach(entry => {
+    //         const description = entry.querySelector(".cost-description").value;
+    //         const price = parseFloat(entry.querySelector(".cost-price").value) || 0;
+    //
+    //         if (description !== "") {
+    //             otherCosts.push({
+    //                 id: null,
+    //                 description: description,
+    //                 price: price
+    //             });
+    //         }
+    //     });
+    //     console.log("la lista tiene", otherCosts)
+    //     if (window.getComputedStyle(modal).display === 'none') {
+    //         document.getElementById("hiddenexpenses").value = JSON.stringify(otherCosts);
+    //     } else {
+    //         document.getElementById("hiddenexpenses1").value = JSON.stringify(otherCosts);
+    //     }
+
+
+    // }
+    // function removeCostoFromList(index) {
+    //     costsList.splice(index, 1);
+    //     if (window.getComputedStyle(modal).display === 'none') {
+    //         document.getElementById("hiddenexpenses").value = JSON.stringify(otherCosts);
+    //     } else {
+    //         document.getElementById("hiddenexpenses1").value = JSON.stringify(otherCosts);
+    //     }
+    // }
+
+    document.querySelector("#quoteForm").addEventListener("submit", function (e) {
+        otherCosts = []; // Reiniciar
+        procesarCostosYActualizarCampo(this); // solo inputs, porque no hay tabla
+
+        // document.getElementById("hiddenexpenses1").value = JSON.stringify(otherCosts);
+
+        console.log("💾 Enviando gastos (nueva cotización):", otherCosts);
+        this.submit();
     });
 
     function agregarProducto(button) {
@@ -432,6 +604,7 @@
         });
 
     }
+
 
     /////////
     function addProductToList(productId, quantity, price, provider) {
@@ -721,6 +894,26 @@
                 </tr>
             `);
                 });
+                // Limpiar y agregar gastos
+                $('#updateexpensesTable tbody').empty();
+                //updatedCosts = []; // Reiniciar la lista de gastos
+
+                data.extra_costs.forEach(cost => {
+                    $('#updateexpensesTable tbody').append(`
+                        <tr data-id="${cost.id}">
+                            <td>${cost.name}</td>
+                            <td>${cost.unit_price}</td>
+                            <td><button class="btn btn-danger btn-sm" onclick="removeExpense(${cost.id})">Eliminar</button></td>
+                        </tr>
+                    `);
+
+                   // updatedCosts.push({id: cost.id,name: cost.name, price: cost.unit_price });
+                });
+
+                // Actualizar el campo oculto
+                // document.getElementById("hiddenexpenses").value = JSON.stringify(updatedCosts);
+
+
                 // Mostrar el modal (sin Bootstrap)
                 document.getElementById('updateQuoteModal').classList.remove('hidden');
             },
@@ -731,6 +924,24 @@
 
 
     }
+
+    function removeExpense(expenseId) {
+        // Eliminar la fila de la tabla
+        let rows = document.querySelectorAll("#updateexpensesTable tbody tr");
+        rows.forEach(row => {
+            if (parseInt(row.getAttribute("data-id")) === expenseId) {
+                row.remove();
+            }
+        });
+
+        // Eliminar del array
+        otherCosts = otherCosts.filter(item => item.id !== expenseId);
+
+        // Actualizar campo oculto
+        //document.getElementById("hiddenexpenses").value = JSON.stringify(updatedCosts);
+    }
+
+
     function removeProduct(materialId) {
         var table = document.getElementById("updateProductsTable");
         var rows = table.getElementsByTagName("tr");
@@ -766,11 +977,40 @@
         // Actualizar campo oculto
         document.getElementById("hiddenProducts").value = JSON.stringify(productList);
     }
+
+
+    function updateExpensesListFromTable() {
+        otherCosts = []; // Reiniciar siempre
+
+        const rows = document.querySelectorAll("#updateexpensesTable tbody tr");
+        rows.forEach(row => {
+            const id = parseInt(row.getAttribute("data-id")) || null;
+            const name = row.children[0].innerText.trim();
+            const price = parseFloat(row.children[1].innerText.trim());
+
+            if (name.length >= 3 && !isNaN(price) && price >= 100) {
+                otherCosts.push({
+                    id: id,
+                    name: name,
+                    price: price
+                });
+            }
+        });
+        //document.getElementById("hiddenexpenses").value = JSON.stringify(updatedCosts);
+        console.log("🧾 Costos actualizados para submit:", otherCosts);
+    }
+
     document.getElementById("updateQuoteForm").addEventListener("submit", function (event) {
         event.preventDefault(); // Evita el envío inmediato
 
-        updateProductListFromTable(); // Recorrer la tabla y actualizar la lista de productos
-        console.log("Datos enviados:", document.getElementById("hiddenProducts").value);
+        updateProductListFromTable();      // Productos
+        updateExpensesListFromTable();     // Costos
+
+        console.log("Datos enviados productos:", document.getElementById("hiddenProducts").value);
+        console.log("Datos enviados costos:", document.getElementById("hiddenexpenses").value);
+        procesarCostosYActualizarCampo(this);
+
+        // document.getElementById("hiddenexpenses").value = JSON.stringify(otherCosts);
         this.submit(); // Envía el formulario
     });
 </script>

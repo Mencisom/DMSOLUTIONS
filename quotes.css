@@ -150,16 +150,16 @@ html, body {
     display: inline-block;
     cursor: pointer;
   }
-  
+
   .action-dots {
     font-size: 1.5em;
     color: #888;
   }
-  
+
   .action-dots:hover {
     color: #000;
   }
-  
+
   /* Menú emergente oculto */
   .action-dropdown {
     position: absolute;
@@ -174,11 +174,11 @@ html, body {
     z-index: 100;
     padding: 10px;
   }
-  
+
   .action-dropdown.hidden {
     display: none;
   }
-  
+
   .action-btn {
     background: none;
     border: none;
@@ -189,11 +189,11 @@ html, body {
     cursor: pointer;
     transition: background 0.2s;
   }
-  
+
   .action-btn:hover {
     background: #f7f7f7;
   }
-  
+
 
 /* Tabla */
 .table-container {
@@ -272,7 +272,7 @@ html, body {
     margin-top: 10px;
 }
 
-.quote-detail-table th, 
+.quote-detail-table th,
 .quote-detail-table td {
     border: 1px solid #ddd;
     padding: 10px;
@@ -428,6 +428,12 @@ html, body {
     align-items: center;
     margin-bottom: 10px;
 }
+.cost-input {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
 
 .product-entry input {
     flex: 1;
@@ -450,6 +456,14 @@ html, body {
 }
 
 .product-quantity {
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+.cost-price {
     padding: 8px;
     border: 2px solid #ccc;
     border-radius: 5px;

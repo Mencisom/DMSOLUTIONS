@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="{{asset('css/products.css')}}">
 </head>
 <body>
+@if(session('status'))
+    <script>
+        alert("{{session('status')}}")
+    </script>
+@endif
 <div class="container">
     <!-- Barra lateral -->
     <x-lateral-bar ></x-lateral-bar>
@@ -15,14 +20,15 @@
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="header">
+
             <h1>PRODUCTOS</h1>
             <div class="search-bar">
                 <input type="text" placeholder="Buscar productos...">
                 <button class="filter-button"><i class="fas fa-filter"></i> Filtros</button>
-{{--                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>--}}
+                {{--                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>--}}
                 <button class="new-button" id="download" action=""></i> <a href="{{ route('descargarPlantilla') }}" class="btn btn-primary">Descargar Plantilla</a></button>
                 <button class="new-button" id="openModalUpdadteButton">
-                <i class="fas fa-plus">Actualizar Productos</i>
+                    <i class="fas fa-plus">Actualizar Productos</i>
                 </button>
 
             </div>
@@ -52,8 +58,14 @@
                             @else
                                 <td>Inactivo</td>
                             @endif
-                            <td>{{number_format($product->prod_price_sales)}}</td>
-                            <td><img style="max-width: 85px;" src="{{asset($product -> prod_image)}}" alt=""></td>
+                            <td>{{ number_format($product->precio_convertido, 2) }} COP</td>
+
+                            <td>
+{{--                                {{ $product->money_exchange }} {{ number_format($product->prod_price_sales, 2) }}--}}
+{{--                                →--}}
+{{--                                {{ number_format($product->precio_convertido, 2) }} COP--}}
+                                <img style="max-width: 85px;" src="{{asset($product -> prod_image)}}" alt="">
+                            </td>
                             <td>
                                 <div class="action-menu">
                                     <span class="action-dots">•••</span>

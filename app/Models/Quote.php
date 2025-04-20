@@ -28,5 +28,8 @@ class Quote extends Model
     {
         return $this->hasOne(Project::class, 'quote_id');
     }
-
+    public function costs()
+    {
+        return $this->hasMany(ExtraCost::class, 'quote_id');
+    }
 }
