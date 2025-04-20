@@ -343,7 +343,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    // let updatedCosts = [];
     let productList = [];
     let otherCosts = [];
     const openModalButton = document.getElementById('openModalButton');
@@ -376,34 +375,7 @@
             });
         });
 
-        // document.querySelector("#quoteForm").addEventListener("submit", function (e) {
-        //     // Vaciamos la lista
-        //     otherCosts = [];
-        //
-        //     // Recolectamos todos los costos al momento del submit
-        //     document.querySelectorAll(".ExpensesBList .cost-entry").forEach(entry => {
-        //         const description = entry.querySelector(".cost-description").value.trim();
-        //         const priceValue = entry.querySelector(".cost-price").value.trim();
-        //         const price = parseFloat(priceValue);
-        //
-        //         // Validación simple
-        //         if (description.length >= 3 && !isNaN(price) && price >= 100) {
-        //             otherCosts.push({
-        //                 description: description,
-        //                 price: price
-        //             });
-        //         }
-        //     });
-        //
-        //     if (window.getComputedStyle(modal).display === 'none') {
-        //         document.getElementById("hiddenexpenses").value = JSON.stringify(otherCosts);
-        //     } else {
-        //         document.getElementById("hiddenexpenses1").value = JSON.stringify(otherCosts);
-        //     }
-        //
-        //
-        //     console.log("🧾 Costos enviados al backend:", otherCosts);
-        // });
+
 
 
     });
@@ -457,56 +429,15 @@
     `;
 
         costsList.appendChild(costDiv);
-        const descriptionInput = costDiv.querySelector(".cost-description");
-        const priceInput = costDiv.querySelector(".cost-price");
+
         const removeButton = costDiv.querySelector(".remove-product");
 
-        // descriptionInput.addEventListener("input", updateCostsList);
-        // priceInput.addEventListener("input", updateCostsList);
 
         removeButton.addEventListener("click", function() {
-            let index = Array.from(costsList.children).indexOf(costDiv);
-            //(index);
             costDiv.remove();
-
         });
     }
-    // function updateCostsList() {
-    //     // const otherCosts = [];
-    //     if (window.getComputedStyle(modal).display === 'none') {
-    //         console.log('El modal está oculto');
-    //     } else {
-    //         console.log('El modal está visible');
-    //     }
-    //     document.querySelectorAll(".ExpensesBList .cost-entry").forEach(entry => {
-    //         const description = entry.querySelector(".cost-description").value;
-    //         const price = parseFloat(entry.querySelector(".cost-price").value) || 0;
-    //
-    //         if (description !== "") {
-    //             otherCosts.push({
-    //                 id: null,
-    //                 description: description,
-    //                 price: price
-    //             });
-    //         }
-    //     });
-    //     console.log("la lista tiene", otherCosts)
-    //     if (window.getComputedStyle(modal).display === 'none') {
-    //         document.getElementById("hiddenexpenses").value = JSON.stringify(otherCosts);
-    //     } else {
-    //         document.getElementById("hiddenexpenses1").value = JSON.stringify(otherCosts);
-    //     }
 
-
-    // }
-    // function removeCostoFromList(index) {
-    //     costsList.splice(index, 1);
-    //     if (window.getComputedStyle(modal).display === 'none') {
-    //         document.getElementById("hiddenexpenses").value = JSON.stringify(otherCosts);
-    //     } else {
-    //         document.getElementById("hiddenexpenses1").value = JSON.stringify(otherCosts);
-    //     }
-    // }
 
     document.querySelector("#quoteForm").addEventListener("submit", function (e) {
         otherCosts = []; // Reiniciar
@@ -907,12 +838,8 @@
                         </tr>
                     `);
 
-                   // updatedCosts.push({id: cost.id,name: cost.name, price: cost.unit_price });
+
                 });
-
-                // Actualizar el campo oculto
-                // document.getElementById("hiddenexpenses").value = JSON.stringify(updatedCosts);
-
 
                 // Mostrar el modal (sin Bootstrap)
                 document.getElementById('updateQuoteModal').classList.remove('hidden');
@@ -937,8 +864,7 @@
         // Eliminar del array
         otherCosts = otherCosts.filter(item => item.id !== expenseId);
 
-        // Actualizar campo oculto
-        //document.getElementById("hiddenexpenses").value = JSON.stringify(updatedCosts);
+
     }
 
 
@@ -1003,14 +929,12 @@
     document.getElementById("updateQuoteForm").addEventListener("submit", function (event) {
         event.preventDefault(); // Evita el envío inmediato
 
-        updateProductListFromTable();      // Productos
-        updateExpensesListFromTable();     // Costos
+        updateProductListFromTable();
+        updateExpensesListFromTable();
 
         console.log("Datos enviados productos:", document.getElementById("hiddenProducts").value);
         console.log("Datos enviados costos:", document.getElementById("hiddenexpenses").value);
         procesarCostosYActualizarCampo(this);
-
-        // document.getElementById("hiddenexpenses").value = JSON.stringify(otherCosts);
         this.submit(); // Envía el formulario
     });
 </script>

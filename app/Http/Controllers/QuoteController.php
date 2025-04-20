@@ -88,7 +88,7 @@ class QuoteController
 
             // Leer y procesar los costos adicionales
             $extraCostsJson = $request->input('expenses');
-            $extraCosts = json_decode($extraCostsJson, true);
+            $extraCosts = json_decode($extraCostsJson ?? '[]', true) ?? [];
 
             if (!empty($extraCosts) && is_array($extraCosts)) {
                 foreach ($extraCosts as $cost) {
@@ -131,7 +131,7 @@ class QuoteController
             }
             // Manejo de productos
             $productsJson = $request->input('products');
-            $products = json_decode($productsJson, true);
+            $products = json_decode($productsJson ?? '[]', true) ?? [];
 
             $materialTotal = 0;
             foreach ($products as $p) {
@@ -200,7 +200,7 @@ class QuoteController
             $quote->quote_helpers = $request->input('numAssistants');
             $quote->quote_helper_payday = $request->input('assistantSalary');
             $quote->quote_supervisor_payday = $request->input('supervisorFee');
-//            $quote->quote_other_costs = $request->input('otherCosts');
+
             // Inicializamos el total de costos adicionales
             $currentCosts = $quote->costs->keyBy('id');
             $extraCosts = json_decode($request->input('expenses'), true);
