@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="{{asset('css/quotes.css')}}">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!-- jQuery debe ir primero -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Luego DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 </head>
 @if(session('status'))
     <script>
@@ -33,7 +41,7 @@
             </div>
         </header>
         <div class="table-container">
-            <table id="quotes-table" class="project-table">
+            <table id="project-table" class="project-table">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -351,8 +359,27 @@
         </form>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- Y solo después tu script personalizado -->
+<script>
+    $(document).ready(function() {
+        $('#project-table').DataTable({
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            },
+            pageLength: 10,
+            lengthChange: false,
+            order: [[ 0, "asc" ]],
+            columnDefs: [
+                {
+                    targets: -1, // Última columna ("Acciones")
+                    orderable: false, // Desactiva ordenamiento
+                    searchable: false // Desactiva búsqueda
+                }
+            ]// Ordena por ID descendente por defecto
+        });
+    });
+</script>
 <script>
     let productList = [];
     let otherCosts = [];
@@ -369,24 +396,8 @@
     const confirmationModal = document.getElementById('confirmationModal');
     const closeConfirmationModal = document.getElementById('closeConfirmationModal');
     const actionMenus = document.querySelectorAll('.action-menu');
+    const ola = document.getElementById("quotes-table");
 
-    $(document).ready(function() {
-        $('#quotes-table').DataTable({
-            language: {
-                url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-            },
-            pageLength: 10,
-            lengthChange: false,
-            order: [[ 0, "desc" ]],
-            columnDefs: [
-                {
-                    targets: -1, // Última columna ("Acciones")
-                    orderable: false, // Desactiva ordenamiento
-                    searchable: false // Desactiva búsqueda
-                }
-            ]// Ordena por ID descendente por defecto
-        });
-    });
 
     document.addEventListener("DOMContentLoaded", function () {
         // Buscar TODOS los botones con la clase 'addProductButton'
@@ -399,11 +410,9 @@
 
         document.querySelectorAll(".addExpensesButton").forEach(button => {
             button.addEventListener("click", function () {
-                    agregarCosto(button);
+                agregarCosto(button);
             });
         });
-
-
 
 
     });
@@ -517,10 +526,10 @@
             quantityInput.addEventListener("input", function () {
                 const selectedData = JSON.parse(productSelect.value);
                 console.log("Producto seleccionado:", selectedData)
-               addProductToList(productSelect.options[productSelect.selectedIndex].text,
-                   quantityInput.value,
-                   JSON.parse(productSelect.value).price,
-                   JSON.parse(productSelect.value).provider_id);
+                addProductToList(productSelect.options[productSelect.selectedIndex].text,
+                    quantityInput.value,
+                    JSON.parse(productSelect.value).price,
+                    JSON.parse(productSelect.value).provider_id);
 
             });
 

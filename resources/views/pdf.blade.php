@@ -106,13 +106,13 @@
     </tr>
 
     <tr>
-        {{$subtotal += $quote[0]->quote_other_costs}}
+        {{$subtotal += $quote[0]->quote_other_costs_total}}
         <td>{{$contador}}</td>
         <td>Otros Costos</td>
         <td>N/A</td>
         <td>1</td>
-        <td>$ {{number_format($quote[0]->quote_other_costs) }}</td>
-        <td>$ {{number_format($quote[0]->quote_other_costs)}}</td>
+        <td>$ {{number_format($quote[0]->quote_other_costs_total) }}</td>
+        <td>$ {{number_format($quote[0]->quote_other_costs_total)}}</td>
         <td>$ {{number_format($subtotal)}}</td>
         <td></td>
         {{$contador += 1}}

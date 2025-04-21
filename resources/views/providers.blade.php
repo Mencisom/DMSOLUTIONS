@@ -216,7 +216,7 @@
             },
             pageLength: 10,
             lengthChange: false,
-            order: [[ 0, "desc" ]],
+            order: [[ 0, "asc" ]],
             columnDefs: [
                 {
                     targets: -1, // Última columna ("Acciones")
