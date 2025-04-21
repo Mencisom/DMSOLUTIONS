@@ -33,7 +33,7 @@
             </div>
         </header>
         <div class="table-container">
-            <table class="project-table">
+            <table id="quotes-table" class="project-table">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -359,6 +359,23 @@
     const closeConfirmationModal = document.getElementById('closeConfirmationModal');
     const actionMenus = document.querySelectorAll('.action-menu');
 
+    $(document).ready(function() {
+        $('#quotes-table').DataTable({
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            },
+            pageLength: 10,
+            lengthChange: false,
+            order: [[ 0, "desc" ]],
+            columnDefs: [
+                {
+                    targets: -1, // Última columna ("Acciones")
+                    orderable: false, // Desactiva ordenamiento
+                    searchable: false // Desactiva búsqueda
+                }
+            ]// Ordena por ID descendente por defecto
+        });
+    });
 
     document.addEventListener("DOMContentLoaded", function () {
         // Buscar TODOS los botones con la clase 'addProductButton'

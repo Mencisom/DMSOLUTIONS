@@ -6,6 +6,13 @@
     <title>Products - DM Solutions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{asset('css/products.css')}}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
 @if(session('status'))
@@ -34,7 +41,7 @@
             </div>
         </header>
         <div class="table-container">
-            <table class="project-table">
+            <table id="products-table" class="project-table">
                 <thead>
                 <tr>
                     <th>Nombre</th>
@@ -220,6 +227,24 @@
             document.getElementById("hiddenProjectId").value = fila.cells[2].textContent.replace(/,/g, '');
             document.getElementById('productPrice').value = fila.cells[4].textContent.replace(/,/g, '');
             modal.classList.remove("hidden");
+        });
+    });
+
+    $(document).ready(function() {
+        $('#products-table').DataTable({
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            },
+            pageLength: 10,
+            lengthChange: false,
+            order: [[ 0, "desc" ]],
+            columnDefs: [
+                {
+                    targets: -1, // Última columna ("Acciones")
+                    orderable: false, // Desactiva ordenamiento
+                    searchable: false // Desactiva búsqueda
+                }
+            ]// Ordena por ID descendente por defecto
         });
     });
 </script>

@@ -161,7 +161,7 @@
                 console.log(data)
                 keys_status = data.map(item => item.status_name);
                 console.log("CANTIDAAAAAAAAAAAD: ", keys_status.length)
-                document.getElementById("totalProjects").textContent = keys_status.length
+                document.getElementById("totalProjects").textContent = keys_status.length + 1
                 console.log ("labels",keys_status);
                 value_status = data.map(item => item.cantidad);
                 console.log ("Values",value_status);
