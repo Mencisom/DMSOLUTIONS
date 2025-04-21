@@ -191,7 +191,18 @@
             </tr>
             </tbody>
         </table>
-
+        <h4 class="text-lg font-semibold mt-4">Costos Adicionales</h4>
+        <table class="quote-detail-table">
+            <thead>
+            <tr>
+                <th class="border px-4 py-2">Nombre</th>
+                <th class="border px-4 py-2">Precio Unitario</th>
+            </tr>
+            </thead>
+            <tbody id="extraCostsBody">
+            <!-- Aquí irán los costos adicionales -->
+            </tbody>
+        </table>
         <table class="quote-summary-table">
             <tfoot>
             <tr>
@@ -502,34 +513,6 @@
         })
 // Evento para detectar si el producto contiene "cable"
         productSelect.addEventListener("change", function () {
-            const nameselect = productSelect.options[productSelect.selectedIndex].text
-            if (nameselect.toLowerCase().includes("cable", "CABLE", "Cable")) {
-                // Reemplazar el input de cantidad por un select con opciones de metros
-                const select = document.createElement("select");
-                select.classList.add("product-quantity");
-                // select.name = "quantity";
-                select.innerHTML = `
-                <option value="0">Elija</option>
-                <option value="10">10 metros</option>
-                <option value="20">20 metros</option>
-                <option value="30">30 metros</option>
-                <option value="50">50 metros</option>
-                <option value="100">100 metros</option>
-            `;
-                quantityInput.replaceWith(select);
-                quantityInput = select; // Actualizar la referencia
-            } else {
-                // Si se borra "cable", vuelve a ser un input de cantidad normal
-                if (quantityInput.tagName === "SELECT") {
-                    const input = document.createElement("input");
-                    input.type = "number";
-                    input.classList.add("product-quantity");
-                    input.placeholder = "Cantidad";
-                    input.min = "1";
-                    quantityInput.replaceWith(input);
-                    quantityInput = input;
-                }
-            }
 
             quantityInput.addEventListener("input", function () {
                 const selectedData = JSON.parse(productSelect.value);
@@ -609,12 +592,12 @@
     const quoteDetailModal = document.getElementById("quoteDetailModal");
     const closeQuoteDetailModal = document.getElementById("closeQuoteDetailModal");
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Obtener todos los botones "Ver Detalle"
         const botonesDetalle = document.querySelectorAll('.view-quote-detail');
 
-        botonesDetalle.forEach(function(boton) {
-            boton.addEventListener('click', function(event) {
+        botonesDetalle.forEach(function (boton) {
+            boton.addEventListener('click', function (event) {
                 // Evitar que el clic en el botón se propague
                 event.stopPropagation();
 
@@ -632,23 +615,52 @@
                     .then(data => {
                         let total = 0;
 
-                        data.forEach(detail => {
+                        // Tabla de materiales
+                        const materials = data.materials;
+                        const tbody = document.getElementById("quoteDetailBody");
+                        tbody.innerHTML = "";
+
+                        materials.forEach(detail => {
                             total += detail.quantity * detail.unit_price;
                             const row = `
-                        <tr>
-                            <td>${detail.prod_name}</td>
-                            <td>${detail.quantity}</td>
-                            <td>$${detail.unit_price.toFixed(2)}</td>
-                            <td>${detail.provider_name}</td>
-                            <td>${total}</td>
-                        </tr>
+                            <tr>
+                                <td>${detail.prod_name}</td>
+                                <td>${detail.quantity}</td>
+                                <td>$${detail.unit_price.toFixed(2)}</td>
+                                <td>${detail.provider_name}</td>
+                                <td>$${(detail.quantity * detail.unit_price).toFixed(2)}</td>
+                            </tr>
                         `;
                             tbody.innerHTML += row;
                         });
-                        document.getElementById("totalMaterialsPrice").textContent = `$${total}`;
+
+                        document.getElementById("totalMaterialsPrice").textContent = `$${total.toFixed(2)}`;
                         document.getElementById("totalPrice").textContent = `$${fila.cells[5].textContent}`;
+
+                        // Tabla de costos adicionales
+                        const extraCosts = data.extra_costs;
+                        const extraTbody = document.getElementById("extraCostsBody");
+                        extraTbody.innerHTML = "";
+
+                        let extraTotal = 0;
+
+                        extraCosts.forEach(cost => {
+                            const unitPrice = parseFloat(cost.unit_price);
+                            extraTotal += unitPrice;
+                            const row = `
+                            <tr>
+                                <td>${cost.name}</td>
+                                <td>$${unitPrice.toFixed(2)}</td>
+                            </tr>
+                        `;
+                            extraTbody.innerHTML += row;
+                        });
+
+                        // Mostramos el total de los costos adicionales si lo deseas:
+                        document.getElementById("otherCosts").textContent = `$${extraTotal.toFixed(2)}`;
                     })
-                    .catch(error => console.error('Error al obtener los productos:', error));
+                    .catch(error => console.error('Error al obtener los productos y costos adicionales:', error));
+
 
                 fetch(`quote/detailed/${id}`)
                     .then(response => response.json())
@@ -658,7 +670,7 @@
                             document.getElementById("helperCost").textContent = `$${r.quote_helper_payday}`;
                             document.getElementById("supervisorCost").textContent = `$${r.quote_supervisor_payday}`;
                             document.getElementById("laborCost").textContent = `$${r.quote_work_total}`;
-                            document.getElementById("otherCosts").textContent = `$${r.quote_other_costs}`
+                            document.getElementById("otherCosts").textContent = `$${r.quote_other_costs_total}`
                         })
                     })
                 quoteDetailModal.classList.remove("hidden");
