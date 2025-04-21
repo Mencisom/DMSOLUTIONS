@@ -32,4 +32,10 @@ class Quote extends Model
     {
         return $this->hasMany(ExtraCost::class, 'quote_id');
     }
+    public function taxRate()
+    {
+        return TaxRate::where('valid_from', '<=', $this->created_at)
+            ->orderBy('valid_from', 'desc')
+            ->first();
+    }
 }
