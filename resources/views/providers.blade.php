@@ -26,8 +26,6 @@
         <header class="header">
             <h1>PROVEEDORES</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Buscar proveedores...">
-                <button class="filter-button"><i class="fas fa-filter"></i> Filtros</button>
                 <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>
             </div>
         </header>

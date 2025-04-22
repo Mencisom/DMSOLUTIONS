@@ -161,7 +161,7 @@
                 console.log(data)
                 keys_status = data.map(item => item.status_name);
                 console.log("CANTIDAAAAAAAAAAAD: ", keys_status.length)
-                document.getElementById("totalProjects").textContent = keys_status.length + 1
+                document.getElementById("totalProjects").textContent = keys_status.length
                 console.log ("labels",keys_status);
                 value_status = data.map(item => item.cantidad);
                 console.log ("Values",value_status);
@@ -224,7 +224,6 @@
                 data.forEach(r => {
                     projectData4[keys[r.mes-1]]=r.cantidad;
                 })
-                console.log("SEXO ANAL ",projectData4)
                 createBarChart(
                     document.getElementById('projectStatusChart4').getContext('2d'),
                     Object.keys(projectData4),

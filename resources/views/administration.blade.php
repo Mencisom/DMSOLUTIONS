@@ -25,10 +25,6 @@
         <header class="header">
             <h1>ADMINISTRACIÓN</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Buscar proyectos...">
-                <button class="filter-button">
-                    <i class="fas fa-filter"></i> Filtros
-                </button>
                 <button class="new-button" id="openModalButton">
                     <i class="fas fa-plus"></i> Nuevo
                 </button>
@@ -125,7 +121,7 @@
             <input type="email" name="updateUserEmail" id="updateUserEmail" value="{{old('userEmail')}}" required>
 
             <label for="userPassword">Contraseña:</label>
-            <input type="password" name="updateUserPassword" id="updateUserPassword" value="{{old('userPassword')}}" required>
+            <input type="password" name="updateUserPassword" id="updateUserPassword" value="{{old('userPassword')}}" >
 
             <label for="menu">Rol:</label>
             <select id="menuActualizarRol" name="menuActualizarRol">
@@ -156,11 +152,6 @@
                 event.stopPropagation();
                 // Obtener la fila correspondiente al botón clickeado
 
-                /*document.getElementById("updateUserNames").setAttribute("value",fila.cells[1].textContent);
-                document.getElementById("updateUserLastNames").setAttribute("value",fila.cells[2].textContent);
-                document.getElementById("updateUserEmail").setAttribute("value",fila.cells[3].textContent);
-                document.getElementById("updateUserPassword").setAttribute("value",fila.cells[4].textContent);*/
-
                 let fila = boton.closest('tr');
                 let userDetail = fila.cells[0].textContent;
                 console.log(userDetail);
@@ -172,7 +163,6 @@
                         document.getElementById("updateUserNames").value = data.user_first_name;
                         document.getElementById("updateUserLastNames").value = data.user_last_name;
                         document.getElementById("updateUserEmail").value = data.user_email;
-                        document.getElementById("updateUserPassword").value = data.user_password;
 
                     })
                     .catch(error => {

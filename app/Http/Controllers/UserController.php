@@ -80,10 +80,13 @@ class UserController
         $user -> user_first_name = $request->input('updateUserNames');
         $user -> user_last_name = $request->input('updateUserLastNames');
         $user -> user_email = $request->input('updateUserEmail');
-        $user -> user_password = password_hash($request->input('updateUserPassword'), PASSWORD_ARGON2ID);
+        if($request->input('updateUserPassword') == null){
+
+        }else{
+            $user -> user_password = password_hash($request->input('updateUserPassword'), PASSWORD_ARGON2ID);
+        }
         $user -> user_role = $request->input('menuActualizarRol');
         $user -> user_status = 1;
-
         try{
             $user -> save();
             return to_route('administration');

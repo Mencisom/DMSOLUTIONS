@@ -30,14 +30,11 @@
 
             <h1>PRODUCTOS</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Buscar productos...">
-                <button class="filter-button"><i class="fas fa-filter"></i> Filtros</button>
                 {{--                <button class="new-button" id="openModalButton"><i class="fas fa-plus"></i> Nuevo</button>--}}
-                <button class="new-button" id="download" action=""></i> <a href="{{ route('descargarPlantilla') }}" class="btn btn-primary">Descargar Plantilla</a></button>
+                <button class="new-button" id="download" action=""></i> <a href="{{ route('descargarPlantilla') }}" >Descargar Plantilla</a></button>
                 <button class="new-button" id="openModalUpdadteButton">
-                    <i class="fas fa-plus">Actualizar Productos</i>
+                    <i>Actualizar Productos</i>
                 </button>
-
             </div>
         </header>
         <div class="table-container">

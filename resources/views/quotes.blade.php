@@ -31,10 +31,6 @@
         <header class="header">
             <h1>COTIZACIONES</h1>
             <div class="search-bar">
-                <input type="text" placeholder="Buscar Cotizaciones...">
-                <button class="filter-button">
-                    <i class="fas fa-filter"></i> Filtros
-                </button>
                 <button class="new-button" id="openModalButton">
                     <i class="fas fa-plus"></i> Nuevo
                 </button>
@@ -288,7 +284,7 @@
             <label for="supervisorFee">Valor Día Supervisor de la Obra</label>
             <input type="number" id="supervisorFee" name="supervisorFee" placeholder="Valor Supervisor" min="0">
 
-            <label for="otherCosts">Otros Costos</label>
+            <label for="otherCosts">Agregar Productos</label>
             <button class="addProductButton">Agregar Producto</button>
             <div class="productList"></div>
             @if(session('error'))
