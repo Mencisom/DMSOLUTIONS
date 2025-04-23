@@ -136,7 +136,7 @@
                 <!-- Product rows will be dynamically inserted here -->
                 </tbody>
             </table>
-            <button class="addProductButton">Agregar Producto</button>
+            <button type="button" class="addProductButton">Agregar Producto</button>
             <div class="productList"></div>
             <table id="updateexpensesTable">
                 <thead>
@@ -285,7 +285,7 @@
             <input type="number" id="supervisorFee" name="supervisorFee" placeholder="Valor Supervisor" min="0">
 
             <label for="otherCosts">Agregar Productos</label>
-            <button class="addProductButton">Agregar Producto</button>
+            <button type="button" class="addProductButton">Agregar Producto</button>
             <div class="productList"></div>
             @if(session('error'))
                 <script>
@@ -413,7 +413,7 @@
 
     });
     function procesarCostosYActualizarCampo(formElement) {
-        //otherCosts = [];
+        otherCosts = [];
         const modal = formElement.closest(".modal");
 
         const entries = modal.querySelectorAll(".ExpensesBList .cost-entry");
@@ -479,7 +479,7 @@
         // document.getElementById("hiddenexpenses1").value = JSON.stringify(otherCosts);
 
         console.log("💾 Enviando gastos (nueva cotización):", otherCosts);
-        this.submit();
+        // this.submit();
     });
 
     function agregarProducto(button) {
@@ -498,7 +498,7 @@
         <select class="product-list">
             <option value="" required>Cargando productos...</option>
         </select>
-        <input type="number" placeholder="Cantidad" class="product-quantity" min="1" required>
+        <input type="number" placeholder="Cantidad" class="product-quantity"step="any" required value="0">
         <input type="number" placeholder="Precio" class="product-price" min="0" step="any" required value="0">
         <button type="button" class="remove-product">❌</button>
     `;
@@ -516,22 +516,24 @@
             console.log("LA MONDA SE LLAMA ",productSelect.options[productSelect.selectedIndex].text)
             productPriceInput.value = selectedData.price;
         })
-// Evento para detectar si el producto contiene "cable"
-        productSelect.addEventListener("change", function () {
-
-            quantityInput.addEventListener("input", function () {
-                const selectedData = JSON.parse(productSelect.value);
-                console.log("Producto seleccionado:", selectedData)
-                addProductToList(productSelect.options[productSelect.selectedIndex].text,
-                    quantityInput.value,
-                    JSON.parse(productSelect.value).price,
-                    JSON.parse(productSelect.value).provider_id);
-
-            });
 
 
+        quantityInput.addEventListener("input", function () {
+            const selectedOption = productSelect.options[productSelect.selectedIndex];
+
+            // Obtenemos el nombre del producto
+            const productName = selectedOption.textContent;
+
+            // Obtenemos el objeto JSON de 'value'
+            const selectedData = JSON.parse(selectedOption.value);
+
+            console.log("Producto con cantidad modificada:", productName, selectedData);
+
+            if (quantityInput.value > 0) {
+                // Aquí pasamos el nombre y los demás datos necesarios
+                addProductToList(productName, selectedData.price, selectedData.provider_id, quantityInput.value);
+            }
         });
-
         removeButton.addEventListener("click", function() {
             let index = Array.from(productList.children).indexOf(productDiv);
             removeProductFromList(index);
@@ -542,23 +544,36 @@
     }
 
 
-    /////////
-    function addProductToList(productId, quantity, price, provider) {
-        if (window.getComputedStyle(modal).display === 'none') {
-            console.log('El modal está oculto');
-        } else {
-            console.log('El modal está visible');
-        }
-        productList.push({ id: productId, quantity: quantity, price: price, provider: provider });
 
+    function addProductToList(productName, productPrice, productProvider, quantity) {
+        if (quantity > 0) {
+            console.log("LACANTIDAD ES ", quantity);
+
+            // Verifica si el producto ya existe en la lista
+            let productExists = productList.find(product => product.id === productName); // Usar nombre como ID
+
+            if (productExists) {
+                // Si existe, actualiza la cantidad
+                productExists.quantity = parseFloat(quantity);
+            } else {
+                // Si no existe, lo agrega a la lista
+                productList.push({
+                    id: productName, // Usar nombre como ID
+                    price: productPrice,
+                    provider: productProvider,
+                    quantity: parseFloat(quantity)
+                });
+            }
+        }
+
+        // Actualiza el campo oculto con el JSON de productos
         if (window.getComputedStyle(modal).display === 'none') {
             document.getElementById("hiddenProducts").value = JSON.stringify(productList);
         } else {
             document.getElementById("hiddenProducts1").value = JSON.stringify(productList);
         }
-
-
     }
+
     ///////////////////////////
     function removeProductFromList(index,hidden) {
         productList.splice(index, 1);

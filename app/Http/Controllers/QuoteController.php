@@ -8,7 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
-
+use Carbon\Carbon;
 class QuoteController
 {
     public function index()
@@ -66,6 +66,7 @@ class QuoteController
     public function store(Request $request)
     {
         try {
+            //dd($request->all());
             // Verificar si el cliente ya existe
             $client = DB::table('clients')->where('client_identification', $request->input('clientId'))->first();
 
@@ -113,7 +114,7 @@ class QuoteController
 
             $quote->quote_material_total = 0;
             $quote->quote_subtotal = 0;
-            $quote->quote_expiration_date = "2026-02-17";
+            $quote->quote_expiration_date = Carbon::now()->addMonth()->format('Y-m-d');
             $quote->save();
             // Guardar costos adicionales si existen
             if (!empty($extraCosts) && is_array($extraCosts)) {
@@ -135,7 +136,9 @@ class QuoteController
 
             $materialTotal = 0;
             foreach ($products as $p) {
-                $materialTotal += ($p['quantity'] * $p['price']);
+                $quantity = floatval($p['quantity']);
+                $price = floatval($p['price']);
+                $materialTotal += $quantity * $price;
             }
 
             $quote->quote_material_total = $materialTotal;
@@ -158,13 +161,14 @@ class QuoteController
                 } else {
                     $materialId = $material->id;
                 }
-
+                $quantity = floatval($p['quantity']);
+                $price = floatval($p['price']);
                 DB::table('quote_materials')->insert([
                     'quote_id' => $quote->id,
                     'product_id' => $materialId,
-                    'unit_price' => $p['price'],
-                    'quantity' => $p['quantity'],
-                    'total_price' => $p['quantity'] * $p['price'],
+                    'unit_price' => $price,
+                    'quantity' => $quantity,
+                    'total_price' => $quantity * $price,
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
@@ -247,7 +251,7 @@ class QuoteController
 
             $quote->quote_material_total = 0;
             $quote->quote_subtotal = 0;
-            $quote->quote_expiration_date = "2026-02-17";
+            $quote->quote_expiration_date = Carbon::now()->addMonth()->format('Y-m-d');
             $quote->save();
 
 
@@ -279,9 +283,11 @@ class QuoteController
                 }
 
                 $materialId = $material->id;
-                $unitPrice = $p['price'];
-                $quantity = $p['quantity'];
+
+                $unitPrice = floatval($p['price']);
+                $quantity = floatval($p['quantity']);
                 $totalPrice = $quantity * $unitPrice;
+
 
                 $newProductIds[] = $materialId;
                     /// condicional  para mirar si existe
