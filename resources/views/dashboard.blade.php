@@ -76,32 +76,32 @@
     function createBarChart(ctx, labels, data,label) {
         const maxValue = Math.max(...Object.values(data)) + 3;
         console.log(maxValue,"Soy el maximoooo")
-            return new Chart(ctx, {
-                type: 'bar',  // Tipo de gráfico
-                data: {
-                    labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'], // Etiquetas en el eje X
-                    datasets: [{
-                        label: label,
-                        data: data,  // Datos
-                        backgroundColor: 'rgba(36, 191, 164, 0.6)',  // Color de barras
-                        borderColor: 'rgba(54, 162, 235, 1)',  // Borde de barras
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: maxValue,
-                            ticks: {
-                                stepSize: 1,
-                                precision: 0
-                            }
+        return new Chart(ctx, {
+            type: 'bar',  // Tipo de gráfico
+            data: {
+                labels: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'], // Etiquetas en el eje X
+                datasets: [{
+                    label: label,
+                    data: data,  // Datos
+                    backgroundColor: 'rgba(36, 191, 164, 0.6)',  // Color de barras
+                    borderColor: 'rgba(54, 162, 235, 1)',  // Borde de barras
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: maxValue,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0
                         }
                     }
                 }
-            });
-        }
+            }
+        });
+    }
 
     function createPieChart(ctx, labels, data, backgroundColor) {
         return new Chart(ctx, {
@@ -124,20 +124,20 @@
         });
     }
 
-        const projectData3 = {
-            "Enero":0,
-            "Febrero": 0,
-            "Marzo":0,
-            "Abril":0,
-            "Mayo":0,
-            "Junio":0,
-            "Julio":0,
-            "Agosto":0,
-            "Septiembre":0,
-            "Octubre":0,
-            "Noviembre":0,
-            "Diciembre":0
-        };
+    const projectData3 = {
+        "Enero":0,
+        "Febrero": 0,
+        "Marzo":0,
+        "Abril":0,
+        "Mayo":0,
+        "Junio":0,
+        "Julio":0,
+        "Agosto":0,
+        "Septiembre":0,
+        "Octubre":0,
+        "Noviembre":0,
+        "Diciembre":0
+    };
 
     const projectData4 = {
         "Enero":0,
@@ -154,14 +154,13 @@
         "Diciembre":0
     };
     window.onload = function() {
-         //Proyectos por estado
+        //Proyectos por estado
         fetch("/dashboard/status")
             .then(response => response.json())
             .then(data => {
                 console.log(data)
                 keys_status = data.map(item => item.status_name);
                 console.log("CANTIDAAAAAAAAAAAD: ", keys_status.length)
-                document.getElementById("totalProjects").textContent = keys_status.length
                 console.log ("labels",keys_status);
                 value_status = data.map(item => item.cantidad);
                 console.log ("Values",value_status);
@@ -173,7 +172,7 @@
                 );
             })
 
-            //proyectos por cliente
+        //proyectos por cliente
 
         fetch("/dashboard/clients")
             .then(response => response.json())
@@ -231,7 +230,14 @@
                     "Cotizaciones sin proyecto por mes"
                 );
             })
-        }
-    </script>
+
+        fetch('dashboard/count')
+            .then (response => response.json())
+            .then (data=>{
+                document.getElementById("totalProjects").textContent = data;
+            });
+    }
+
+</script>
 </body>
 </html>
